@@ -1,24 +1,14 @@
 import React, {useContext} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
-import {safeAreaStyle, useStyles} from './utils/GlobalStyle.js';
-import LoginForm from './components/LoginForm.js';
-import RegisterForm from './components/RegisterForm.js';
-
+import Navigator from './navigators/Navigator';
+import {MainProvider} from './contexts/MainContext';
 export default function App() {
-  const styleFont = useStyles();
-  if (styleFont == undefined) return undefined;
-  else
-    return (
-      <View style={[safeAreaStyle.AndroidSafeArea, styles.container]}>
-        <RegisterForm></RegisterForm>
-        <StatusBar style="auto" />
-      </View>
-    );
+  return (
+    <>
+      <MainProvider>
+        <Navigator></Navigator>
+      </MainProvider>
+      <StatusBar style="auto" />
+    </>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-  },
-});

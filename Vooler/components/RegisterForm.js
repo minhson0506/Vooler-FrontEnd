@@ -104,7 +104,7 @@ const RegisterForm = () => {
           </View>
         </View>
         <Button
-          title="SIGN IN"
+          title="SIGN UP"
           icon={{
             name: 'check-circle',
             type: 'font-awesome',
