@@ -8,6 +8,7 @@ import {safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import {AppBarBackButton, AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
 import Step from './Step';
+import Graph from './Graph';
 
 const Dashboard = ({navigation}) => {
   const styleFont = useStyles();
@@ -18,6 +19,7 @@ const Dashboard = ({navigation}) => {
         <AppBarIcon></AppBarIcon>
         <Text style={styleFont.Headline}>Home!</Text>
         <Step></Step>
+        <Graph></Graph>
       </View>
     );
 };

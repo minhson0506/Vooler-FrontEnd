@@ -1,7 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
+import {ECharts} from 'react-native-echarts-wrapper';
+import Graph from './Graph';
 
 const Step = () => {
   const styleFont = useStyles();
@@ -19,6 +21,7 @@ const Step = () => {
           style={{height: 100}}
         />
         <Text>{date.toString()}</Text>
+        {/* <Graph></Graph> */}
       </View>
     );
 };
@@ -26,6 +29,9 @@ const Step = () => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
+  },
+  chartContainer: {
+    flex: 1,
   },
 });
 
