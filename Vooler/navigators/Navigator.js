@@ -20,7 +20,7 @@ const TabScreen = () => {
           tabBarStyle: {
             justifyContent: 'center',
             alignContent: 'center',
-            height: '7%',
+            height: '9%',
             border: 0,
             margin: 0,
             paddingTop: 5,
@@ -33,7 +33,7 @@ const TabScreen = () => {
             } else if (route.name === 'Settings') {
               iconName = focused ? 'settings' : 'settings';
             }
-            return <Ionicons name={iconName} size={30} color={color} />;
+            return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: colorSet.primary,
           tabBarLabelStyle: {fontSize: 18, fontFamily: 'Nunito-SemiBold'},

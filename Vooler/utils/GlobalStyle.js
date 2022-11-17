@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {StyleSheet, Platform, StatusBar} from 'react-native';
+import {StyleSheet, Platform, StatusBar, Dimensions} from 'react-native';
 import {MainContext} from '../contexts/MainContext';
 import * as Font from 'expo-font';
 
@@ -65,7 +65,10 @@ const safeAreaStyle = StyleSheet.create({
   AndroidSafeArea: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop:
+      Platform.OS === 'android'
+        ? StatusBar.currentHeight
+        : Dimensions.get('window').height * 0.06,
   },
 });
 
