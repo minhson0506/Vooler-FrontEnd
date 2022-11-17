@@ -28,7 +28,7 @@ const RankTable = () => {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width * 0.9,
+    width: '100%',
     alignSelf: 'center',
   },
   textHeader: {

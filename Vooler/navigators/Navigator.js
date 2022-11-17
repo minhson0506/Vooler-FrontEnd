@@ -8,6 +8,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import Register from '../views/Register';
 import Login from '../views/Login';
+import Step from '../views/Step';
+import TeamRank from '../views/TeamRank';
+import Badges from '../views/Badges';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -19,14 +22,6 @@ const TabScreen = () => {
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
-          tabBarStyle: {
-            justifyContent: 'center',
-            alignContent: 'center',
-            height: '9%',
-            border: 0,
-            margin: 0,
-            paddingTop: 5,
-          },
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
 
@@ -72,6 +67,21 @@ const StackScreen = () => {
       <Stack.Screen
         name="Main"
         component={TabScreen}
+        options={{headerShown: false}}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Step"
+        component={Step}
+        options={{headerShown: false}}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Rank"
+        component={TeamRank}
+        options={{headerShown: false}}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Badges"
+        component={Badges}
         options={{headerShown: false}}
       ></Stack.Screen>
     </Stack.Navigator>

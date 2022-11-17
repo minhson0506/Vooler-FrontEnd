@@ -6,7 +6,7 @@ export default class Graph extends Component {
   option = {
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: ['', '', '', '', '', '', ''],
     },
     yAxis: {
       type: 'value',
@@ -26,10 +26,7 @@ export default class Graph extends Component {
   render() {
     return (
       <View style={styles.chartContainer}>
-        <ECharts
-          option={this.option}
-          backgroundColor="rgba(93, 169, 81, 0.3)"
-        />
+        <ECharts option={this.option} />
       </View>
     );
   }
