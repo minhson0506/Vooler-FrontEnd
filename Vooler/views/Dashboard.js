@@ -13,7 +13,6 @@ const Dashboard = () => {
     return (
       <View style={[safeAreaStyle.AndroidSafeArea, styles.container]}>
         <Text style={styleFont.Header}>Home!</Text>
-        <CardView></CardView>
       </View>
     );
 };

@@ -1,31 +1,19 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
+import {moominArray} from '../utils/data';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 
 const CardView = () => {
-  const [image, setImage] = useState(1);
-  const [items, setItems] = useState([
-    {name: '200', unit: 'steps/day'},
-    {name: '500', unit: 'steps/day'},
-    {name: '700', unit: 'steps/day'},
-    {name: '1000', unit: 'steps/day'},
-    {name: '5000', unit: 'steps/week'},
-    {name: '7000', unit: 'steps/week'},
-    {name: '10000', unit: 'steps/week'},
-    {name: 'Rank #3', unit: ''},
-    {name: 'Rank #2', unit: ''},
-    {name: 'Rank #1', unit: ''},
-  ]);
+  const [items, setItems] = useState(moominArray);
 
-  const fontStyle = useStyles();   
+  const onClick = (id) => {
+    const newImages = [...items];
+    newImages[id].state = !newImages[id].state;
+    setItems(newImages);
+  };
+
+  const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
     return (
@@ -33,29 +21,31 @@ const CardView = () => {
         itemDimension={130}
         data={items}
         style={styles.gridView}
-        // staticDimension={300}
-        // fixed
         spacing={10}
-        renderItem={({item}) =>
-          1 ? (
-            <TouchableOpacity
-              style={styles.itemContainer}
-              onPress={setImage(2)}
-            >
-              <Text style={[fontStyle.Text, styles.itemName]}>{item.name}</Text>
-              <Text style={[fontStyle.Text, styles.itemName]}>{item.unit}</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={styles.itemContainer}
-              onPress={setImage(1)}
-            >
+        renderItem={({item, index}) => (
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={() => {
+              onClick(index);
+            }}
+          >
+            {item.state ? (
               <Image
-                source={require('../assets/Moomin/Moominmama.png')}
+                style={{width: '100%', height: '100%', opacity: 0.2}}
+                source={item.image}
               ></Image>
-            </TouchableOpacity>
-          )
-        }
+            ) : (
+              <>
+                <Text style={[fontStyle.Text, styles.itemName]}>
+                  {item.name}
+                </Text>
+                <Text style={[fontStyle.Text, styles.itemName]}>
+                  {item.unit}
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+        )}
       />
     );
 };
