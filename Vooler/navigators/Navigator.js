@@ -6,6 +6,8 @@ import Dashboard from '../views/Dashboard';
 import Settings from '../views/Setting';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
+import Register from '../views/Register';
+import Login from '../views/Login';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,6 +59,16 @@ const TabScreen = () => {
 const StackScreen = () => {
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: false}}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
+      ></Stack.Screen>
       <Stack.Screen
         name="Main"
         component={TabScreen}

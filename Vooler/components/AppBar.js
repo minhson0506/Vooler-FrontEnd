@@ -40,7 +40,7 @@ const AppBarIcon = () => (
 );
 
 AppBarBackButton.propTypes = {
-  title: PropTypes.object,
+  title: PropTypes.string,
 };
 
 export {AppBarIcon, AppBarBackButton};

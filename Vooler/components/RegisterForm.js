@@ -6,8 +6,11 @@ import {useForm, Controller} from 'react-hook-form';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import DropDownPicker from 'react-native-dropdown-picker';
+import PropTypes from 'prop-types';
 
-const RegisterForm = () => {
+const RegisterForm = ({onPress}) => {
+  const [showPassword, setShowPassword] = useState(true);
+
   const {
     control,
     handleSubmit,
@@ -48,19 +51,19 @@ const RegisterForm = () => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  placeholder="Nickname"
                   style={styles.inputBox}
                   inputContainerStyle={styles.inputContainer}
-                  inputStyle={fontStyle.Button}
+                  inputStyle={{fontFamily: 'Nunito-Bold'}}
                 />
               )}
               name="username"
             />
             {errors.username && <Text>This is required.</Text>}
           </View>
-          <View>
+          <View style={{zIndex: 2}}>
             <Text style={[fontStyle.Title, styles.text]}>Join your team</Text>
             <DropDownPicker
-              zIndex={1000}
               open={openTeam}
               value={team}
               items={teamItem}
@@ -70,12 +73,12 @@ const RegisterForm = () => {
               placeholder="Choose"
               style={styles.pickerContainer}
               containerStyle={styles.picker}
-              textStyle={[fontStyle.Button, styles.textPicker]}
+              textStyle={styles.textPicker}
               selectedItemLabelStyle={{color: '#EB6833'}}
               labelStyle={{color: '#EB6833'}}
             />
           </View>
-          <View>
+          <View style={{zIndex: 1}}>
             <Text style={[fontStyle.Title, styles.text]}>Enter password</Text>
             <Controller
               control={control}
@@ -87,15 +90,21 @@ const RegisterForm = () => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
-                  secureTextEntry={true}
+                  placeholder="Password"
+                  secureTextEntry={showPassword}
                   style={styles.inputBox}
+                  autoCapitalize="none"
+                  inputStyle={{fontFamily: 'Nunito-Bold'}}
+                  inputContainerStyle={styles.inputContainer}
                   rightIcon={(props) => (
                     <IconButton
                       icon={(props) => <Icon name="eye" {...props} />}
                       {...props}
+                      onPress={() => {
+                        setShowPassword(!showPassword);
+                      }}
                     />
                   )}
-                  inputContainerStyle={styles.inputContainer}
                 />
               )}
               name="password"
@@ -119,6 +128,7 @@ const RegisterForm = () => {
             height: 68,
             alignSelf: 'center',
           }}
+          onPress={onPress}
         />
       </View>
     );
@@ -176,7 +186,11 @@ const styles = StyleSheet.create({
   },
   textPicker: {
     paddingStart: 10,
+    fontFamily: 'Nunito-Bold',
+    fontSize: 18,
   },
 });
+
+RegisterForm.propTypes = {onPress: PropTypes.func};
 
 export default RegisterForm;
