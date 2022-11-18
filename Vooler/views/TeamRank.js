@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
+import RankComp from '../components/RankComponent';
 
 const TeamRank = ({navigation}) => {
   const onPress = () => {
@@ -30,69 +31,18 @@ const TeamRank = ({navigation}) => {
           title={'Team Rank'}
           onPress={onPress}
         ></AppBarBackButton>
+        <WeeklyCalendar
+          onDayPress={(day) => {
+            setDate(day.format('DD-MM-YYYY'));
+            console.log(day.format('DD-MM-YYYY'));
+          }}
+          themeColor={colorSet.primary}
+          style={{height: 100, marginBottom: 10}}
+        />
         <View style={styles.container}>
-          <WeeklyCalendar
-            onDayPress={(day) => {
-              setDate(day.format('DD-MM-YYYY'));
-              console.log(day.format('DD-MM-YYYY'));
-            }}
-            themeColor={colorSet.primary}
-            style={{height: Dimensions.get('window').height * 0.12}}
-          />
-          <View style={{height: '85%', justifyContent: 'space-evenly'}}>
-            <View style={styles.rankContainer}>
-              <View style={styles.column}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={require('../assets/image/old1.png')}
-                ></Image>
-                <Text style={styles.text}>Koti 2</Text>
-                <View
-                  style={[styles.rankView, {backgroundColor: colorSet.primary}]}
-                >
-                  <Text style={styles.rank}>2</Text>
-                </View>
-                <Text style={styleFont.Title}>3000</Text>
-                <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>
-                  STEPS
-                </Text>
-              </View>
-              <View style={styles.column}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={require('../assets/image/old2.png')}
-                ></Image>
-                <Text style={styles.text}>Koti 3</Text>
-                <View
-                  style={[styles.rankView, {backgroundColor: colorSet.green}]}
-                >
-                  <Text style={styles.rank}>1</Text>
-                </View>
-                <Text style={styleFont.Title}>3139</Text>
-                <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>
-                  STEPS
-                </Text>
-              </View>
-              <View style={styles.column}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={require('../assets/image/old3.png')}
-                ></Image>
-                <Text style={styles.text}>Koti 1</Text>
-                <View
-                  style={[styles.rankView, {backgroundColor: colorSet.red}]}
-                >
-                  <Text style={styles.rank}>3</Text>
-                </View>
-                <Text style={styleFont.Title}>2680</Text>
-                <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>
-                  STEPS
-                </Text>
-              </View>
-            </View>
-            <Divider width={2} style={{marginBottom: 20}}></Divider>
-            <RankTable></RankTable>
-          </View>
+          <RankComp step1={3100} step2={3000} step3={2000}></RankComp>
+          <Divider width={2} style={{marginBottom: 20}}></Divider>
+          <RankTable></RankTable>
         </View>
       </View>
     );
@@ -100,7 +50,8 @@ const TeamRank = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    height: '80%',
+    justifyContent: 'space-evenly',
   },
   column: {
     alignItems: 'center',

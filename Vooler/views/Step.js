@@ -19,31 +19,29 @@ const Step = ({navigation}) => {
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Steps'} onPress={onPress}></AppBarBackButton>
+        <WeeklyCalendar
+          onDayPress={(day) => {
+            setDate(day.format('DD-MM-YYYY'));
+            console.log(day.format('DD-MM-YYYY'));
+          }}
+          themeColor={colorSet.primary}
+          style={{height: 100}}
+        />
         <View style={styles.container}>
-          <WeeklyCalendar
-            onDayPress={(day) => {
-              setDate(day.format('DD-MM-YYYY'));
-              console.log(day.format('DD-MM-YYYY'));
-            }}
-            themeColor={colorSet.primary}
-            style={{height: Dimensions.get('window').height * 0.12}}
-          />
-          <View style={{height: '85%', justifyContent: 'space-evenly'}}>
-            <View style={styles.iconText}>
-              <Icon
-                name="shoe-print"
-                type="material-community"
-                size={40}
-                color={colorSet.black}
-              ></Icon>
-              <Text style={styleFont.Headline}>500</Text>
-              <Text style={{fontFamily: 'Nunito-SemiBold', fontSize: 18}}>
-                STEPS
-              </Text>
-            </View>
-            <View style={styles.card}>
-              <Text style={styles.text}>This is where the graph will be</Text>
-            </View>
+          <View style={styles.iconText}>
+            <Icon
+              name="shoe-print"
+              type="material-community"
+              size={40}
+              color={colorSet.black}
+            ></Icon>
+            <Text style={styleFont.Headline}>500</Text>
+            <Text style={{fontFamily: 'Nunito-SemiBold', fontSize: 18}}>
+              STEPS
+            </Text>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.text}>This is where the graph will be</Text>
           </View>
         </View>
       </View>
@@ -52,7 +50,8 @@ const Step = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    height: '80%',
+    justifyContent: 'space-evenly',
   },
   iconText: {
     flexDirection: 'column',
