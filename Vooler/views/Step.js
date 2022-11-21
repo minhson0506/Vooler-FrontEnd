@@ -13,6 +13,7 @@ const Step = ({navigation}) => {
     navigation.goBack();
   };
   const [date, setDate] = useState('No data');
+  const [weekday, setWeekday] = useState(0);
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
@@ -20,9 +21,11 @@ const Step = ({navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Steps'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
-          onDayPress={(day) => {
+          onDayPress={(day, weekdays) => {
             setDate(day.format('DD-MM-YYYY'));
+            setWeekday(weekday);
             console.log(day.format('DD-MM-YYYY'));
+            console.log(weekdays);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
@@ -41,7 +44,37 @@ const Step = ({navigation}) => {
             </Text>
           </View>
           <View style={styles.card}>
-            <Text style={styles.text}>This is where the graph will be</Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}
+            >
+              <Text style={[styles.text, styleFont.Text]}>Nov 20 - 26</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginEnd: 10,
+                  alignItems: 'center',
+                }}
+              >
+                <View
+                  style={{
+                    height: 15,
+                    width: 22,
+                    backgroundColor: colorSet.primary,
+                    borderRadius: 5,
+                  }}
+                ></View>
+                <Text
+                  style={{
+                    fontFamily: 'Nunito-Bold',
+                    fontSize: 15,
+                    marginLeft: 10,
+                  }}
+                >
+                  steps
+                </Text>
+              </View>
+            </View>
+            <Graph></Graph>
           </View>
         </View>
       </View>
@@ -64,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 1000,
   },
   card: {
-    height: Dimensions.get('window').height * 0.5,
+    height: Dimensions.get('window').height * 0.45,
     width: Dimensions.get('window').width * 0.9,
     alignSelf: 'center',
     borderRadius: 15,
@@ -73,9 +106,10 @@ const styles = StyleSheet.create({
     shadowOffset: {width: -2, height: 4},
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    justifyContent: 'space-evenly',
   },
   text: {
-    textAlign: 'center',
+    marginStart: 10,
     fontSize: 20,
   },
 });

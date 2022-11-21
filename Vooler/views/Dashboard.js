@@ -53,7 +53,7 @@ const Dashboard = ({navigation}) => {
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
-                navigation.navigate('Rank');
+                navigation.navigate('UserRank');
               }}
             >
               <View style={styles.iconText}>

@@ -42,7 +42,7 @@ const TeamRank = ({navigation}) => {
         <View style={styles.container}>
           <RankComp step1={3100} step2={3000} step3={2000}></RankComp>
           <Divider width={2} style={{marginBottom: 20}}></Divider>
-          <RankTable></RankTable>
+          <RankTable state={'Team'}></RankTable>
         </View>
       </View>
     );

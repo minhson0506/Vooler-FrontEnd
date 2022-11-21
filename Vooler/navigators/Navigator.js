@@ -11,6 +11,7 @@ import Login from '../views/Login';
 import Step from '../views/Step';
 import TeamRank from '../views/TeamRank';
 import Badges from '../views/Badges';
+import UserRank from '../views/UserRank';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -75,7 +76,12 @@ const StackScreen = () => {
         options={{headerShown: false}}
       ></Stack.Screen>
       <Stack.Screen
-        name="Rank"
+        name="UserRank"
+        component={UserRank}
+        options={{headerShown: false}}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="TeamRank"
         component={TeamRank}
         options={{headerShown: false}}
       ></Stack.Screen>

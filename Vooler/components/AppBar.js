@@ -1,11 +1,11 @@
 import {Icon} from '@rneui/base';
 import * as React from 'react';
-import {StyleSheet, Text, Image, View} from 'react-native';
+import {StyleSheet, Text, Image, View, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import {PropTypes} from 'prop-types';
 
-const AppBarBackButton = ({onPress, title}) => {
+const AppBarBackButton = ({onPress, title, icon, team}) => {
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
@@ -27,7 +27,21 @@ const AppBarBackButton = ({onPress, title}) => {
         <Text style={[fontStyle.Headline, {color: colorSet.primary}]}>
           {title}
         </Text>
-        <View style={{width: 50}}></View>
+        {icon == true ? (
+          <TouchableOpacity
+            onPress={team}
+            style={{width: 50, justifyContent: 'center'}}
+          >
+            <Icon
+              name="people"
+              type="ionicon"
+              size={30}
+              color={colorSet.black}
+            ></Icon>
+          </TouchableOpacity>
+        ) : (
+          <View style={{width: 50}}></View>
+        )}
       </View>
     );
 };

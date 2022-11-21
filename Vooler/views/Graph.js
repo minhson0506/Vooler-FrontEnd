@@ -1,39 +1,40 @@
+import {color} from '@rneui/base';
 import React, {Component} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {ECharts} from 'react-native-echarts-wrapper';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {BarChart} from 'react-native-gifted-charts';
+import {colorSet} from '../utils/GlobalStyle';
 
-export default class Graph extends Component {
-  option = {
-    xAxis: {
-      type: 'category',
-      data: ['', '', '', '', '', '', ''],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'bar',
-      },
-      {
-        data: [1075, 1075, 1075, 1075, 1075, 1075, 1075],
-        type: 'line',
-      },
-    ],
-  };
+const Graph = () => {
+  const barData = [
+    {value: 396, label: 'S', frontColor: colorSet.primary},
+    {value: 259, label: 'M'},
+    {value: 245, label: 'T'},
+    {value: 500, label: 'W', frontColor: colorSet.primary},
+    {value: 320, label: 'T', frontColor: colorSet.primary},
+    {value: 450, label: 'F', frontColor: colorSet.primary},
+    {value: 200, label: 'S'},
+  ];
+  return (
+    <BarChart
+      barWidth={22}
+      noOfSections={3}
+      frontColor="lightgray"
+      barBorderRadius={4}
+      data={barData}
+      yAxisThickness={0}
+      xAxisThickness={0}
+      hideRules
+      initialSpacing={10}
+      showReferenceLine1
+      referenceLine1Position={300}
+      referenceLine1Config={{
+        color: 'gray',
+        dashWidth: 2,
+        dashGap: 3,
+        width: Dimensions.get('window').width * 0.75,
+      }}
+    />
+  );
+};
 
-  render() {
-    return (
-      <View style={styles.chartContainer}>
-        <ECharts option={this.option} />
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  chartContainer: {
-    flex: 1,
-  },
-});
+export default Graph;
