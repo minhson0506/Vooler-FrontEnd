@@ -19,6 +19,8 @@ const RankTable = ({state}) => {
     ['6', 'Dinosaur', '305'],
     ['7', 'Chicken', '220'],
     ['8', 'Foxy', '210'],
+    ['9', 'Fishy', '202'],
+    ['10', 'Cow', '200'],
   ];
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   row: {
     marginTop: 20,
     borderBottomWidth: 1,
-    borderColor: colorSet.lightGray,
+    borderColor: colorSet.darkGray,
   },
 });
 

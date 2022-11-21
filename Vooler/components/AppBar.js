@@ -30,7 +30,7 @@ const AppBarBackButton = ({onPress, title, icon, team}) => {
         {icon == true ? (
           <TouchableOpacity
             onPress={team}
-            style={{width: 50, justifyContent: 'center'}}
+            style={{width: 50, justifyContent: 'center', paddingEnd: 20}}
           >
             <Icon
               name="people"

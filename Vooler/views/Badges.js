@@ -15,7 +15,7 @@ const Badges = ({navigation}) => {
   else
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
-        <AppBarBackButton title={'Badges'} onPress={onPress}></AppBarBackButton>
+        <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
         <CardView></CardView>
       </View>
     );

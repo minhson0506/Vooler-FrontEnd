@@ -65,7 +65,10 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Rank</Text>
               </View>
-              <Text style={styleFont.Headline}>1st</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={styleFont.Headline}>1</Text>
+                <Text style={styleFont.Text}>st</Text>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
@@ -82,7 +85,7 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Badges</Text>
               </View>
-              <Text style={styleFont.Headline}>3</Text>
+              <Text style={styleFont.Headline}>0</Text>
             </TouchableOpacity>
           </View>
         </View>

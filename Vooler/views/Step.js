@@ -19,7 +19,7 @@ const Step = ({navigation}) => {
   else
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
-        <AppBarBackButton title={'Steps'} onPress={onPress}></AppBarBackButton>
+        <AppBarBackButton title={'Step'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={(day, weekdays) => {
             setDate(day.format('DD-MM-YYYY'));

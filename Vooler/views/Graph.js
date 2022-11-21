@@ -18,7 +18,7 @@ const Graph = () => {
     <BarChart
       barWidth={22}
       noOfSections={3}
-      frontColor="lightgray"
+      frontColor="#BFBFBF"
       barBorderRadius={4}
       data={barData}
       yAxisThickness={0}
