@@ -5,10 +5,12 @@ import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
+import DropDownPicker from 'react-native-dropdown-picker';
 import PropTypes from 'prop-types';
 
-const LoginForm = ({onPress}) => {
+const EditForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
+
   const {
     control,
     handleSubmit,
@@ -20,6 +22,16 @@ const LoginForm = ({onPress}) => {
     },
   });
 
+  // Picker open states
+  const [openTeam, setOpenTeam] = useState(false);
+  // Picker value states
+  const [team, setTeam] = useState('Hoitokoti 3');
+  // Picker items
+  const [teamItem, setTeamItem] = useState([
+    {label: 'Hoitokoti 1', value: 'Hoitokoti1'},
+    {label: 'Hoitokoti 2', value: 'Hoitokoti2'},
+    {label: 'Hoitokoti 3', value: 'Hoitokoti3'},
+  ]);
   const onSubmit = () => {};
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
@@ -28,7 +40,7 @@ const LoginForm = ({onPress}) => {
       <View style={{height: '100%', justifyContent: 'space-evenly'}}>
         <View style={styles.card}>
           <View>
-            <Text style={[fontStyle.Title, styles.text]}>Enter nickname</Text>
+            <Text style={[fontStyle.Title, styles.text]}>Update nickname</Text>
             <Controller
               control={control}
               rules={{
@@ -49,9 +61,25 @@ const LoginForm = ({onPress}) => {
             />
             {errors.username && <Text>This is required.</Text>}
           </View>
-
-          <View>
-            <Text style={[fontStyle.Title, styles.text]}>Enter password</Text>
+          <View style={{zIndex: 2}}>
+            <Text style={[fontStyle.Title, styles.text]}>Update team</Text>
+            <DropDownPicker
+              open={openTeam}
+              value={team}
+              items={teamItem}
+              setOpen={setOpenTeam}
+              setValue={setTeam}
+              setItems={setTeamItem}
+              placeholder="Choose"
+              style={styles.pickerContainer}
+              containerStyle={styles.picker}
+              textStyle={styles.textPicker}
+              selectedItemLabelStyle={{color: '#EB6833'}}
+              labelStyle={{color: '#EB6833'}}
+            />
+          </View>
+          <View style={{zIndex: 1}}>
+            <Text style={[fontStyle.Title, styles.text]}>Update password</Text>
             <Controller
               control={control}
               rules={{
@@ -85,7 +113,7 @@ const LoginForm = ({onPress}) => {
           </View>
         </View>
         <Button
-          title="SIGN IN"
+          title="SUBMIT"
           icon={{
             name: 'check-circle',
             type: 'font-awesome',
@@ -108,7 +136,7 @@ const LoginForm = ({onPress}) => {
 
 const styles = StyleSheet.create({
   card: {
-    height: Dimensions.get('window').height * 0.4,
+    height: Dimensions.get('window').height * 0.6,
     width: Dimensions.get('window').width * 0.9,
     alignSelf: 'center',
     justifyContent: 'space-evenly',
@@ -145,8 +173,24 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 60,
   },
+  picker: {
+    height: 50,
+    width: '75%',
+    alignSelf: 'center',
+  },
+  pickerContainer: {
+    borderWidth: 4,
+    height: 50,
+    borderColor: colorSet.primary,
+    borderRadius: 15,
+  },
+  textPicker: {
+    paddingStart: 10,
+    fontFamily: 'Nunito-Bold',
+    fontSize: 18,
+  },
 });
 
-LoginForm.propTypes = {onPress: PropTypes.func};
+EditForm.propTypes = {onPress: PropTypes.func};
 
-export default LoginForm;
+export default EditForm;

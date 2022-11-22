@@ -10,10 +10,11 @@ import {
   StyleSheet,
   Keyboard,
 } from 'react-native';
-import EditForm from '../components/EditForm';
 
-const Settings = ({navigation}) => {
-  const onPress = () => {};
+const Register = ({navigation}) => {
+  const onPress = () => {
+    navigation.navigate('Login');
+  };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity
@@ -26,7 +27,7 @@ const Settings = ({navigation}) => {
           style={styles.container}
         >
           <AppBarIcon></AppBarIcon>
-          <EditForm onPress={onPress}></EditForm>
+          <RegisterForm onPress={onPress}></RegisterForm>
         </KeyboardAvoidingView>
       </TouchableOpacity>
     </View>
@@ -40,6 +41,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Settings.propTypes = {navigation: PropTypes.object};
+Register.propTypes = {navigation: PropTypes.object};
 
-export default Settings;
+export default Register;

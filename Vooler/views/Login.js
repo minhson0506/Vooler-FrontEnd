@@ -1,19 +1,20 @@
 import React from 'react';
-import {colorSet, safeAreaStyle} from '../utils/GlobalStyle';
+import {safeAreaStyle} from '../utils/GlobalStyle';
 import {AppBarIcon} from '../components/AppBar';
-import RegisterForm from '../components/RegisterForm';
+import LoginForm from '../components/LoginForm';
 import PropTypes from 'prop-types';
 import {
   View,
   KeyboardAvoidingView,
+  Keyboard,
   TouchableOpacity,
   StyleSheet,
-  Keyboard,
 } from 'react-native';
-import EditForm from '../components/EditForm';
 
-const Settings = ({navigation}) => {
-  const onPress = () => {};
+const Login = ({navigation}) => {
+  const onPress = () => {
+    navigation.navigate('Main');
+  };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity
@@ -26,7 +27,7 @@ const Settings = ({navigation}) => {
           style={styles.container}
         >
           <AppBarIcon></AppBarIcon>
-          <EditForm onPress={onPress}></EditForm>
+          <LoginForm onPress={onPress}></LoginForm>
         </KeyboardAvoidingView>
       </TouchableOpacity>
     </View>
@@ -40,6 +41,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Settings.propTypes = {navigation: PropTypes.object};
+Login.propTypes = {navigation: PropTypes.object};
 
-export default Settings;
+export default Login;
