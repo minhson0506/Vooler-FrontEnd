@@ -71,4 +71,12 @@ const moominArray = [
   },
 ];
 
-export {moominArray};
+const teamArray = [
+  {label: 'Team 1', value: 1},
+  {label: 'Team 2', value: 2},
+  {label: 'Team 3', value: 3},
+  {label: 'Team 4', value: 4},
+  {label: 'Team 5', value: 5},
+  {label: 'Team 6', value: 6},
+];
+export {moominArray, teamArray};
