@@ -118,10 +118,7 @@ const useUser = () => {
 
 const useTeam = () => {
   const getAllTeams = async () => {
-    const options = {
-      method: 'GET',
-    };
-    return await doFetch(baseUrl + 'team', options);
+    return await doFetch(baseUrl + 'team/all');
   };
   const getTeamInfoByTeamId = async (teamId, token) => {
     const options = {

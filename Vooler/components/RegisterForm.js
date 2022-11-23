@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {StyleSheet, Dimensions, View, Alert} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
@@ -18,19 +18,31 @@ const RegisterForm = ({onPress}) => {
   const {postUser, postLogin} = useAuth();
   const {getAllTeams} = useTeam();
 
+  const [teams, setTeams] = useState([]);
+
   const getTeams = async () => {
-    const teams = await getAllTeams();
-    console.log('all team', teams);
-    return teams;
+    try {
+      const array = await getAllTeams();
+      const teamArray = array.map((element) => {
+        return {label: element.team_name, value: element.team_id};
+      });
+      setTeams(teamArray);
+      setTeamItem(teamArray);
+    } catch (error) {
+      console.error('get team error', error);
+    }
   };
-  // const teams = getTeams();
+
+  useEffect(() => {
+    getTeams();
+  }, []);
 
   // Picker open states
   const [openTeam, setOpenTeam] = useState(false);
   // Picker value states
   const [team, setTeam] = useState();
   // Picker items
-  const [teamItem, setTeamItem] = useState(teamArray);
+  const [teamItem, setTeamItem] = useState(teams);
 
   const {
     control,
