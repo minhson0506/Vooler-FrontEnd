@@ -12,13 +12,11 @@ import {MainContext} from '../contexts/MainContext';
 import {useAuth, useTeam} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
 
-const RegisterForm = ({onPress}) => {
+const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
   const {setIsLoggedIn, setToken, setUser} = useContext(MainContext);
   const {postUser, postLogin} = useAuth();
   const {getAllTeams} = useTeam();
-
-  const [teams, setTeams] = useState([]);
 
   const getTeams = async () => {
     try {
@@ -26,7 +24,6 @@ const RegisterForm = ({onPress}) => {
       const teamArray = array.map((element) => {
         return {label: element.team_name, value: element.team_id};
       });
-      setTeams(teamArray);
       setTeamItem(teamArray);
     } catch (error) {
       console.error('get team error', error);
@@ -42,7 +39,7 @@ const RegisterForm = ({onPress}) => {
   // Picker value states
   const [team, setTeam] = useState();
   // Picker items
-  const [teamItem, setTeamItem] = useState(teams);
+  const [teamItem, setTeamItem] = useState([]);
 
   const {
     control,
@@ -76,6 +73,7 @@ const RegisterForm = ({onPress}) => {
         console.log('login', loginData);
         if (loginData) {
           setToken(loginData.token);
+          setTeam(loginData.user.team_id);
           setIsLoggedIn(true);
         }
       } else if (userData == 403) {
@@ -141,6 +139,10 @@ const RegisterForm = ({onPress}) => {
               control={control}
               rules={{
                 required: true,
+                minLength: {
+                  value: 3,
+                  message: 'Password has to be at least 3 characters.',
+                },
               }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input

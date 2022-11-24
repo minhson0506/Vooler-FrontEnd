@@ -1,5 +1,11 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, Dimensions, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -12,7 +18,7 @@ import {generateHash} from '../utils/hash';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken} = useContext(MainContext);
+  const {setIsLoggedIn, setUser, setToken, setTeam} = useContext(MainContext);
 
   const {postLogin} = useAuth();
 
@@ -40,6 +46,7 @@ const LoginForm = ({onPress}) => {
       const userData = await postLogin(userLogin);
       if (userData) {
         setToken(userData.token);
+        setTeam(userData.user.team_id);
         setIsLoggedIn(true);
       }
     } catch (error) {
