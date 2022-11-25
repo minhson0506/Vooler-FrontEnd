@@ -13,6 +13,7 @@ import TeamRank from '../views/TeamRank';
 import Badges from '../views/Badges';
 import UserRank from '../views/UserRank';
 import {MainContext} from '../contexts/MainContext';
+import BadgesDetail from '../views/BadgeDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -83,6 +84,11 @@ const StackScreen = () => {
           <Stack.Screen
             name="Badges"
             component={Badges}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="BadgesDetail"
+            component={BadgesDetail}
             options={{headerShown: false}}
           ></Stack.Screen>
         </>
