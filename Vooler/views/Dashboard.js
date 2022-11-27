@@ -16,8 +16,11 @@ import PropTypes from 'prop-types';
 import Step from './Step';
 import Graph from './Graph';
 import {Icon} from '@rneui/base';
+import {MainContext} from '../contexts/MainContext';
 
 const Dashboard = ({navigation}) => {
+  const {user} = useContext(MainContext);
+
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
@@ -26,7 +29,7 @@ const Dashboard = ({navigation}) => {
         <AppBarIcon></AppBarIcon>
         <View style={styles.container}>
           <View style={styles.textView}>
-            <Text style={styleFont.Title}>Good morning, Laura</Text>
+            <Text style={styleFont.Title}>Good morning, {user}</Text>
             <Text style={styles.quote}>
               “The longer I live, the more beautiful life becomes.” - Frank
               Lloyd Wright

@@ -1,14 +1,27 @@
-import React, {useState} from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
+import {MainContext} from '../contexts/MainContext';
+import {useAuth} from '../hooks/ApiHooks';
+import {generateHash} from '../utils/hash';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
+  const {setIsLoggedIn, setUser, setToken, setTeam} = useContext(MainContext);
+
+  const {postLogin} = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -20,12 +33,32 @@ const LoginForm = ({onPress}) => {
     },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = async (data) => {
+    setUser(data.username);
+    console.log('data before hash', data);
+    const hashedData = await generateHash(data.username, data.password);
+    console.log('hashedData', hashedData);
+    const userLogin = {
+      userId: hashedData.userId,
+      password: hashedData.password,
+    };
+    try {
+      const userData = await postLogin(userLogin);
+      if (userData) {
+        setToken(userData.token);
+        setTeam(userData.user.team_id);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      Alert.alert('Login failed!', 'Wrong username or password!');
+      console.error(error);
+    }
+  };
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <View style={{height: '100%', justifyContent: 'space-evenly'}}>
+      <View style={{height: '100%', justifyContent: 'center'}}>
         <View style={styles.card}>
           <View>
             <Text style={[fontStyle.Title, styles.text]}>Enter nickname</Text>
@@ -84,24 +117,46 @@ const LoginForm = ({onPress}) => {
             {errors.password && <Text>This is required.</Text>}
           </View>
         </View>
-        <Button
-          title="SIGN IN"
-          icon={{
-            name: 'check-circle',
-            type: 'font-awesome',
-            size: 25,
-            color: 'black',
+        <View
+          style={{
+            justifyContent: 'flex-start',
+            marginTop: 30,
           }}
-          iconContainerStyle={{marginRight: 10}}
-          titleStyle={fontStyle.Button}
-          buttonStyle={styles.button}
-          containerStyle={{
-            width: 200,
-            height: 68,
-            alignSelf: 'center',
-          }}
-          onPress={onPress}
-        />
+        >
+          <Button
+            title="SIGN IN"
+            icon={{
+              name: 'check-circle',
+              type: 'font-awesome',
+              size: 25,
+              color: 'black',
+            }}
+            iconContainerStyle={{marginRight: 10}}
+            titleStyle={fontStyle.Button}
+            buttonStyle={styles.button}
+            containerStyle={{
+              width: 200,
+              height: 68,
+              alignSelf: 'center',
+            }}
+            onPress={handleSubmit(onSubmit)}
+          />
+          <TouchableOpacity
+            onPress={onPress}
+            style={{flexDirection: 'row', justifyContent: 'center'}}
+          >
+            <Text
+              style={{
+                fontFamily: 'Nunito-Medium',
+                fontSize: 20,
+                marginEnd: 10,
+              }}
+            >
+              New to Vooler?
+            </Text>
+            <Text style={[fontStyle.Text]}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
 };

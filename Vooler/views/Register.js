@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
+  Text,
 } from 'react-native';
 
 const Register = ({navigation}) => {
   const onPress = () => {
-    navigation.navigate('Login');
+    navigation.navigate('Main');
   };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>

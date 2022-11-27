@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
-import {moominArray} from '../utils/data';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 
-const CardView = () => {
-  const [items, setItems] = useState(moominArray);
+const CardView = ({array}) => {
+  const [items, setItems] = useState(array);
 
   const onClick = (id) => {
     const newImages = [...items];
@@ -31,7 +30,12 @@ const CardView = () => {
           >
             {item.state ? (
               <Image
-                style={{width: '100%', height: '100%', opacity: 0.2}}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.2,
+                  borderRadius: 15,
+                }}
                 source={item.image}
               ></Image>
             ) : (

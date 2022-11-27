@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet, Dimensions, View, Alert} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -7,9 +7,39 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PropTypes from 'prop-types';
+import {MainContext} from '../contexts/MainContext';
+import {useTeam, useUser} from '../hooks/ApiHooks';
+import {generateHash} from '../utils/hash';
 
-const EditForm = ({onPress}) => {
+const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
+  const {setIsLoggedIn, setToken, setUser, user, team} =
+    useContext(MainContext);
+  const {putUser} = useUser();
+  const {getAllTeams} = useTeam();
+
+  const getTeams = async () => {
+    try {
+      const array = await getAllTeams();
+      const teamArray = array.map((element) => {
+        return {label: element.team_name, value: element.team_id};
+      });
+      setTeamItem(teamArray);
+    } catch (error) {
+      console.error('get team error', error);
+    }
+  };
+
+  useEffect(() => {
+    getTeams();
+  }, []);
+
+  // Picker open states
+  const [openTeam, setOpenTeam] = useState(false);
+  // Picker value states
+  const [teamValue, setTeamValue] = useState(team);
+  // Picker items
+  const [teamItem, setTeamItem] = useState([]);
 
   const {
     control,
@@ -17,22 +47,46 @@ const EditForm = ({onPress}) => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      username: '',
+      username: user,
       password: '',
     },
   });
 
-  // Picker open states
-  const [openTeam, setOpenTeam] = useState(false);
-  // Picker value states
-  const [team, setTeam] = useState('Hoitokoti 3');
-  // Picker items
-  const [teamItem, setTeamItem] = useState([
-    {label: 'Hoitokoti 1', value: 'Hoitokoti1'},
-    {label: 'Hoitokoti 2', value: 'Hoitokoti2'},
-    {label: 'Hoitokoti 3', value: 'Hoitokoti3'},
-  ]);
-  const onSubmit = () => {};
+  const onSubmit = async (data) => {
+    setUser(data.username);
+    const hashedData = await generateHash(data.username, data.password);
+    try {
+      const user = {
+        userId: hashedData.userId,
+        password: hashedData.password,
+        teamId: teamValue,
+      };
+      const userData = await putUser(user);
+      if (userData == 201) {
+        Alert.alert('Success', 'User created successfully!');
+        //auto login for user after register
+        const userLogin = {
+          userId: hashedData.userId,
+          password: hashedData.password,
+        };
+        const loginData = await postLogin(userLogin);
+        console.log('login', loginData);
+        if (loginData) {
+          setToken(loginData.token);
+          setIsLoggedIn(true);
+        }
+      } else if (userData == 403) {
+        Alert.alert('Oops!', 'Username already taken!');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Register failed!',
+        'Please check your nickname or password!'
+      );
+      console.error(error);
+    }
+  };
+
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
@@ -40,7 +94,7 @@ const EditForm = ({onPress}) => {
       <View style={{height: '100%', justifyContent: 'space-evenly'}}>
         <View style={styles.card}>
           <View>
-            <Text style={[fontStyle.Title, styles.text]}>Update nickname</Text>
+            <Text style={[fontStyle.Title, styles.text]}>Change nickname</Text>
             <Controller
               control={control}
               rules={{
@@ -62,13 +116,13 @@ const EditForm = ({onPress}) => {
             {errors.username && <Text>This is required.</Text>}
           </View>
           <View style={{zIndex: 2}}>
-            <Text style={[fontStyle.Title, styles.text]}>Update team</Text>
+            <Text style={[fontStyle.Title, styles.text]}>Change team</Text>
             <DropDownPicker
               open={openTeam}
-              value={team}
+              value={teamValue}
               items={teamItem}
               setOpen={setOpenTeam}
-              setValue={setTeam}
+              setValue={setTeamValue}
               setItems={setTeamItem}
               placeholder="Choose"
               style={styles.pickerContainer}
@@ -79,7 +133,7 @@ const EditForm = ({onPress}) => {
             />
           </View>
           <View style={{zIndex: 1}}>
-            <Text style={[fontStyle.Title, styles.text]}>Update password</Text>
+            <Text style={[fontStyle.Title, styles.text]}>Change password</Text>
             <Controller
               control={control}
               rules={{
@@ -128,7 +182,7 @@ const EditForm = ({onPress}) => {
             height: 68,
             alignSelf: 'center',
           }}
-          onPress={onPress}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
     );
