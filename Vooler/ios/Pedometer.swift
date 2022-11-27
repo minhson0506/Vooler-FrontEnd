@@ -16,29 +16,29 @@ class Pedometer: NSObject {
   
   private var steps: Int?
   
-//  private var isPedometerAvailable: Bool {
-//             return CMPedometer.isPedometerEventTrackingAvailable() && CMPedometer.isDistanceAvailable() && CMPedometer.isStepCountingAvailable()
-//         }
+  private var isPedometerAvailable: Bool {
+             return CMPedometer.isPedometerEventTrackingAvailable() && CMPedometer.isDistanceAvailable() && CMPedometer.isStepCountingAvailable()
+         }
   
-//  @objc
-//  func initializePedometer () {
-//    if isPedometerAvailable {
-//      guard let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())
-//      else {return}
-//      pedometer.queryPedometerData(from: startDate, to: Date()){
-//        (data, error) in
-//        guard let data = data, error == nil else {return}
-//        self.steps = data.numberOfSteps.intValue
-//      }
-//    }
-//  }
-//  
+  @objc
+  func initializePedometer () {
+    if isPedometerAvailable {
+      guard let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())
+      else {return}
+      pedometer.queryPedometerData(from: startDate, to: Date()){
+        (data, error) in
+        guard let data = data, error == nil else {return}
+        self.steps = data.numberOfSteps.intValue
+      }
+    }
+  }
+  
   
   private var count = 0;
   @objc
   func test(_ callback: RCTResponseSenderBlock){
     count+=1;
-//    print(count);
+    initializePedometer();
     callback([count])
   }
   
