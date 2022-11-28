@@ -11,6 +11,7 @@ import {teamArray} from '../utils/data';
 import {MainContext} from '../contexts/MainContext';
 import {useAuth, useTeam} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);

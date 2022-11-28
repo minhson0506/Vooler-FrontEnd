@@ -83,12 +83,12 @@ const useUser = () => {
     return await doFetch(baseUrl + 'user/records', options);
   };
 
-  const getUserRecordwithDate = async (date, token) => {
+  const getUserRecordwithDate = async (endDate, token) => {
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'user/records' + date, options);
+    return await doFetch(baseUrl + 'user/records?endDate=' + endDate, options);
   };
 
   return {

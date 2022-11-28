@@ -1,4 +1,4 @@
-import {useTeam} from '../hooks/ApiHooks';
+import {useTeam, useUser} from '../hooks/ApiHooks';
 import {nameArray} from '../utils/data';
 
 const {getTeamRecordByDate, getAllTeamRecords} = useTeam();

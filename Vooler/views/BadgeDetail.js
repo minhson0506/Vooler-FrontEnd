@@ -57,7 +57,7 @@ const BadgesDetail = ({route, navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
         <Text style={[fontStyle.Title, {marginStart: 20, marginTop: 10}]}>
-          Level {id}: {name}
+          Level {id}: {name.toString()}
         </Text>
         <CardView array={array}></CardView>
       </View>
