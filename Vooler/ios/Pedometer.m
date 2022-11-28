@@ -7,11 +7,12 @@
 
 #import <Foundation/Foundation.h>
 #import "React/RCTBridgeModule.h"
+#import "React/RCTEventEmitter.h"
 
-@interface RCT_EXTERN_MODULE(Pedometer, NSObject);
+@interface RCT_EXTERN_MODULE(Pedometer, RCTEventEmitter);
 
 RCT_EXTERN_METHOD(test:(RCTResponseSenderBlock)callback)
-//RCT_EXTERN_METHOD(initializePedometer)
+RCT_EXTERN_METHOD(getSteps:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 
 @end
 

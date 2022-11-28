@@ -11,6 +11,11 @@ import CoreMotion
 @objc(Pedometer)
 class Pedometer: NSObject {
   
+  override init() {
+    super.init();
+    initializePedometer();
+  }
+  
   private let activityManager = CMMotionActivityManager()
   private let pedometer: CMPedometer = CMPedometer()
   
@@ -20,38 +25,48 @@ class Pedometer: NSObject {
              return CMPedometer.isPedometerEventTrackingAvailable() && CMPedometer.isDistanceAvailable() && CMPedometer.isStepCountingAvailable()
          }
   
-  @objc
-  func initializePedometer () {
+  private func initializePedometer () {
     if isPedometerAvailable {
-      guard let startDate = Calendar.current.date(byAdding: .day, value: -7, to: Date())
+      guard let startDate = Calendar.current.date(byAdding: .hour, value: -1, to: Date())
       else {return}
       pedometer.queryPedometerData(from: startDate, to: Date()){
         (data, error) in
         guard let data = data, error == nil else {return}
         self.steps = data.numberOfSteps.intValue
+        print("steps in ios \(self.steps!)");
       }
     }
   }
-  
   
   private var count = 0;
   @objc
   func test(_ callback: RCTResponseSenderBlock){
     count+=1;
-    initializePedometer();
     callback([count])
   }
   
   @objc
-  static func requiresMainQueueSetup() -> Bool {
-    return true;
+  func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
+    if (self.steps == nil){
+      let error = NSError(domain: "", code: 200, userInfo: nil);
+      reject("ERROR_STEPCOUNT", "cannot get step count", error);
+    }
+    else {
+      resolve("step count is \(String(describing: self.steps))");
+    }
   }
   
   @objc
-  func constantToExport() -> [AnyHashable: Any]!{
-    return ["stepCount": steps!]
+  static func requiresMainQueueSetup() -> Bool {
+    return false;
   }
   
   
+  @objc
+  func constantToExport() -> [String: Any]!{
+    return ["stepCount": self.steps!]
+  }
+  
+
 }
 
