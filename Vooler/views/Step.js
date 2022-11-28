@@ -1,4 +1,4 @@
-import React, {useContext, useState, Component} from 'react';
+import React, {useContext, useState, Component, useEffect} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
@@ -7,8 +7,28 @@ import {ECharts} from 'react-native-echarts-wrapper';
 import Graph from './Graph';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
+import { NativeModules} from 'react-native';
 
 const Step = ({navigation}) => {
+  const {TaskModule} = NativeModules;
+  const [steps, setSteps] = useState("100");
+  const [second, setSecond] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (second == 2000) {
+        setSecond(0);
+      } else {
+        setSecond(second + 1)
+      }
+      TaskModule.getStep
+      console.log('step in android: ', TaskModule.getStep);
+      console.log('step in Vs: ', steps);
+    }, 500);
+    return () => clearInterval(interval)
+  }, []);
+
+
   const onPress = () => {
     navigation.goBack();
   };
@@ -25,7 +45,7 @@ const Step = ({navigation}) => {
             setDate(day.format('DD-MM-YYYY'));
             setWeekday(weekday);
             console.log(day.format('DD-MM-YYYY'));
-            console.log(weekdays);
+            //console.log(weekdays);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
@@ -38,7 +58,7 @@ const Step = ({navigation}) => {
               size={40}
               color={colorSet.black}
             ></Icon>
-            <Text style={styleFont.Headline}>500</Text>
+            <Text style={styleFont.Headline}>{steps}</Text>
             <Text style={{fontFamily: 'Nunito-SemiBold', fontSize: 18}}>
               STEPS
             </Text>
