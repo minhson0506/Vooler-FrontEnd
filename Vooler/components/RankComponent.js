@@ -15,7 +15,7 @@ import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
 
-const RankComp = ({step1, step2, step3}) => {
+const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
   const styleFont = useStyles();
   const [state, setState] = useState(100);
 
@@ -34,7 +34,7 @@ const RankComp = ({step1, step2, step3}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old1.png')}
           ></Image>
-          <Text style={styles.text}>Koti 2</Text>
+          <Text style={styles.text}>{secondTeam[1]}</Text>
           <View
             style={[
               styles.rankView,
@@ -46,7 +46,7 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>2</Text>
           </View>
-          <Text style={styleFont.Title}>{step2}</Text>
+          <Text style={styleFont.Title}>{secondTeam[2]}</Text>
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
@@ -54,7 +54,7 @@ const RankComp = ({step1, step2, step3}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old2.png')}
           ></Image>
-          <Text style={styles.text}>Koti 3</Text>
+          <Text style={styles.text}>{firstTeam[1]}</Text>
           <View
             style={[
               styles.rankView,
@@ -63,7 +63,7 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>1</Text>
           </View>
-          <Text style={styleFont.Title}>{step1}</Text>
+          <Text style={styleFont.Title}>{firstTeam[2]}</Text>
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
@@ -71,7 +71,7 @@ const RankComp = ({step1, step2, step3}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old3.png')}
           ></Image>
-          <Text style={styles.text}>Koti 1</Text>
+          <Text style={styles.text}>{thirdTeam[1]}</Text>
           <View
             style={[
               styles.rankView,
@@ -80,7 +80,7 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>3</Text>
           </View>
-          <Text style={styleFont.Title}>{step3}</Text>
+          <Text style={styleFont.Title}>{thirdTeam[2]}</Text>
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
       </View>

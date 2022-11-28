@@ -14,7 +14,9 @@ import {generateHash} from '../utils/hash';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser} = useContext(MainContext);
+  const {setIsLoggedIn, setToken, setUser, setUid, token} =
+    useContext(MainContext);
+  const {getUserByToken} = useUser();
   const {postUser, postLogin} = useAuth();
   const {getAllTeams} = useTeam();
 
@@ -62,7 +64,7 @@ const RegisterForm = () => {
         teamId: team,
       };
       const userData = await postUser(user);
-      if (userData == 201) {
+      if (userData) {
         Alert.alert('Success', 'User created successfully!');
         //auto login for user after register
         const userLogin = {
@@ -71,20 +73,20 @@ const RegisterForm = () => {
         };
         const loginData = await postLogin(userLogin);
         console.log('login', loginData);
+
         if (loginData) {
           setToken(loginData.token);
+          const response = await getUserByToken(loginData.token);
+          if (response) {
+            setUid(response.uid);
+          }
           setTeam(loginData.user.team_id);
           setIsLoggedIn(true);
         }
-      } else if (userData == 403) {
-        Alert.alert('Oops!', 'Username already taken!');
       }
     } catch (error) {
-      Alert.alert(
-        'Register failed!',
-        'Please check your nickname or password!'
-      );
-      console.error(error);
+      Alert.alert('Register failed!', 'Username is taken!');
+      console.log(error);
     }
   };
 

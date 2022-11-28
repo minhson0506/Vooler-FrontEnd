@@ -16,7 +16,6 @@ const doFetch = async (url, options = {}) => {
       throw new Error(message || response.statusText);
     }
   } catch (err) {
-    console.log('error status code', err.status);
     throw new Error(err.message);
   }
 };
@@ -37,22 +36,7 @@ const useAuth = () => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
     };
-    console.log('body', options.body);
-    try {
-      const response = await fetch(baseUrl + 'auth/register', options);
-      console.log('response', JSON.stringify(response));
-      if (response.status != 400) {
-        return response.status;
-      } else {
-        const message = response.error
-          ? `${response.message}: ${response.error}`
-          : response.message;
-
-        throw new Error(message || response.statusText);
-      }
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    return await doFetch(baseUrl + 'auth/register', options);
   };
 
   const getSalt = async () => {
@@ -68,15 +52,15 @@ const useUser = () => {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'user', options);
+    return await doFetch(baseUrl + 'user/all', options);
   };
 
-  const getUserById = async (userId, token) => {
+  const getUserByToken = async (token) => {
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'user/' + userId, options);
+    return await doFetch(baseUrl + 'user/info', options);
   };
 
   const putUser = async (userId, data, token) => {
@@ -91,28 +75,28 @@ const useUser = () => {
     return await doFetch(baseUrl + 'user' + userId, options);
   };
 
-  const getAllRecordsByUserId = async (userId, token) => {
+  const getAllRecordsByUser = async (token) => {
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'user/record' + userId, options);
+    return await doFetch(baseUrl + 'user/records', options);
   };
 
-  const getUserRecord = async (userId, startDate, token) => {
+  const getUserRecordwithDate = async (date, token) => {
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'user/record' + userId + startDate, options);
+    return await doFetch(baseUrl + 'user/records' + date, options);
   };
 
   return {
     getAllUsers,
     putUser,
-    getUserById,
-    getAllRecordsByUserId,
-    getUserRecord,
+    getUserByToken,
+    getAllRecordsByUser,
+    getUserRecordwithDate,
   };
 };
 
@@ -128,15 +112,31 @@ const useTeam = () => {
     return await doFetch(baseUrl + 'team' + teamId, options);
   };
 
-  const getTeamRecordByDate = async (teamId, startDate, token) => {
+  const getTeamRecordByDate = async (teamId, endDate, token) => {
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
     };
-    return await doFetch(baseUrl + 'team' + teamId + startDate, options);
+    return await doFetch(
+      baseUrl + 'team?endDate=' + endDate + '&teamId=' + teamId,
+      options
+    );
   };
 
-  return {getTeamInfoByTeamId, getTeamRecordByDate, getAllTeams};
+  const getAllTeamRecords = async (endDate, token) => {
+    const options = {
+      method: 'GET',
+      headers: {Authorization: `Bearer ${token}`},
+    };
+    return await doFetch(baseUrl + 'team?endDate=' + endDate, options);
+  };
+
+  return {
+    getTeamInfoByTeamId,
+    getTeamRecordByDate,
+    getAllTeams,
+    getAllTeamRecords,
+  };
 };
 
 const useRecord = () => {

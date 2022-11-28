@@ -15,11 +15,13 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useAuth} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import {useUser} from '../hooks/ApiHooks';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken, setTeam} = useContext(MainContext);
-
+  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, token} =
+    useContext(MainContext);
+  const {getUserByToken} = useUser();
   const {postLogin} = useAuth();
 
   const {
@@ -44,14 +46,19 @@ const LoginForm = ({onPress}) => {
     };
     try {
       const userData = await postLogin(userLogin);
+
       if (userData) {
         setToken(userData.token);
+        const response = await getUserByToken(userData.token);
+        if (response) {
+          setUid(response.uid);
+        }
         setTeam(userData.user.team_id);
         setIsLoggedIn(true);
       }
     } catch (error) {
       Alert.alert('Login failed!', 'Wrong username or password!');
-      console.error(error);
+      console.log(error);
     }
   };
   const fontStyle = useStyles();

@@ -1,4 +1,4 @@
-import React, {useContext, useState, Component} from 'react';
+import React, {useContext, useState, useEffect, Component} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
@@ -7,13 +7,42 @@ import {ECharts} from 'react-native-echarts-wrapper';
 import Graph from './Graph';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
+import {useUser} from '../hooks/ApiHooks';
+import {MainContext} from '../contexts/MainContext';
 
 const Step = ({navigation}) => {
   const onPress = () => {
     navigation.goBack();
   };
+  const {token} = useContext(MainContext);
+  const {getAllRecordsByUser} = useUser();
   const [date, setDate] = useState('No data');
-  const [weekday, setWeekday] = useState(0);
+  const [step, setStep] = useState(0);
+
+  const fetchStep = async (day) => {
+    const userData = await getAllRecordsByUser(token);
+    if (day == 'today') {
+      setStep(
+        userData.records[userData.records.length - 1].step_count_for_date
+      );
+    } else {
+      const array = userData.records;
+      for (const element in array) {
+        if (array[element].record_date == day) {
+          if (array[element].step_count_for_date == null) {
+            setStep(0);
+          } else {
+            setStep(array[element].step_count_for_date);
+          }
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchStep('today');
+  }, []);
+
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
@@ -21,11 +50,9 @@ const Step = ({navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Step'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
-          onDayPress={(day, weekdays) => {
-            setDate(day.format('DD-MM-YYYY'));
-            setWeekday(weekday);
-            console.log(day.format('DD-MM-YYYY'));
-            console.log(weekdays);
+          onDayPress={(day) => {
+            setDate(day.format('YYYY-MM-DD'));
+            fetchStep(day.format('YYYY-MM-DD'));
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
@@ -38,7 +65,7 @@ const Step = ({navigation}) => {
               size={40}
               color={colorSet.black}
             ></Icon>
-            <Text style={styleFont.Headline}>500</Text>
+            <Text style={styleFont.Headline}>{step ? step : 0}</Text>
             <Text style={{fontFamily: 'Nunito-SemiBold', fontSize: 18}}>
               STEPS
             </Text>

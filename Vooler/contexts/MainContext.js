@@ -10,6 +10,11 @@ const MainProvider = (props) => {
   const [token, setToken] = useState('fetching...');
   const [salt, setSalt] = useState();
   const [team, setTeam] = useState();
+  const [loading, setLoading] = useState(false);
+  const [uid, setUid] = useState();
+  const [rank, setRank] = useState();
+  const [teamData, setTeamData] = useState([]);
+  const [teamRank, setTeamRank] = useState([]);
 
   return (
     <MainContext.Provider
@@ -26,6 +31,16 @@ const MainProvider = (props) => {
         setSalt,
         team,
         setTeam,
+        loading,
+        setLoading,
+        uid,
+        setUid,
+        rank,
+        setRank,
+        teamData,
+        setTeamData,
+        teamRank,
+        setTeamRank,
       }}
     >
       {props.children}
