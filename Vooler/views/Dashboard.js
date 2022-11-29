@@ -1,6 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {
   Dimensions,
+  NativeModules,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,6 +23,7 @@ import {useUser} from '../hooks/ApiHooks';
 import {getDate, getTeamData, fetchStep} from '../utils/getData';
 
 const Dashboard = ({navigation}) => {
+  // const {TaskModule} = NativeModules;
   const {user, loading, setLoading, token, rank, step, weekStep} =
     useContext(MainContext);
   const context = useContext(MainContext);
@@ -43,6 +45,7 @@ const Dashboard = ({navigation}) => {
   }, [loading]);
 
   useEffect(() => {
+    // TaskModule.getToken(token);
     getTeamData(getDate(), context);
   }, []);
 

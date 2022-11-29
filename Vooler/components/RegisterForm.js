@@ -15,7 +15,7 @@ import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser, setUid, token} =
+  const {setIsLoggedIn, setToken, setUser, setUid, token, setTeam} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postUser, postLogin} = useAuth();
@@ -40,7 +40,7 @@ const RegisterForm = () => {
   // Picker open states
   const [openTeam, setOpenTeam] = useState(false);
   // Picker value states
-  const [team, setTeam] = useState();
+  const [teamValue, setTeamValue] = useState();
   // Picker items
   const [teamItem, setTeamItem] = useState([]);
 
@@ -62,7 +62,7 @@ const RegisterForm = () => {
       const user = {
         userId: hashedData.userId,
         password: hashedData.password,
-        teamId: team,
+        teamId: teamValue,
       };
       const userData = await postUser(user);
       if (userData) {
@@ -123,10 +123,10 @@ const RegisterForm = () => {
             <Text style={[fontStyle.Title, styles.text]}>Join your team</Text>
             <DropDownPicker
               open={openTeam}
-              value={team}
+              value={teamValue}
               items={teamItem}
               setOpen={setOpenTeam}
-              setValue={setTeam}
+              setValue={setTeamValue}
               setItems={setTeamItem}
               placeholder="Choose"
               style={styles.pickerContainer}

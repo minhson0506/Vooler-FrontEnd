@@ -101,7 +101,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
             <Text style={styles.rank}>3</Text>
           </View>
           {thirdTeam ? (
-            <Text style={styles.text}>{thirdTeam[1]}</Text>
+            <Text style={styles.text}>{thirdTeam[2]}</Text>
           ) : (
             <Text style={styles.noData}>No data</Text>
           )}

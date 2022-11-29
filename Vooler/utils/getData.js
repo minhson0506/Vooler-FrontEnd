@@ -10,19 +10,21 @@ const getTeamData = async (day, context) => {
     const response = await getTeamRecordByDate(team, day, token);
 
     var userData = [];
-    for (const element in response.team_members) {
-      if (uid != response.team_members[element].uid) {
-        userData.push({
-          uid: response.team_members[element].uid,
-          name: nameArray[response.team_members[element].uid],
-          step: response.team_members[element].total_steps_accumulated,
-        });
-      } else {
-        userData.push({
-          uid: response.team_members[element].uid,
-          name: user,
-          step: response.team_members[element].total_steps_accumulated,
-        });
+    for (const index in response.team_members) {
+      if (response.team_members[index].total_steps_accumulated != null) {
+        if (uid != response.team_members[index].uid) {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: nameArray[response.team_members[index].uid],
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        } else {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: user,
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        }
       }
     }
     const sortedArray = userData.sort((a, b) => b.step - a.step);
@@ -46,7 +48,9 @@ const getAllTeams = async (day, context) => {
   const {token, setTeamRank} = context;
   try {
     const response = await getAllTeamRecords(day, token);
-    const teamData = response.teams;
+    const teamData = response.teams.filter((element) => {
+      return element.total_team_steps_accumulated != null;
+    });
     const sortedData = teamData.sort(
       (a, b) => b.total_team_steps_accumulated - a.total_team_steps_accumulated
     );

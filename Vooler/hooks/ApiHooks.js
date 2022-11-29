@@ -63,7 +63,7 @@ const useUser = () => {
     return await doFetch(baseUrl + 'user/info', options);
   };
 
-  const putUser = async (userId, data, token) => {
+  const putUser = async (data, token) => {
     const options = {
       method: 'PUT',
       headers: {
@@ -72,7 +72,7 @@ const useUser = () => {
       },
       body: JSON.stringify(data),
     };
-    return await doFetch(baseUrl + 'user' + userId, options);
+    return await doFetch(baseUrl + 'user', options);
   };
 
   const getAllRecordsByUser = async (token) => {

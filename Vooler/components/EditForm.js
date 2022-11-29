@@ -13,8 +13,7 @@ import {generateHash} from '../utils/hash';
 
 const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser, user, team} =
-    useContext(MainContext);
+  const {setTeam, setUser, user, team, token} = useContext(MainContext);
   const {putUser} = useUser();
   const {getAllTeams} = useTeam();
 
@@ -54,36 +53,33 @@ const EditForm = () => {
 
   const onSubmit = async (data) => {
     setUser(data.username);
-    const hashedData = await generateHash(data.username, data.password);
     try {
-      const user = {
-        userId: hashedData.userId,
-        password: hashedData.password,
-        teamId: teamValue,
-      };
-      const userData = await putUser(user);
-      if (userData == 201) {
-        Alert.alert('Success', 'User created successfully!');
-        //auto login for user after register
-        const userLogin = {
+      let hashedData = '';
+      let user = {};
+      if (data.password) {
+        hashedData = await generateHash(data.username, data.password);
+        user = {
           userId: hashedData.userId,
           password: hashedData.password,
+          teamId: teamValue,
         };
-        const loginData = await postLogin(userLogin);
-        console.log('login', loginData);
-        if (loginData) {
-          setToken(loginData.token);
-          setIsLoggedIn(true);
-        }
-      } else if (userData == 403) {
-        Alert.alert('Oops!', 'Username already taken!');
+      } else {
+        hashedData = await generateHash(data.username, '');
+        user = {
+          userId: hashedData.userId,
+          password: '',
+          teamId: teamValue,
+        };
+      }
+      const userData = await putUser(user, token);
+      console.log('put data', userData);
+      if (userData) {
+        Alert.alert('Success', 'User modified!');
+        setTeam(teamValue);
       }
     } catch (error) {
-      Alert.alert(
-        'Register failed!',
-        'Please check your nickname or password!'
-      );
-      console.error(error);
+      Alert.alert('Modify failed!', 'Username is taken!');
+      console.log(error);
     }
   };
 
@@ -136,9 +132,6 @@ const EditForm = () => {
             <Text style={[fontStyle.Title, styles.text]}>Change password</Text>
             <Controller
               control={control}
-              rules={{
-                required: true,
-              }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
                   onBlur={onBlur}
@@ -163,7 +156,6 @@ const EditForm = () => {
               )}
               name="password"
             />
-            {errors.password && <Text>This is required.</Text>}
           </View>
         </View>
         <Button
