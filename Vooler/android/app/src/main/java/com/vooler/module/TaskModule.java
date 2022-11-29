@@ -18,7 +18,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
-public class TaskModule extends ReactContextBaseJavaModule implements SensorEventListener {
+public class TaskModule extends ReactContextBaseJavaModule {
   public String TAG = "Task manager from android module";
   private SensorManager sensorManager;
   private Sensor stepSensor;
@@ -27,24 +27,6 @@ public class TaskModule extends ReactContextBaseJavaModule implements SensorEven
 
   public TaskModule(ReactApplicationContext context) {
     super(context);
-    sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-    for (Sensor sensor : sensorManager.getSensorList(Sensor.TYPE_ALL)) {
-      Log.d(TAG, "TaskModule: sensor is " + sensor.getName());
-    }
-    stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-  }
-
-  @Override
-  public void onSensorChanged(SensorEvent sensorEvent) {
-    if (sensorEvent.sensor == stepSensor) {
-      steps = (int) sensorEvent.values[0];
-      Log.d(TAG, "onSensorChanged: step " + sensorEvent.values[0]);
-    } else Log.d(TAG, "onSensorChanged: another sensor");
-  }
-
-  @Override
-  public void onAccuracyChanged(Sensor sensor, int i) {
-    Log.d(TAG, "onAccuracyChanged: " + sensor + " :" + i);
   }
 
   @NonNull
@@ -60,9 +42,8 @@ public class TaskModule extends ReactContextBaseJavaModule implements SensorEven
   }
 
   @ReactMethod
-  public Boolean getSteps() {
-    Log.d(TAG, "getSteps: " + steps);
-    if (steps < 300) return false;
-    return true;
+  public void getToken(String token) {
+    MainActivity.token = token;
+    Log.d(TAG, "getToken: " + MainActivity.token);
   }
 }
