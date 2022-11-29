@@ -58,8 +58,6 @@ const Badges = ({navigation}) => {
     } else if (stepDay < cityArray[5].name) {
       setBadgeDay(5);
     }
-    console.log('badge', badgeDay);
-    levelArray[0].completed = badgeDay;
   };
 
   useEffect(() => {

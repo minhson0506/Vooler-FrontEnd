@@ -55,11 +55,18 @@ const TeamRank = ({navigation}) => {
                 secondTeam={context.teamRank[1]}
                 thirdTeam={context.teamRank[2]}
               ></RankComp>
-              <Divider width={2} style={{marginBottom: 20}}></Divider>
-              <RankTable
-                state={'Team'}
-                source={context.teamRank.slice(2)}
-              ></RankTable>
+
+              {context.teamRank.length > 2 ? (
+                <>
+                  <Divider width={2} style={{marginBottom: 20}}></Divider>
+                  <RankTable
+                    state={'Team'}
+                    source={context.teamRank.slice(2)}
+                  ></RankTable>
+                </>
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <Text>No data</Text>

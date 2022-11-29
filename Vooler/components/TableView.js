@@ -7,21 +7,18 @@ import {MainContext} from '../contexts/MainContext';
 const RankTable = ({state, source}) => {
   const {user} = useContext(MainContext);
   const header = ['Rank', state, 'Step'];
-
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <ScrollView style={{flex: 1}}>
-        <Table borderStyle={{borderWidth: 0}} style={styles.container}>
-          <Row data={header} textStyle={[styles.textHeader, fontStyle.Title]} />
-          {state == 'Team' ? (
-            <Rows data={source} textStyle={styles.text} style={styles.row} />
-          ) : (
-            <Rows data={source} textStyle={styles.text} style={styles.row} />
-          )}
-        </Table>
-      </ScrollView>
+      <Table borderStyle={{borderWidth: 0}} style={styles.container}>
+        <Row data={header} textStyle={styles.textHeader} />
+        {state == 'Team' ? (
+          <Rows data={source} textStyle={styles.text} style={styles.row} />
+        ) : (
+          <Rows data={source} textStyle={styles.text} style={styles.row} />
+        )}
+      </Table>
     );
 };
 
@@ -33,6 +30,9 @@ const styles = StyleSheet.create({
   textHeader: {
     textAlign: 'center',
     color: colorSet.primary,
+    fontSize: 22,
+    fontFamily: 'Nunito-Black',
+    textTransform: 'uppercase',
   },
   text: {
     textAlign: 'center',

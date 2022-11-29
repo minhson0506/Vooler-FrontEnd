@@ -39,7 +39,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-super-grid": "^4.6.1",
     "react-native-svg": "^13.6.0",
-    "react-native-table-component": "^1.2.2",
+    "react-native-table-component": "https://github.com/slice312/react-native-table-component.git",
     "react-native-web": "^0.18.10",
     "react-native-webview": "^11.24.0",
     "react-native-weekly-calendar": "^0.2.0"

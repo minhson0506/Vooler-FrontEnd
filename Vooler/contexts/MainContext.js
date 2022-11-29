@@ -9,7 +9,7 @@ const MainProvider = (props) => {
   const [user, setUser] = useState();
   const [token, setToken] = useState('fetching...');
   const [salt, setSalt] = useState();
-  const [team, setTeam] = useState();
+  const [team, setTeam] = useState(1);
   const [loading, setLoading] = useState(false);
   const [uid, setUid] = useState();
   const [rank, setRank] = useState();

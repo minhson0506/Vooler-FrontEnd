@@ -13,9 +13,8 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
-import {useAuth} from '../hooks/ApiHooks';
+import {useAuth, useRecord, useUser} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
-import {useUser} from '../hooks/ApiHooks';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
@@ -23,6 +22,7 @@ const LoginForm = ({onPress}) => {
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postLogin} = useAuth();
+  const {postRecord} = useRecord();
 
   const {
     control,
