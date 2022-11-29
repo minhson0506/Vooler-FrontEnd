@@ -2,6 +2,7 @@ import {useTeam, useUser} from '../hooks/ApiHooks';
 import {nameArray} from '../utils/data';
 
 const {getTeamRecordByDate, getAllTeamRecords} = useTeam();
+const {getUserRecordwithDate} = useUser();
 
 const getTeamData = async (day, context) => {
   const {team, token, user, uid, setRank, setTeamData} = context;
@@ -61,4 +62,11 @@ const getAllTeams = async (day, context) => {
   }
 };
 
-export {getTeamData, getAllTeams};
+const getDate = () => {
+  const date = new Date().getDate();
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+  return year + '-' + month + '-' + date;
+}
+
+export {getTeamData, getAllTeams, getDate};

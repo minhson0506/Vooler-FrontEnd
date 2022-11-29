@@ -19,7 +19,7 @@ import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
 import {quoteArray} from '../utils/data';
 import {useUser} from '../hooks/ApiHooks';
-import {getTeamData} from '../utils/getData';
+import {getDate, getTeamData} from '../utils/getData';
 
 const Dashboard = ({navigation}) => {
   const {user, loading, setLoading, token, rank} = useContext(MainContext);
@@ -47,7 +47,7 @@ const Dashboard = ({navigation}) => {
   }, [loading]);
 
   useEffect(() => {
-    getTeamData('2022-11-20', context);
+    getTeamData(getDate(), context);
   }, []);
 
   const styleFont = useStyles();

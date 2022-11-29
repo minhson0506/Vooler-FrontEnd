@@ -15,7 +15,7 @@ import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
 import RankComp from '../components/RankComponent';
-import {getAllTeams} from '../utils/getData';
+import {getAllTeams, getDate} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const TeamRank = ({navigation}) => {
@@ -27,7 +27,7 @@ const TeamRank = ({navigation}) => {
   const [date, setDate] = useState('No data');
 
   useEffect(() => {
-    getAllTeams('2022-11-20', context);
+    getAllTeams(getDate(), context);
   }, []);
 
   const styleFont = useStyles();
@@ -41,7 +41,8 @@ const TeamRank = ({navigation}) => {
         ></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={(day) => {
-            setDate(day.format('DD-MM-YYYY'));
+            //setDate(day.format('DD-MM-YYYY'));
+            context.setTeamRank([]);
             getAllTeams(day.format('YYYY-MM-DD'), context);
           }}
           themeColor={colorSet.primary}

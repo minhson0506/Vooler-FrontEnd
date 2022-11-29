@@ -1,4 +1,4 @@
-const cityArray = [
+const dailyTarget = [
   {
     id: 1,
     name: 100,

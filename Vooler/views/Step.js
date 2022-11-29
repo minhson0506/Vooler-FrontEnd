@@ -9,38 +9,66 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
+import {getDate, getUserWeekData} from '../utils/getData';
 
 const Step = ({navigation}) => {
   const onPress = () => {
     navigation.goBack();
   };
   const {token} = useContext(MainContext);
-  const {getAllRecordsByUser} = useUser();
+  const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
   const [date, setDate] = useState('No data');
   const [step, setStep] = useState(0);
+  const [graph, setGraph] = useState([]);
 
   const fetchStep = async (day) => {
-    const userData = await getAllRecordsByUser(token);
-    if (day == 'today') {
-      setStep(
-        userData.records[userData.records.length - 1].step_count_for_date
-      );
-    } else {
+    try {
+      const userData = await getAllRecordsByUser(token);
       const array = userData.records;
+      console.log('record', userData.records);
       for (const element in array) {
         if (array[element].record_date == day) {
-          if (array[element].step_count_for_date == null) {
-            setStep(0);
-          } else {
-            setStep(array[element].step_count_for_date);
-          }
+          console.log('got right day', array[element].step_count_for_date);
+          setStep(array[element].step_count_for_date);
         }
       }
+
+      const graphData = await getUserRecordwithDate(day, token);
+
+      const startDay = graphData.start_date.split('-');
+      console.log('current data before convert', graphData);
+      const current = new Date(
+        parseInt(startDay[0]),
+        parseInt(startDay[1]) - 1,
+        parseInt(startDay[2]) + 1
+      );
+      let weekArray = [current.toISOString().slice(0, 10)];
+      for (let i = 0; i <= 5; i++) {
+        weekArray.push(
+          new Date(current.setDate(current.getDate() + 1))
+            .toISOString()
+            .slice(0, 10)
+        );
+      }
+
+      console.log('week', weekArray);
+
+      let weekData = weekArray.map((element) => {
+        for (let i = 0; i < graphData.records.length; i++) {
+          if (element == graphData.records[i].record_date) {
+            return graphData.records[i].step_count_for_date;
+          }
+        }
+        return 0;
+      });
+      setGraph(weekData);
+    } catch (error) {
+      console.log('error', error);
     }
   };
 
   useEffect(() => {
-    fetchStep('today');
+    fetchStep(getDate());
   }, []);
 
   const styleFont = useStyles();
@@ -51,7 +79,8 @@ const Step = ({navigation}) => {
         <AppBarBackButton title={'Step'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={(day) => {
-            setDate(day.format('YYYY-MM-DD'));
+            setStep(0);
+            // setDate(day.format('YYYY-MM-DD'));
             fetchStep(day.format('YYYY-MM-DD'));
           }}
           themeColor={colorSet.primary}
@@ -74,7 +103,7 @@ const Step = ({navigation}) => {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}
             >
-              <Text style={[styles.text, styleFont.Text]}>Nov 20 - 26</Text>
+              <Text style={[styles.text, styleFont.Text]}>Week summary</Text>
               <View
                 style={{
                   flexDirection: 'row',
@@ -101,7 +130,7 @@ const Step = ({navigation}) => {
                 </Text>
               </View>
             </View>
-            <Graph></Graph>
+            <Graph source={graph}></Graph>
           </View>
         </View>
       </View>

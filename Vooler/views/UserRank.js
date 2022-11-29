@@ -11,7 +11,7 @@ import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import RankTable from '../components/TableView';
 import PropTypes from 'prop-types';
-import {getTeamData} from '../utils/getData';
+import {getDate, getTeamData} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const UserRank = ({navigation}) => {
@@ -22,11 +22,11 @@ const UserRank = ({navigation}) => {
     navigation.navigate('TeamRank');
   };
   const [date, setDate] = useState('No data');
-  const {teamData, token} = useContext(MainContext);
+  const {teamData, token, setTeamData} = useContext(MainContext);
   const context = useContext(MainContext);
 
   useEffect(() => {
-    getTeamData('2022-11-20', context);
+    getTeamData(getDate(), context);
   }, []);
 
   const styleFont = useStyles();
@@ -42,7 +42,8 @@ const UserRank = ({navigation}) => {
         ></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={async (day) => {
-            setDate(day.format('YYYY-MM-DD'));
+            //setDate(day.format('YYYY-MM-DD'));
+            setTeamData([]);
             getTeamData(day.format('YYYY-MM-DD'), context);
           }}
           themeColor={colorSet.primary}
