@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -12,6 +12,8 @@ import Step from '../views/Step';
 import TeamRank from '../views/TeamRank';
 import Badges from '../views/Badges';
 import UserRank from '../views/UserRank';
+import {MainContext} from '../contexts/MainContext';
+import BadgesDetail from '../views/BadgeDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -53,43 +55,57 @@ const TabScreen = () => {
 };
 
 const StackScreen = () => {
+  const {isLoggedIn} = useContext(MainContext);
+
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Main"
-        component={TabScreen}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Step"
-        component={Step}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="UserRank"
-        component={UserRank}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="TeamRank"
-        component={TeamRank}
-        options={{headerShown: false}}
-      ></Stack.Screen>
-      <Stack.Screen
-        name="Badges"
-        component={Badges}
-        options={{headerShown: false}}
-      ></Stack.Screen>
+      {isLoggedIn ? (
+        <>
+          <Stack.Screen
+            name="Main"
+            component={TabScreen}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="Step"
+            component={Step}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="UserRank"
+            component={UserRank}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="TeamRank"
+            component={TeamRank}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="Badges"
+            component={Badges}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="BadgesDetail"
+            component={BadgesDetail}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{headerShown: false}}
+          ></Stack.Screen>
+        </>
+      )}
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useContext, useState, Component} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
@@ -11,40 +11,55 @@ import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import RankTable from '../components/TableView';
 import PropTypes from 'prop-types';
-import {Icon} from '@rneui/base';
+import {getDate, getTeamData} from '../utils/getData';
+import {MainContext} from '../contexts/MainContext';
 
 const UserRank = ({navigation}) => {
+  const [date, setDate] = useState('No data');
+  const {teamData, token, setTeamData, loading, setLoading} =
+    useContext(MainContext);
+  const context = useContext(MainContext);
+
   const onPress = () => {
+    setLoading(!loading);
     navigation.goBack();
   };
-  const team = () => {
+  const teamPress = () => {
     navigation.navigate('TeamRank');
   };
-  const [date, setDate] = useState('No data');
-  const [weekday, setWeekday] = useState(0);
+
+  useEffect(() => {
+    getTeamData(getDate(), context);
+  }, []);
+
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton
-          title={'Koti 3'}
+          title={'Rank'}
           onPress={onPress}
           icon={true}
-          team={team}
+          team={teamPress}
         ></AppBarBackButton>
         <WeeklyCalendar
-          onDayPress={(day, weekdays) => {
-            setDate(day.format('DD-MM-YYYY'));
-            setWeekday(weekday);
-            console.log(day.format('DD-MM-YYYY'));
-            console.log(weekdays);
+          onDayPress={async (day) => {
+            //setDate(day.format('YYYY-MM-DD'));
+            setTeamData([]);
+            getTeamData(day.format('YYYY-MM-DD'), context);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
         />
         <View style={styles.container}>
-          <RankTable state={'User'}></RankTable>
+          {teamData.length > 0 ? (
+            <RankTable state={'User'} source={teamData}></RankTable>
+          ) : (
+            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+              Oops! No data for this day!
+            </Text>
+          )}
         </View>
       </View>
     );

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Dimensions, View} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {StyleSheet, Dimensions, View, Alert} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -7,9 +7,42 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PropTypes from 'prop-types';
+import {teamArray} from '../utils/data';
+import {MainContext} from '../contexts/MainContext';
+import {useAuth, useTeam} from '../hooks/ApiHooks';
+import {generateHash} from '../utils/hash';
+import {useUser} from '../hooks/ApiHooks';
 
-const RegisterForm = ({onPress}) => {
+const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
+  const {setIsLoggedIn, setToken, setUser, setUid, token} =
+    useContext(MainContext);
+  const {getUserByToken} = useUser();
+  const {postUser, postLogin} = useAuth();
+  const {getAllTeams} = useTeam();
+
+  const getTeams = async () => {
+    try {
+      const array = await getAllTeams();
+      const teamArray = array.map((element) => {
+        return {label: element.team_name, value: element.team_id};
+      });
+      setTeamItem(teamArray);
+    } catch (error) {
+      console.error('get team error', error);
+    }
+  };
+
+  useEffect(() => {
+    getTeams();
+  }, []);
+
+  // Picker open states
+  const [openTeam, setOpenTeam] = useState(false);
+  // Picker value states
+  const [team, setTeam] = useState();
+  // Picker items
+  const [teamItem, setTeamItem] = useState([]);
 
   const {
     control,
@@ -22,17 +55,42 @@ const RegisterForm = ({onPress}) => {
     },
   });
 
-  // Picker open states
-  const [openTeam, setOpenTeam] = useState(false);
-  // Picker value states
-  const [team, setTeam] = useState('Hoitokoti 3');
-  // Picker items
-  const [teamItem, setTeamItem] = useState([
-    {label: 'Hoitokoti 1', value: 'Hoitokoti1'},
-    {label: 'Hoitokoti 2', value: 'Hoitokoti2'},
-    {label: 'Hoitokoti 3', value: 'Hoitokoti3'},
-  ]);
-  const onSubmit = () => {};
+  const onSubmit = async (data) => {
+    setUser(data.username);
+    const hashedData = await generateHash(data.username, data.password);
+    try {
+      const user = {
+        userId: hashedData.userId,
+        password: hashedData.password,
+        teamId: team,
+      };
+      const userData = await postUser(user);
+      if (userData) {
+        Alert.alert('Success', 'User created successfully!');
+        //auto login for user after register
+        const userLogin = {
+          userId: hashedData.userId,
+          password: hashedData.password,
+        };
+        const loginData = await postLogin(userLogin);
+        console.log('login', loginData);
+
+        if (loginData) {
+          setToken(loginData.token);
+          const response = await getUserByToken(loginData.token);
+          if (response) {
+            setUid(response.uid);
+          }
+          setTeam(loginData.user.team_id);
+          setIsLoggedIn(true);
+        }
+      }
+    } catch (error) {
+      Alert.alert('Register failed!', 'Username is taken!');
+      console.log(error);
+    }
+  };
+
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
@@ -84,6 +142,10 @@ const RegisterForm = ({onPress}) => {
               control={control}
               rules={{
                 required: true,
+                minLength: {
+                  value: 3,
+                  message: 'Password has to be at least 3 characters.',
+                },
               }}
               render={({field: {onChange, onBlur, value}}) => (
                 <Input
@@ -128,7 +190,7 @@ const RegisterForm = ({onPress}) => {
             height: 68,
             alignSelf: 'center',
           }}
-          onPress={onPress}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
     );
