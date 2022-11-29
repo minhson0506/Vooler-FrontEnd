@@ -59,7 +59,7 @@ const TeamRank = ({navigation}) => {
 
               {context.teamRank.length > 2 ? (
                 <>
-                  <Divider width={2} style={{marginBottom: 20}}></Divider>
+                  <Divider width={2}></Divider>
                   <RankTable
                     state={'Team'}
                     source={context.teamRank.slice(2)}
@@ -70,7 +70,9 @@ const TeamRank = ({navigation}) => {
               )}
             </>
           ) : (
-            <Text>No data</Text>
+            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+              Oops! No data for this day!
+            </Text>
           )}
         </View>
       </View>

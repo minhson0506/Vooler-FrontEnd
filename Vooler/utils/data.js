@@ -1,4 +1,4 @@
-const dailyTarget = [
+const dayTarget = [
   {
     id: 1,
     name: 100,
@@ -43,97 +43,98 @@ const dailyTarget = [
   },
 ];
 
-const mushroomArray = [
+const rankTarget = [
   {
     id: 1,
-    name: 2000,
-    unit: 'steps/week',
-    image: require('../assets/mushroom/bolete.jpeg'),
-    state: false,
-  },
-  {
-    id: 2,
-    name: 2500,
-    unit: 'steps/week',
-    image: require('../assets/mushroom/chanterelle.jpeg'),
-    state: false,
-  },
-  {
-    id: 3,
-    name: 3000,
-    unit: 'steps/week',
-    image: require('../assets/mushroom/hoof_fungues.webp'),
-    state: false,
-  },
-  {
-    id: 4,
     name: 'Rank #6',
     unit: '',
     image: require('../assets/mushroom/porcini.jpeg'),
     state: false,
   },
   {
-    id: 5,
+    id: 2,
     name: 'Rank #5',
     unit: '',
     image: require('../assets/mushroom/suppilo.png'),
     state: false,
   },
   {
-    id: 6,
+    id: 3,
     name: 'Rank #4',
     unit: '',
     image: require('../assets/mushroom/fly_agaric.jpeg'),
-    state: false,
-  },
-];
-
-const saunaArray = [
-  {
-    id: 1,
-    name: 3500,
-    unit: 'steps/week',
-    image: require('../assets/sauna/wood_sauna.jpg'),
-    state: false,
-  },
-  {
-    id: 2,
-    name: 4000,
-    unit: 'steps/week',
-    image: require('../assets/sauna/ice_swimming.jpg'),
-    state: false,
-  },
-  {
-    id: 3,
-    name: 4500,
-    unit: 'steps/week',
-    image: require('../assets/sauna/whisk.webp'),
     state: false,
   },
   {
     id: 4,
     name: 'Rank #3',
     unit: '',
-    image: require('../assets/sauna/karhu.jpg'),
+    image: require('../assets/mushroom/bolete.jpeg'),
+
     state: false,
   },
   {
     id: 5,
     name: 'Rank #2',
     unit: '',
-    image: require('../assets/sauna/sausage.jpeg'),
+    image: require('../assets/mushroom/chanterelle.jpeg'),
     state: false,
   },
   {
     id: 6,
     name: 'Rank #1',
     unit: '',
-    image: require('../assets/sauna/wood.png'),
+    image: require('../assets/mushroom/hoof_fungues.webp'),
     state: false,
   },
 ];
 
-const berryArray = [
+const weekFirstTarget = [
+  {
+    id: 1,
+    name: 2000,
+    unit: 'steps/week',
+    image: require('../assets/sauna/karhu.jpg'),
+    state: false,
+  },
+  {
+    id: 2,
+    name: 2500,
+    unit: 'steps/week',
+    image: require('../assets/sauna/sausage.jpeg'),
+    state: false,
+  },
+  {
+    id: 3,
+    name: 3000,
+    unit: 'steps/week',
+    image: require('../assets/sauna/wood.png'),
+    state: false,
+  },
+  {
+    id: 4,
+    name: 3500,
+    unit: 'steps/week',
+    image: require('../assets/sauna/wood_sauna.jpg'),
+    state: false,
+  },
+  {
+    id: 5,
+    name: 4000,
+    unit: 'steps/week',
+    image: require('../assets/sauna/ice_swimming.jpg'),
+    state: false,
+  },
+  {
+    id: 6,
+    name: 4500,
+    unit: 'steps/week',
+    image: require('../assets/sauna/whisk.webp'),
+    state: false,
+  },
+];
+
+const weekSecondTarget = [
   {
     id: 1,
     name: 5000,
@@ -178,7 +179,7 @@ const berryArray = [
   },
 ];
 
-const pastryArray = [
+const weekThirdTarget = [
   {
     id: 1,
     name: 8000,
@@ -226,27 +227,27 @@ const pastryArray = [
 const levelArray = [
   {
     level: 1,
-    name: 'Destination',
+    name: 'Daily target',
     completed: 0,
   },
   {
     level: 2,
-    name: 'Mushroom',
+    name: 'Rank target',
     completed: 0,
   },
   {
     level: 3,
-    name: 'Sauna',
+    name: 'Weekly target 1',
     completed: 0,
   },
   {
     level: 4,
-    name: 'Berries',
+    name: 'Weekly target 2',
     completed: 0,
   },
   {
     level: 5,
-    name: 'Pastry',
+    name: 'Weekly target 3',
     completed: 0,
   },
 ];
@@ -353,11 +354,11 @@ var nameArray = [
 ];
 
 export {
-  cityArray,
-  mushroomArray,
-  saunaArray,
-  pastryArray,
-  berryArray,
+  dayTarget,
+  rankTarget,
+  weekFirstTarget,
+  weekSecondTarget,
+  weekThirdTarget,
   levelArray,
   quoteArray,
   nameArray,

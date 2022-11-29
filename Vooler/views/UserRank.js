@@ -15,15 +15,18 @@ import {getDate, getTeamData} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const UserRank = ({navigation}) => {
+  const [date, setDate] = useState('No data');
+  const {teamData, token, setTeamData, loading, setLoading} =
+    useContext(MainContext);
+  const context = useContext(MainContext);
+
   const onPress = () => {
+    setLoading(!loading);
     navigation.goBack();
   };
   const teamPress = () => {
     navigation.navigate('TeamRank');
   };
-  const [date, setDate] = useState('No data');
-  const {teamData, token, setTeamData} = useContext(MainContext);
-  const context = useContext(MainContext);
 
   useEffect(() => {
     getTeamData(getDate(), context);
@@ -53,7 +56,9 @@ const UserRank = ({navigation}) => {
           {teamData.length > 0 ? (
             <RankTable state={'User'} source={teamData}></RankTable>
           ) : (
-            <Text>No data</Text>
+            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+              Oops! No data for this day!
+            </Text>
           )}
         </View>
       </View>

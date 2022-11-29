@@ -11,57 +11,41 @@ import {
   FlatList,
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
-import {cityArray, levelArray} from '../utils/data';
+import {dayTarget, levelArray} from '../utils/data';
 import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
+import {fetchStep, getDate} from '../utils/getData';
 
 const Badges = ({navigation}) => {
+  const {token, badgeDay, setBadgeDay, step, weekStep, setLoading, loading} =
+    useContext(MainContext);
+  const context = useContext(MainContext);
+
   const onPress = () => {
+    setLoading(!loading);
     navigation.goBack();
-  };
-  const {getUserRecordwithDate} = useUser();
-  const {token, badgeDay, setBadgeDay} = useContext(MainContext);
-  const [stepDay, setStepDay] = useState();
-  const [stepWeek, setStepWeek] = useState();
-
-  const getUserData = async (day) => {
-    const response = await getUserRecordwithDate(day, token);
-    console.log('response', response);
-    if (response.records[response.records.length - 1].record_date == day) {
-      const dayData =
-        response.records[response.records.length - 1].step_count_for_date;
-      setStepDay(dayData);
-    } else {
-      setStepDay(0);
-    }
-
-    let weekData = 0;
-    for (const index in response.records) {
-      weekData = weekData + response.records[index].step_count_for_date;
-    }
-    setStepWeek(weekData);
   };
 
   const compareData = () => {
-    if (stepDay < cityArray[0].name) {
+    if (step < dayTarget[0].name) {
       setBadgeDay(0);
-    } else if (stepDay < cityArray[1].name) {
+    } else if (step < dayTarget[1].name) {
       setBadgeDay(1);
-    } else if (stepDay < cityArray[2].name) {
+    } else if (step < dayTarget[2].name) {
       setBadgeDay(2);
-    } else if (stepDay < cityArray[3].name) {
+    } else if (step < dayTarget[3].name) {
       setBadgeDay(3);
-    } else if (stepDay < cityArray[4].name) {
+    } else if (step < dayTarget[4].name) {
       setBadgeDay(4);
-    } else if (stepDay < cityArray[5].name) {
+    } else if (step < dayTarget[5].name) {
       setBadgeDay(5);
     }
   };
 
   useEffect(() => {
-    getUserData('2022-11-20');
+    fetchStep(getDate(), context);
     compareData();
   }, []);
 

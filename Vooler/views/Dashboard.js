@@ -19,14 +19,15 @@ import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
 import {quoteArray} from '../utils/data';
 import {useUser} from '../hooks/ApiHooks';
-import {getDate, getTeamData} from '../utils/getData';
+import {getDate, getTeamData, fetchStep} from '../utils/getData';
 
 const Dashboard = ({navigation}) => {
-  const {user, loading, setLoading, token, rank} = useContext(MainContext);
+  const {user, loading, setLoading, token, rank, step, weekStep} =
+    useContext(MainContext);
   const context = useContext(MainContext);
 
-  const {getAllRecordsByUser} = useUser();
-  const [step, setStep] = useState(0);
+  console.log(`step day ${step}, step week: ${weekStep}`);
+
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
   );
@@ -36,14 +37,9 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
-  const fetchStep = async () => {
-    const userData = await getAllRecordsByUser(token);
-    setStep(userData.records[userData.records.length - 1].step_count_for_date);
-  };
-
   useEffect(() => {
     randomQuote();
-    fetchStep();
+    fetchStep(getDate(), context);
   }, [loading]);
 
   useEffect(() => {

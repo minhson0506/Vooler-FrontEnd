@@ -9,30 +9,22 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {getDate, getUserWeekData} from '../utils/getData';
+import {getDate, getUserWeekData, fetchStep} from '../utils/getData';
 
 const Step = ({navigation}) => {
-  const onPress = () => {
-    navigation.goBack();
-  };
-  const {token} = useContext(MainContext);
-  const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
+  const {token, step, setStep, loading, setLoading} = useContext(MainContext);
+  const context = useContext(MainContext);
+  const {getUserRecordwithDate} = useUser();
   const [date, setDate] = useState('No data');
-  const [step, setStep] = useState(0);
   const [graph, setGraph] = useState([]);
 
-  const fetchStep = async (day) => {
-    try {
-      const userData = await getAllRecordsByUser(token);
-      const array = userData.records;
-      console.log('record', userData.records);
-      for (const element in array) {
-        if (array[element].record_date == day) {
-          console.log('got right day', array[element].step_count_for_date);
-          setStep(array[element].step_count_for_date);
-        }
-      }
+  const onPress = () => {
+    setLoading(!loading);
+    navigation.goBack();
+  };
 
+  const getGraphData = async (day) => {
+    try {
       const graphData = await getUserRecordwithDate(day, token);
 
       const startDay = graphData.start_date.split('-');
@@ -63,12 +55,13 @@ const Step = ({navigation}) => {
       });
       setGraph(weekData);
     } catch (error) {
-      console.log('error', error);
+      console.log('Error getting data for graph', error);
     }
   };
 
   useEffect(() => {
-    fetchStep(getDate());
+    fetchStep(getDate(), context);
+    getGraphData(getDate());
   }, []);
 
   const styleFont = useStyles();
@@ -81,7 +74,8 @@ const Step = ({navigation}) => {
           onDayPress={(day) => {
             setStep(0);
             // setDate(day.format('YYYY-MM-DD'));
-            fetchStep(day.format('YYYY-MM-DD'));
+            fetchStep(day.format('YYYY-MM-DD'), context);
+            getGraphData(day.format('YYYY-MM-DD'));
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}

@@ -34,9 +34,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old1.png')}
           ></Image>
-          <Text style={styles.text}>
-            {secondTeam ? secondTeam[1] : 'No data'}
-          </Text>
+          {secondTeam ? (
+            <Text style={styles.text}>{secondTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -48,9 +50,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           >
             <Text style={styles.rank}>2</Text>
           </View>
-          <Text style={styleFont.Title}>
-            {secondTeam ? secondTeam[2] : 'No data'}
-          </Text>
+          {secondTeam ? (
+            <Text style={styles.text}>{secondTeam[2]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
@@ -58,9 +62,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old2.png')}
           ></Image>
-          <Text style={styles.text}>
-            {firstTeam ? firstTeam[1] : 'No data'}
-          </Text>
+          {firstTeam ? (
+            <Text style={styles.text}>{firstTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -69,9 +75,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           >
             <Text style={styles.rank}>1</Text>
           </View>
-          <Text style={styleFont.Title}>
-            {firstTeam ? firstTeam[2] : 'No data'}
-          </Text>
+          {firstTeam ? (
+            <Text style={styles.text}>{firstTeam[2]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
@@ -79,9 +87,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
             style={{width: 100, height: 100}}
             source={require('../assets/image/old3.png')}
           ></Image>
-          <Text style={styles.text}>
-            {thirdTeam ? thirdTeam[1] : 'No data'}
-          </Text>
+          {thirdTeam ? (
+            <Text style={styles.text}>{thirdTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -90,9 +100,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           >
             <Text style={styles.rank}>3</Text>
           </View>
-          <Text style={styleFont.Title}>
-            {thirdTeam ? thirdTeam[2] : 'No data'}
-          </Text>
+          {thirdTeam ? (
+            <Text style={styles.text}>{thirdTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
       </View>
@@ -121,6 +133,10 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Nunito-ExtraBold',
     fontSize: 20,
+  },
+  noData: {
+    fontFamily: 'Nunito-SemiBold',
+    fontSize: 18,
   },
   rankContainer: {
     height: Dimensions.get('window').height * 0.4,

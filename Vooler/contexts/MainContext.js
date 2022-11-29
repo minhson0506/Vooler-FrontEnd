@@ -17,6 +17,8 @@ const MainProvider = (props) => {
   const [teamRank, setTeamRank] = useState([]);
   const [badgeDay, setBadgeDay] = useState(0);
   const [badgeWeek, setBadgeWeek] = useState(0);
+  const [step, setStep] = useState(0);
+  const [weekStep, setWeekStep] = useState(0);
 
   return (
     <MainContext.Provider
@@ -47,6 +49,10 @@ const MainProvider = (props) => {
         setBadgeDay,
         badgeWeek,
         setBadgeWeek,
+        step,
+        setStep,
+        weekStep,
+        setWeekStep,
       }}
     >
       {props.children}

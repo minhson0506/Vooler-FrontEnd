@@ -2,7 +2,7 @@ import {useTeam, useUser} from '../hooks/ApiHooks';
 import {nameArray} from '../utils/data';
 
 const {getTeamRecordByDate, getAllTeamRecords} = useTeam();
-const {getUserRecordwithDate} = useUser();
+const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
 
 const getTeamData = async (day, context) => {
   const {team, token, user, uid, setRank, setTeamData} = context;
@@ -30,9 +30,11 @@ const getTeamData = async (day, context) => {
       return [index + 1, element.name, element.step];
     });
     if (newArray) {
-      const userStatus = newArray.filter((element) => element[1] == user);
       setTeamData(newArray);
-      setRank(userStatus[0][0]);
+      const userStatus = newArray.filter((element) => element[1] == user);
+      if (userStatus.length > 0) {
+        setRank(userStatus[0][0]);
+      }
     }
   } catch (error) {
     console.log('No data in this day', error);
@@ -67,6 +69,26 @@ const getDate = () => {
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
   return year + '-' + month + '-' + date;
-}
+};
 
-export {getTeamData, getAllTeams, getDate};
+const fetchStep = async (day, context) => {
+  const {token, setStep, setWeekStep} = context;
+  try {
+    const userData = await getAllRecordsByUser(token);
+    if (userData) {
+      const array = userData.records;
+      console.log('record', userData.records);
+      for (const element in array) {
+        if (array[element].record_date == day) {
+          setStep(array[element].step_count_for_date);
+        }
+      }
+      const response = await getUserRecordwithDate(day, token);
+      if (response) setWeekStep(response.total_steps_accumulated);
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
+};
+
+export {getTeamData, getAllTeams, getDate, fetchStep};
