@@ -14,7 +14,6 @@ const colorSet = {
 };
 
 const useStyles = () => {
-  const {setLoadFont} = useContext(MainContext);
   const [font, setFont] = useState(false);
   useEffect(() => {
     async function loadFont() {

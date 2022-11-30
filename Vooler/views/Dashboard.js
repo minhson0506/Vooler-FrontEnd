@@ -1,6 +1,7 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Dimensions,
+  NativeModules,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,9 +18,36 @@ import Step from './Step';
 import Graph from './Graph';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
+import {quoteArray} from '../utils/data';
+import {useUser} from '../hooks/ApiHooks';
+import {getDate, getTeamData, fetchStep} from '../utils/getData';
 
 const Dashboard = ({navigation}) => {
-  const {user} = useContext(MainContext);
+  // const {TaskModule} = NativeModules;
+  const {user, loading, setLoading, token, rank, step, weekStep} =
+    useContext(MainContext);
+  const context = useContext(MainContext);
+
+  console.log(`step day ${step}, step week: ${weekStep}`);
+
+  const [quote, setQuote] = useState(
+    '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
+  );
+
+  const randomQuote = () => {
+    const random = Math.floor(Math.random() * 18);
+    setQuote(quoteArray[random].quote);
+  };
+
+  useEffect(() => {
+    randomQuote();
+    fetchStep(getDate(), context);
+  }, [loading]);
+
+  useEffect(() => {
+    // TaskModule.getToken(token);
+    getTeamData(getDate(), context);
+  }, []);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -30,16 +58,14 @@ const Dashboard = ({navigation}) => {
         <View style={styles.container}>
           <View style={styles.textView}>
             <Text style={styleFont.Title}>Good morning, {user}</Text>
-            <Text style={styles.quote}>
-              “The longer I live, the more beautiful life becomes.” - Frank
-              Lloyd Wright
-            </Text>
+            <Text style={styles.quote}>{quote}</Text>
           </View>
           <View style={{height: '80%', justifyContent: 'space-evenly'}}>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -51,12 +77,13 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Steps</Text>
               </View>
-              <Text style={styleFont.Headline}>500</Text>
+              <Text style={styleFont.Headline}>{step ? step : 0}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -69,14 +96,14 @@ const Dashboard = ({navigation}) => {
                 <Text style={styleFont.Title}>Rank</Text>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Text style={styleFont.Headline}>1</Text>
-                <Text style={styleFont.Text}>st</Text>
+                <Text style={styleFont.Headline}>{rank ? rank : 0}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>

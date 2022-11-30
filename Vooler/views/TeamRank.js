@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {AppBarBackButton} from '../components/AppBar';
 import {
   StyleSheet,
@@ -15,13 +15,21 @@ import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
 import RankComp from '../components/RankComponent';
+import {getAllTeams, getDate} from '../utils/getData';
+import {MainContext} from '../contexts/MainContext';
 
 const TeamRank = ({navigation}) => {
   const onPress = () => {
     navigation.goBack();
   };
 
+  const context = useContext(MainContext);
   const [date, setDate] = useState('No data');
+
+  useEffect(() => {
+    getAllTeams(getDate(), context);
+  }, []);
+
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
@@ -33,16 +41,39 @@ const TeamRank = ({navigation}) => {
         ></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={(day) => {
-            setDate(day.format('DD-MM-YYYY'));
-            console.log(day.format('DD-MM-YYYY'));
+            //setDate(day.format('DD-MM-YYYY'));
+            context.setTeamRank([]);
+            getAllTeams(day.format('YYYY-MM-DD'), context);
           }}
           themeColor={colorSet.primary}
           style={{height: 100, marginBottom: 10}}
         />
         <View style={styles.container}>
-          <RankComp step1={3100} step2={3000} step3={2000}></RankComp>
-          <Divider width={2} style={{marginBottom: 20}}></Divider>
-          <RankTable state={'Team'}></RankTable>
+          {context.teamRank.length > 0 ? (
+            <>
+              <RankComp
+                firstTeam={context.teamRank[0]}
+                secondTeam={context.teamRank[1]}
+                thirdTeam={context.teamRank[2]}
+              ></RankComp>
+
+              {context.teamRank.length > 2 ? (
+                <>
+                  <Divider width={2}></Divider>
+                  <RankTable
+                    state={'Team'}
+                    source={context.teamRank.slice(2)}
+                  ></RankTable>
+                </>
+              ) : (
+                <></>
+              )}
+            </>
+          ) : (
+            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+              Oops! No data for this day!
+            </Text>
+          )}
         </View>
       </View>
     );

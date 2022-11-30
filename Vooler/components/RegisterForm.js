@@ -11,10 +11,13 @@ import {teamArray} from '../utils/data';
 import {MainContext} from '../contexts/MainContext';
 import {useAuth, useTeam} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser} = useContext(MainContext);
+  const {setIsLoggedIn, setToken, setUser, setUid, token, setTeam} =
+    useContext(MainContext);
+  const {getUserByToken} = useUser();
   const {postUser, postLogin} = useAuth();
   const {getAllTeams} = useTeam();
 
@@ -37,7 +40,7 @@ const RegisterForm = () => {
   // Picker open states
   const [openTeam, setOpenTeam] = useState(false);
   // Picker value states
-  const [team, setTeam] = useState();
+  const [teamValue, setTeamValue] = useState();
   // Picker items
   const [teamItem, setTeamItem] = useState([]);
 
@@ -59,10 +62,10 @@ const RegisterForm = () => {
       const user = {
         userId: hashedData.userId,
         password: hashedData.password,
-        teamId: team,
+        teamId: teamValue,
       };
       const userData = await postUser(user);
-      if (userData == 201) {
+      if (userData) {
         Alert.alert('Success', 'User created successfully!');
         //auto login for user after register
         const userLogin = {
@@ -71,20 +74,20 @@ const RegisterForm = () => {
         };
         const loginData = await postLogin(userLogin);
         console.log('login', loginData);
+
         if (loginData) {
           setToken(loginData.token);
+          const response = await getUserByToken(loginData.token);
+          if (response) {
+            setUid(response.uid);
+          }
           setTeam(loginData.user.team_id);
           setIsLoggedIn(true);
         }
-      } else if (userData == 403) {
-        Alert.alert('Oops!', 'Username already taken!');
       }
     } catch (error) {
-      Alert.alert(
-        'Register failed!',
-        'Please check your nickname or password!'
-      );
-      console.error(error);
+      Alert.alert('Register failed!', 'Username is taken!');
+      console.log(error);
     }
   };
 
@@ -120,10 +123,10 @@ const RegisterForm = () => {
             <Text style={[fontStyle.Title, styles.text]}>Join your team</Text>
             <DropDownPicker
               open={openTeam}
-              value={team}
+              value={teamValue}
               items={teamItem}
               setOpen={setOpenTeam}
-              setValue={setTeam}
+              setValue={setTeamValue}
               setItems={setTeamItem}
               placeholder="Choose"
               style={styles.pickerContainer}

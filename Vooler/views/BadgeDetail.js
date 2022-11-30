@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {
-  cityArray,
-  saunaArray,
-  mushroomArray,
-  berryArray,
-  pastryArray,
+  dayTarget,
+  rankTarget,
+  weekFirstTarget,
+  weekSecondTarget,
+  weekThirdTarget,
 } from '../utils/data';
 import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
@@ -24,24 +24,24 @@ const BadgesDetail = ({route, navigation}) => {
     navigation.goBack();
   };
   const {id, name} = route.params;
-  const [array, setArray] = useState(cityArray);
+  const [array, setArray] = useState(dayTarget);
 
   const switchId = () => {
     switch (id) {
       case 2:
-        setArray(mushroomArray);
+        setArray(rankTarget);
         break;
       case 3:
-        setArray(saunaArray);
+        setArray(weekFirstTarget);
         break;
       case 4:
-        setArray(berryArray);
+        setArray(weekSecondTarget);
         break;
       case 5:
-        setArray(pastryArray);
+        setArray(weekThirdTarget);
         break;
       default:
-        setArray(cityArray);
+        setArray(dayTarget);
         break;
     }
   };
@@ -57,7 +57,7 @@ const BadgesDetail = ({route, navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
         <Text style={[fontStyle.Title, {marginStart: 20, marginTop: 10}]}>
-          Level {id}: {name}
+          Level {id}: {name.toString()}
         </Text>
         <CardView array={array}></CardView>
       </View>
