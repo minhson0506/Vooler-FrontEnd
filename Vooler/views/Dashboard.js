@@ -7,39 +7,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CardView from '../components/CardView';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
-import RankTable from '../components/TableView';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
-import {AppBarBackButton, AppBarIcon} from '../components/AppBar';
+import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
-import Step from './Step';
-import Graph from './Graph';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
-import {
-  dayTarget,
-  quoteArray,
-  weekFirstTarget,
-  weekSecondTarget,
-  weekThirdTarget,
-} from '../utils/data';
-import {useUser} from '../hooks/ApiHooks';
-import {getDate, getTeamData, fetchStep} from '../utils/getData';
+import {getDate, getTeamData, fetchStep, getBadge} from '../utils/getData';
 import {Platform} from 'react-native';
+import {quoteArray} from '../utils/data';
 
 const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
-  const {user, loading, setLoading, token, rank, step, weekStep} =
-    useContext(MainContext);
-
-  console.log(`step day: ${step}, step week: ${weekStep}`);
-
   const context = useContext(MainContext);
-  const [bagdeStepDay, setBadgeStepDay] = useState(0);
-  const [bagdeStepWeek, setBadgeStepWeek] = useState(0);
-  const [bagdeRank, setBagdeRank] = useState(0);
+  const {
+    user,
+    rank,
+    step,
+    weekStep,
+    badgeStepDay,
+    badgeStepWeek,
+    badgeRank,
+    setBadgeStepDay,
+    setBadgeStepWeek,
+    setBadgeRank,
+  } = useContext(MainContext);
+
+  console.log(
+    `day badge: ${badgeStepDay}, week badge: ${badgeStepWeek}, rank: ${badgeRank}`
+  );
+
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
   );
@@ -50,68 +46,6 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
-  const getWeekBadge = (array) => {
-    if (weekStep < array[0].name) setBadgeStepWeek(0 + bagdeStepWeek);
-    else if (weekStep < array[1].name) setBadgeStepWeek(1 + bagdeStepWeek);
-    else if (weekStep < array[2].name) setBadgeStepWeek(2 + bagdeStepWeek);
-    else if (weekStep < array[3].name) setBadgeStepWeek(3 + bagdeStepWeek);
-    else if (weekStep < array[4].name) setBadgeStepWeek(4 + bagdeStepWeek);
-    else if (weekStep < array[5].name) setBadgeStepWeek(5 + bagdeStepWeek);
-    else setBadgeStepWeek(6 + bagdeStepWeek);
-  };
-
-  const getBadge = () => {
-    console.log(`step day is ${step}, step week is ${weekStep}`);
-    if (step < dayTarget[0].name) setBadgeStepDay(0);
-    else if (step < dayTarget[1].name) setBadgeStepDay(1);
-    else if (step < dayTarget[2].name) setBadgeStepDay(2);
-    else if (step < dayTarget[3].name) setBadgeStepDay(3);
-    else if (step < dayTarget[4].name) setBadgeStepDay(4);
-    else if (step < dayTarget[5].name) setBadgeStepDay(5);
-    else setBadgeStepDay(6);
-
-    if (weekStep < weekSecondTarget[0].name) {
-      setBadgeStepWeek(0);
-      getWeekBadge(weekFirstTarget);
-    } else if (weekStep < weekThirdTarget[0].name) {
-      setBadgeStepWeek(6);
-      getWeekBadge(weekSecondTarget);
-    } else {
-      setBadgeStepWeek(12);
-      getWeekBadge(weekThirdTarget);
-    }
-
-    switch (rank) {
-      case 1:
-        setBagdeRank(6);
-        break;
-      case 2:
-        setBagdeRank(5);
-        break;
-      case 3:
-        setBagdeRank(4);
-        break;
-      case 4:
-        setBagdeRank(3);
-        break;
-      case 5:
-        setBagdeRank(2);
-        break;
-      case 6:
-        setBagdeRank(1);
-        break;
-      default:
-        setBagdeRank(0);
-    }
-  };
-
-  // useEffect(() => {
-  //   randomQuote();
-  //   fetchStep(getDate(), context);
-  //   getTeamData(getDate(), context);
-  //   getBadge();
-  // }, [loading]);
-
   useEffect(() => {
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
@@ -121,12 +55,12 @@ const Dashboard = ({navigation}) => {
       if (second === 100) {
         setSecond(0);
       } else setSecond(second + 1);
-      fetchStep(getDate(), context);
+      getBadge(context);
       getTeamData(getDate(), context);
-      getBadge();
+      fetchStep(getDate(), context);
     }, 1500);
     return () => clearInterval(interval);
-  }, [loading]);
+  }, []);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -144,7 +78,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -156,13 +89,12 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Steps</Text>
               </View>
-              <Text style={styleFont.Headline}>{step ? step : 0}</Text>
+              <Text style={styleFont.Headline}>{step ? step + 1 : 0}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -182,7 +114,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -195,7 +126,7 @@ const Dashboard = ({navigation}) => {
                 <Text style={styleFont.Title}>Badges</Text>
               </View>
               <Text style={styleFont.Headline}>
-                {bagdeRank + bagdeStepDay + bagdeStepWeek}
+                {badgeRank}, {badgeStepDay}, {badgeStepWeek}
               </Text>
             </TouchableOpacity>
           </View>
