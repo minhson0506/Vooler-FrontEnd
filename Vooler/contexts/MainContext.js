@@ -21,6 +21,9 @@ const MainProvider = (props) => {
   const [step, setStep] = useState(0);
   const [weekStep, setWeekStep] = useState(0);
 
+  const [currentStep, setCurrentStep] = useState(0);
+  const [currentWeekStep, setCurrentWeekStep] = useState(0);
+
   const [badgeStepDay, setBadgeStepDay] = useState(0);
   const [badgeStepWeek, setBadgeStepWeek] = useState(0);
   const [badgeRank, setBadgeRank] = useState(0);
@@ -60,6 +63,10 @@ const MainProvider = (props) => {
         setWeekStep,
         badgeRank,
         setBadgeRank,
+        currentStep,
+        setCurrentStep,
+        currentWeekStep,
+        setCurrentWeekStep,
       }}
     >
       {props.children}

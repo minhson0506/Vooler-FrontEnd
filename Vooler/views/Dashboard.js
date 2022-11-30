@@ -12,7 +12,13 @@ import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
-import {getDate, getTeamData, fetchStep, getBadge} from '../utils/getData';
+import {
+  getDate,
+  getTeamData,
+  fetchStep,
+  getBadge,
+  getTodayStep,
+} from '../utils/getData';
 import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
 
@@ -20,7 +26,10 @@ const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
   const context = useContext(MainContext);
   const {
+    loading,
+    setLoading,
     user,
+    currentStep,
     rank,
     step,
     weekStep,
@@ -46,6 +55,7 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
+  //TODO: getBadge cannot auto reload
   useEffect(() => {
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
@@ -55,12 +65,16 @@ const Dashboard = ({navigation}) => {
       if (second === 100) {
         setSecond(0);
       } else setSecond(second + 1);
-      getBadge(context);
-      getTeamData(getDate(), context);
-      fetchStep(getDate(), context);
+
+      getTodayStep(context);
     }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    getTeamData(getDate(), context);
+    getBadge(context);
+  }, [loading]);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -78,6 +92,7 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -89,12 +104,15 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Steps</Text>
               </View>
-              <Text style={styleFont.Headline}>{step ? step + 1 : 0}</Text>
+              <Text style={styleFont.Headline}>
+                {currentStep ? currentStep : 0}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -114,6 +132,7 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
