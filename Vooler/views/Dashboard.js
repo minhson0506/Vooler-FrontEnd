@@ -145,7 +145,7 @@ const Dashboard = ({navigation}) => {
                 <Text style={styleFont.Title}>Badges</Text>
               </View>
               <Text style={styleFont.Headline}>
-                {badgeRank}, {badgeStepDay}, {badgeStepWeek}
+                {badgeRank + badgeStepDay + badgeStepWeek}
               </Text>
             </TouchableOpacity>
           </View>
