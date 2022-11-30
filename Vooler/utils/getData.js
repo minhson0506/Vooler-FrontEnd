@@ -101,7 +101,6 @@ const getTodayStep = async (context) => {
       for (const element in array) {
         if (array[element].record_date == getDate()) {
           setCurrentStep(array[element].step_count_for_date);
-          setLoading(!loading);
         }
       }
       const response = await getUserRecordwithDate(getDate(), token);
@@ -109,19 +108,60 @@ const getTodayStep = async (context) => {
         setCurrentWeekStep(response.total_steps_accumulated);
       }
     }
+    setLoading(!loading);
   } catch (error) {
     console.log('error', error);
   }
 };
 
-const getWeekBadge = (array, context) => {
+const getTeamDataToday = async (context) => {
+  const {team, token, user, uid, setRank, setTeamData, rank} = context;
+  try {
+    const response = await getTeamRecordByDate(team, getDate(), token);
+
+    var userData = [];
+    for (const index in response.team_members) {
+      if (response.team_members[index].total_steps_accumulated != null) {
+        if (uid != response.team_members[index].uid) {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: nameArray[response.team_members[index].uid],
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        } else {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: user,
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        }
+      }
+    }
+    const sortedArray = userData.sort((a, b) => b.step - a.step);
+    const newArray = sortedArray.map((element, index) => {
+      return [index + 1, element.name, element.step];
+    });
+    if (newArray) {
+      const userStatus = newArray.filter((element) => element[1] == user);
+      if (userStatus.length > 0) {
+        setRank(userStatus[0][0]);
+      } else {
+        setRank(0);
+      }
+    }
+  } catch (error) {
+    console.log('No data in this day', error);
+  }
+};
+
+const getWeekBadge = (array, context, index) => {
   const {currentWeekStep, badgeStepWeek, setBadgeStepWeek} = context;
-  if (currentWeekStep < array[0].name) setBadgeStepWeek(0 + badgeStepWeek);
-  else if (currentWeekStep < array[1].name) setBadgeStepWeek(1 + badgeStepWeek);
-  else if (currentWeekStep < array[2].name) setBadgeStepWeek(2 + badgeStepWeek);
-  else if (currentWeekStep < array[3].name) setBadgeStepWeek(3 + badgeStepWeek);
-  else if (currentWeekStep < array[4].name) setBadgeStepWeek(4 + badgeStepWeek);
-  else if (currentWeekStep < array[5].name) setBadgeStepWeek(5 + badgeStepWeek);
+  if (currentWeekStep < array[0].name) setBadgeStepWeek(0 + index);
+  else if (currentWeekStep < array[1].name) setBadgeStepWeek(1 + index);
+  else if (currentWeekStep < array[2].name) setBadgeStepWeek(2 + index);
+  else if (currentWeekStep < array[3].name) setBadgeStepWeek(3 + index);
+  else if (currentWeekStep < array[4].name) setBadgeStepWeek(4 + index);
+  else if (currentWeekStep < array[5].name) setBadgeStepWeek(5 + index);
   else setBadgeStepWeek(6 + badgeStepWeek);
 };
 
@@ -146,14 +186,11 @@ const getBadge = (context) => {
   else setBadgeStepDay(6);
 
   if (currentWeekStep < weekSecondTarget[0].name) {
-    setBadgeStepWeek(0);
-    getWeekBadge(weekFirstTarget, context);
+    getWeekBadge(weekFirstTarget, context, 0);
   } else if (currentWeekStep < weekThirdTarget[0].name) {
-    setBadgeStepWeek(6);
-    getWeekBadge(weekSecondTarget, context);
+    getWeekBadge(weekSecondTarget, context, 6);
   } else {
-    setBadgeStepWeek(12);
-    getWeekBadge(weekThirdTarget, context);
+    getWeekBadge(weekThirdTarget, context, 12);
   }
 
   switch (rank) {
@@ -213,4 +250,12 @@ const getDate = () => {
   return year + '-' + month + '-' + date;
 };
 
-export {getTeamData, getAllTeams, getDate, fetchStep, getBadge, getTodayStep};
+export {
+  getTeamData,
+  getAllTeams,
+  getDate,
+  fetchStep,
+  getBadge,
+  getTodayStep,
+  getTeamDataToday,
+};

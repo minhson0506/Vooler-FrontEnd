@@ -18,6 +18,7 @@ import {
   fetchStep,
   getBadge,
   getTodayStep,
+  getTeamDataToday,
 } from '../utils/getData';
 import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
@@ -65,14 +66,13 @@ const Dashboard = ({navigation}) => {
       if (second === 100) {
         setSecond(0);
       } else setSecond(second + 1);
-
+      getTeamDataToday(context);
       getTodayStep(context);
     }, 1500);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    getTeamData(getDate(), context);
     getBadge(context);
   }, [loading]);
 

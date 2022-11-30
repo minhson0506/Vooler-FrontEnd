@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,30 +18,92 @@ import {
 import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
 import CardView from '../components/CardView';
+import {MainContext} from '../contexts/MainContext';
 
 const BadgesDetail = ({route, navigation}) => {
+  const {badgeRank, badgeStepDay, badgeStepWeek} = useContext(MainContext);
+
   const onPress = () => {
     navigation.goBack();
   };
   const {id, name} = route.params;
   const [array, setArray] = useState(dayTarget);
 
+  const changeArray = (data, id) => {
+    if (id == 1) {
+      const array = [...data];
+      for (let i = 0; i < badgeStepDay; i++) {
+        array[i].state = 3;
+      }
+      console.log('array to change', array);
+      return array;
+    } else if (id == 2) {
+      const array = [...data];
+      for (let i = 0; i < badgeRank; i++) {
+        array[i].state = 3;
+      }
+      return array;
+    } else if (id == 3) {
+      const array = [...data];
+      if (badgeStepWeek / 6 < 1) {
+        for (let i = 0; i < badgeStepWeek; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      } else {
+        for (let i = 0; i < 6; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      }
+    } else if (id == 4) {
+      const array = [...data];
+      if (badgeStepWeek / 6 < 1) {
+        return array;
+      } else if (badgeStepWeek / 6 < 2) {
+        for (let i = 0; i < badgeStepWeek - 6; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      } else {
+        for (let i = 0; i < 6; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      }
+    } else {
+      const array = [...data];
+      if (badgeStepWeek / 6 < 2) {
+        return array;
+      } else if (badgeStepWeek / 6 < 3) {
+        for (let i = 0; i < badgeStepWeek - 12; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      } else {
+        for (let i = 0; i < 6; i++) {
+          array[i].state = 3;
+        }
+        return array;
+      }
+    }
+  };
   const switchId = () => {
     switch (id) {
       case 2:
-        setArray(rankTarget);
+        setArray(changeArray(rankTarget, id));
         break;
       case 3:
-        setArray(weekFirstTarget);
+        setArray(changeArray(weekFirstTarget, id));
         break;
       case 4:
-        setArray(weekSecondTarget);
+        setArray(changeArray(weekSecondTarget, id));
         break;
       case 5:
-        setArray(weekThirdTarget);
+        setArray(changeArray(weekThirdTarget, id));
         break;
       default:
-        setArray(dayTarget);
+        setArray(changeArray(dayTarget, id));
         break;
     }
   };

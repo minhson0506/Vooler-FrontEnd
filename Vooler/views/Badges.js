@@ -19,29 +19,29 @@ import {MainContext} from '../contexts/MainContext';
 import {fetchStep, getDate} from '../utils/getData';
 
 const Badges = ({navigation}) => {
-  // const {badgeStepDay, badgeStepWeek, badgeRank} = useContext(MainContext);
-  // const [array, setArray] = useState(levelArray);
+  const {badgeStepDay, badgeStepWeek, badgeRank} = useContext(MainContext);
+  const [array, setArray] = useState(levelArray);
 
-  // const changeArray = () => {
-  //   const newArray = [...array];
-  //   newArray[0].completed = badgeStepDay;
-  //   newArray[1].completed = badgeRank;
-  //   if (badgeStepWeek <= 6) {
-  //     newArray[2].completed = badgeStepWeek;
-  //   } else if (badgeStepWeek <= 12) {
-  //     newArray[2].completed = 6;
-  //     newArray[3].completed = badgeStepWeek - 6;
-  //   } else {
-  //     newArray[2].completed = 6;
-  //     newArray[3].completed = 6;
-  //     newArray[4].completed = badgeStepWeek - 12;
-  //   }
-  //   setArray(newArray);
-  // };
+  const changeArray = () => {
+    const newArray = [...array];
+    newArray[0].completed = badgeStepDay;
+    newArray[1].completed = badgeRank;
+    if (badgeStepWeek <= 6) {
+      newArray[2].completed = badgeStepWeek;
+    } else if (badgeStepWeek <= 12) {
+      newArray[2].completed = 6;
+      newArray[3].completed = badgeStepWeek - 6;
+    } else {
+      newArray[2].completed = 6;
+      newArray[3].completed = 6;
+      newArray[4].completed = badgeStepWeek - 12;
+    }
+    setArray(newArray);
+  };
 
-  // useEffect(() => {
-  //   changeArray();
-  // }, []);
+  useEffect(() => {
+    changeArray();
+  }, []);
 
   const onPress = () => {
     navigation.goBack();
