@@ -5,15 +5,25 @@
 //  Created by Dieu Vu on 11/27/22.
 //
 
+// TODO:
+// - create data class of record DONE
+// - add create record method
+// - add post method with token from RN. Use event emitter when submit logins and save token to userDefaults
+// - add schedule to run task in background
+// - if no network save unposted data to core data
+
+
 import Foundation
 import CoreMotion
 
 @objc(Pedometer)
 class Pedometer: NSObject {
   
+  let networkService = NetworkService()
   override init() {
     super.init();
     initializePedometer();
+    networkService.checkNetworkConnection();
   }
   
   private let activityManager = CMMotionActivityManager()
@@ -47,13 +57,23 @@ class Pedometer: NSObject {
   
   @objc
   func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
+    // Seem that the function is called here when the app starts on foreground, we can see the log only when calling it here
+//    networkService.checkNetworkConnection();
+//    print("network service \(networkService)");
+
     if (self.steps == nil){
       let error = NSError(domain: "", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
     }
     else {
-      resolve("step count is \(String(describing: self.steps))");
+      resolve("step count is \(self.steps!)");
     }
+  }
+  
+  // TODO: add a method to transfer token from RN and save to userDefaults
+  @objc
+  func getToken(){
+    
   }
   
   @objc
@@ -69,4 +89,6 @@ class Pedometer: NSObject {
   
 
 }
+
+
 

@@ -7,6 +7,8 @@ PODS:
     - ExpoModulesCore
   - EXConstants (14.0.2):
     - ExpoModulesCore
+  - EXErrorRecovery (4.0.1):
+    - ExpoModulesCore
   - EXFileSystem (15.1.1):
     - ExpoModulesCore
   - EXFont (11.0.1):
@@ -31,6 +33,8 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.70.5)
   - fmt (6.2.1)
   - glog (0.3.5)
+  - hermes-engine (0.70.5)
+  - libevent (2.1.12)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -42,11 +46,18 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
+  - RCT-Folly/Futures (2021.07.22.00):
+    - boost
+    - DoubleConversion
+    - fmt (~> 6.2.1)
+    - glog
+    - libevent
   - RCTRequired (0.70.5)
   - RCTTypeSafety (0.70.5):
     - FBLazyVector (= 0.70.5)
     - RCTRequired (= 0.70.5)
     - React-Core (= 0.70.5)
+  - ReachabilitySwift (5.0.0)
   - React (0.70.5):
     - React-Core (= 0.70.5)
     - React-Core/DevSupport (= 0.70.5)
@@ -219,6 +230,17 @@ PODS:
     - React-logger (= 0.70.5)
     - React-perflogger (= 0.70.5)
     - React-runtimeexecutor (= 0.70.5)
+  - React-hermes (0.70.5):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2021.07.22.00)
+    - RCT-Folly/Futures (= 2021.07.22.00)
+    - React-cxxreact (= 0.70.5)
+    - React-jsi (= 0.70.5)
+    - React-jsiexecutor (= 0.70.5)
+    - React-jsinspector (= 0.70.5)
+    - React-perflogger (= 0.70.5)
   - React-jsi (0.70.5):
     - boost (= 1.76.0)
     - DoubleConversion
@@ -360,6 +382,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - Expo (from `../node_modules/expo`)
@@ -369,9 +392,12 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
+  - libevent (~> 2.1.12)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
+  - ReachabilitySwift
   - React (from `../node_modules/react-native/`)
   - React-bridging (from `../node_modules/react-native/ReactCommon`)
   - React-callinvoker (from `../node_modules/react-native/ReactCommon/callinvoker`)
@@ -380,6 +406,7 @@ DEPENDENCIES:
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
+  - React-hermes (from `../node_modules/react-native/ReactCommon/hermes`)
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
@@ -409,6 +436,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - fmt
+    - libevent
+    - ReachabilitySwift
 
 EXTERNAL SOURCES:
   boost:
@@ -421,6 +450,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-application/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
+  EXErrorRecovery:
+    :path: "../node_modules/expo-error-recovery/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
@@ -439,6 +470,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  hermes-engine:
+    :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -459,6 +492,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/CoreModules"
   React-cxxreact:
     :path: "../node_modules/react-native/ReactCommon/cxxreact"
+  React-hermes:
+    :path: "../node_modules/react-native/ReactCommon/hermes"
   React-jsi:
     :path: "../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
@@ -516,6 +551,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 034b1c40a8e9fe1bff76a1e511ee90dff64ad834
   EXConstants: 3c86653c422dd77e40d10cbbabb3025003977415
+  EXErrorRecovery: ae43433feb0608a64dc5b1c8363b3e7769a9ea24
   EXFileSystem: 60602b6eefa6873f97172c684b7537c9760b50d6
   EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
   Expo: 36b5f625d36728adbdd1934d4d57182f319ab832
@@ -526,9 +562,12 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: fe8b5f1429cfe83a8d72dc8ed61dc7704cac8745
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  hermes-engine: 7fe5fc6ef707b7fdcb161b63898ec500e285653d
+  libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
   RCTRequired: 21229f84411088e5d8538f21212de49e46cc83e2
   RCTTypeSafety: 62eed57a32924b09edaaf170a548d1fc96223086
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   React: f0254ccddeeef1defe66c6b1bb9133a4f040792b
   React-bridging: e46911666b7ec19538a620a221d6396cd293d687
   React-callinvoker: 66b62e2c34546546b2f21ab0b7670346410a2b53
@@ -536,6 +575,7 @@ SPEC CHECKSUMS:
   React-Core: dabbc9d1fe0a11d884e6ee1599789cf8eb1058a5
   React-CoreModules: 5b6b7668f156f73a56420df9ec68ca2ec8f2e818
   React-cxxreact: c7ca2baee46db22a30fce9e639277add3c3f6ad1
+  React-hermes: c93e1d759ad5560dfea54d233013d7d2c725c286
   React-jsi: a565dcb49130ed20877a9bb1105ffeecbb93d02d
   React-jsiexecutor: 31564fa6912459921568e8b0e49024285a4d584b
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
@@ -562,6 +602,6 @@ SPEC CHECKSUMS:
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
   Yoga: eca980a5771bf114c41a754098cd85e6e0d90ed7
 
-PODFILE CHECKSUM: 6f10266fc64a6697f5a9f2dc6d836f0f9bf96c73
+PODFILE CHECKSUM: 4ee9cc514660e1731b42b2248bfe79905e1d6bad
 
 COCOAPODS: 1.11.3

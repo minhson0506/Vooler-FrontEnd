@@ -14,13 +14,13 @@ target 'Vooler' do
   config = use_native_modules!
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
-
+  pod 'ReachabilitySwift'
   # Flags change depending on the env values.
   flags = get_default_flags()
 
   use_react_native!(
     :path => config[:reactNativePath],
-    :hermes_enabled => true
+    :hermes_enabled => true,
 #    :hermes_enabled => podfile_properties['expo.jsEngine'] == 'hermes',
     :fabric_enabled => flags[:fabric_enabled],
     # An absolute path to your application root.
