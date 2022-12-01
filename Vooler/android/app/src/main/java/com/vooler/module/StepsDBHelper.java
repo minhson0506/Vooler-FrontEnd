@@ -47,6 +47,23 @@ public class StepsDBHelper extends SQLiteOpenHelper {
     String todayDate =
       String.valueOf(mCalendar.get(Calendar.YEAR)) + "-" +
         String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+
+    if (mCalendar.get(Calendar.MONTH) < 9) {
+      if (mCalendar.get(Calendar.DAY_OF_MONTH) < 10) {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-0" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-0" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      } else {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-0" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      }
+    } else {
+      if (mCalendar.get(Calendar.DAY_OF_MONTH) < 10) {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-0" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      }
+    }
+
+
     String selectQuery = "SELECT " + STEPS_COUNT + " FROM " + TABLE_STEPS_SUMMARY + " WHERE " + CREATION_DATE +
       " = '" + todayDate + "' ";
     Log.d(TAG, "createStepsEntry: date is " + todayDate);
@@ -97,20 +114,59 @@ public class StepsDBHelper extends SQLiteOpenHelper {
   }
 
   @SuppressLint("Range")
-  public ArrayList<DateStepsModel> readStepsEntries()
-  {
-    ArrayList<DateStepsModel> mStepCountList = new ArrayList<DateStepsModel>();
+  public ArrayList<DateStepsModel> readStepsEntries(ArrayList<DateStepsModel> oldVersion) {
+    Calendar mCalendar = Calendar.getInstance();
+    String todayDate =
+      String.valueOf(mCalendar.get(Calendar.YEAR)) + "-" +
+        String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+
+    if (mCalendar.get(Calendar.MONTH) < 9) {
+      if (mCalendar.get(Calendar.DAY_OF_MONTH) < 10) {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-0" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-0" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      } else {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-0" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      }
+    } else {
+      if (mCalendar.get(Calendar.DAY_OF_MONTH) < 10) {
+        todayDate = String.valueOf(mCalendar.get(Calendar.YEAR)) + "-" +
+          String.valueOf(mCalendar.get(Calendar.MONTH) + 1) + "-0" + String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH));
+      }
+    }
+
+    Log.d(TAG, "readStepsEntries: today is " + todayDate);
+    ArrayList<DateStepsModel> mStepCountList = new ArrayList<>();
+    if (oldVersion != null)
+      for (int i = 0; i < oldVersion.size(); i++) {
+        mStepCountList.add(oldVersion.get(i));
+      }
     String selectQuery = "SELECT * FROM " + TABLE_STEPS_SUMMARY;
     try {
-
       SQLiteDatabase db = this.getReadableDatabase();
       Cursor c = db.rawQuery(selectQuery, null);
       if (c.moveToFirst()) {
         do {
-          DateStepsModel mDateStepsModel = new DateStepsModel();
-          mDateStepsModel.mDate = c.getString((c.getColumnIndex(CREATION_DATE)));
-          mDateStepsModel.mStepCount = c.getInt((c.getColumnIndex(STEPS_COUNT)));
-          mStepCountList.add(mDateStepsModel);
+          Log.d(TAG, "readStepsEntries: date " + c.getString(c.getColumnIndex(CREATION_DATE)));
+          if ((c.getString(c.getColumnIndex(CREATION_DATE))).equals(todayDate)) {
+            Log.d(TAG, "readStepsEntries: update table");
+            DateStepsModel mDateStepsModel = new DateStepsModel();
+            mDateStepsModel.mDate = todayDate;
+            mDateStepsModel.mStepCount = c.getInt((c.getColumnIndex(STEPS_COUNT)));
+            mDateStepsModel.mUploaded = false;
+            int index = -1;
+            if (oldVersion != null)
+              for (int i = 0; i < oldVersion.size(); i++) {
+                if (oldVersion.get(i).mDate.equals(todayDate))
+                  index = i;
+              }
+            if (index == -1) {
+              mStepCountList.add(mDateStepsModel);
+            } else if (oldVersion.get(index).mStepCount < mDateStepsModel.mStepCount) {
+              mStepCountList.add(mDateStepsModel);
+            }
+          }
+
         } while (c.moveToNext());
       }
       db.close();
