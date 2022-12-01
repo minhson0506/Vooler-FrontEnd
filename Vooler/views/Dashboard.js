@@ -7,47 +7,74 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CardView from '../components/CardView';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
-import RankTable from '../components/TableView';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
-import {AppBarBackButton, AppBarIcon} from '../components/AppBar';
+import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
-import Step from './Step';
-import Graph from './Graph';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
+import {
+  getDate,
+  getTeamData,
+  fetchStep,
+  getBadge,
+  getTodayStep,
+  getTeamDataToday,
+} from '../utils/getData';
+import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
-import {useUser} from '../hooks/ApiHooks';
-import {getDate, getTeamData, fetchStep} from '../utils/getData';
 
 const Dashboard = ({navigation}) => {
-  // const {TaskModule} = NativeModules;
-  const {user, loading, setLoading, token, rank, step, weekStep} =
-    useContext(MainContext);
+  const {TaskModule} = NativeModules;
   const context = useContext(MainContext);
+  const {
+    loading,
+    setLoading,
+    user,
+    currentStep,
+    rank,
+    step,
+    weekStep,
+    badgeStepDay,
+    badgeStepWeek,
+    badgeRank,
+    setBadgeStepDay,
+    setBadgeStepWeek,
+    setBadgeRank,
+  } = useContext(MainContext);
 
-  console.log(`step day ${step}, step week: ${weekStep}`);
+  console.log(
+    `day badge: ${badgeStepDay}, week badge: ${badgeStepWeek}, rank: ${badgeRank}`
+  );
 
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
   );
+  const [second, setSecond] = useState(0);
 
   const randomQuote = () => {
     const random = Math.floor(Math.random() * 18);
     setQuote(quoteArray[random].quote);
   };
 
+  //TODO: getBadge cannot auto reload
   useEffect(() => {
+    Platform.OS === 'android'
+      ? TaskModule.getToken(token)
+      : console.log('you are running ios');
     randomQuote();
-    fetchStep(getDate(), context);
-  }, [loading]);
+    const interval = setInterval(() => {
+      if (second === 100) {
+        setSecond(0);
+      } else setSecond(second + 1);
+      getTeamDataToday(context);
+      getTodayStep(context);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
-    // TaskModule.getToken(token);
-    getTeamData(getDate(), context);
-  }, []);
+    getBadge(context);
+  }, [loading]);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -77,7 +104,9 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Steps</Text>
               </View>
-              <Text style={styleFont.Headline}>{step ? step : 0}</Text>
+              <Text style={styleFont.Headline}>
+                {currentStep ? currentStep : 0}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
@@ -115,7 +144,9 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Badges</Text>
               </View>
-              <Text style={styleFont.Headline}>0</Text>
+              <Text style={styleFont.Headline}>
+                {badgeRank + badgeStepDay + badgeStepWeek}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

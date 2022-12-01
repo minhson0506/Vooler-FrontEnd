@@ -62,7 +62,7 @@ const TeamRank = ({navigation}) => {
                   <Divider width={2}></Divider>
                   <RankTable
                     state={'Team'}
-                    source={context.teamRank.slice(2)}
+                    source={context.teamRank.slice(3)}
                   ></RankTable>
                 </>
               ) : (

@@ -19,35 +19,33 @@ import {MainContext} from '../contexts/MainContext';
 import {fetchStep, getDate} from '../utils/getData';
 
 const Badges = ({navigation}) => {
-  const {token, badgeDay, setBadgeDay, step, weekStep, setLoading, loading} =
-    useContext(MainContext);
-  const context = useContext(MainContext);
+  const {badgeStepDay, badgeStepWeek, badgeRank} = useContext(MainContext);
+  const [array, setArray] = useState(levelArray);
 
-  const onPress = () => {
-    setLoading(!loading);
-    navigation.goBack();
-  };
-
-  const compareData = () => {
-    if (step < dayTarget[0].name) {
-      setBadgeDay(0);
-    } else if (step < dayTarget[1].name) {
-      setBadgeDay(1);
-    } else if (step < dayTarget[2].name) {
-      setBadgeDay(2);
-    } else if (step < dayTarget[3].name) {
-      setBadgeDay(3);
-    } else if (step < dayTarget[4].name) {
-      setBadgeDay(4);
-    } else if (step < dayTarget[5].name) {
-      setBadgeDay(5);
+  const changeArray = () => {
+    const newArray = [...array];
+    newArray[0].completed = badgeStepDay;
+    newArray[1].completed = badgeRank;
+    if (badgeStepWeek <= 6) {
+      newArray[2].completed = badgeStepWeek;
+    } else if (badgeStepWeek <= 12) {
+      newArray[2].completed = 6;
+      newArray[3].completed = badgeStepWeek - 6;
+    } else {
+      newArray[2].completed = 6;
+      newArray[3].completed = 6;
+      newArray[4].completed = badgeStepWeek - 12;
     }
+    setArray(newArray);
   };
 
   useEffect(() => {
-    fetchStep(getDate(), context);
-    compareData();
+    changeArray();
   }, []);
+
+  const onPress = () => {
+    navigation.goBack();
+  };
 
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;

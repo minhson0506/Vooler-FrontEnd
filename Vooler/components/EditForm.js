@@ -44,6 +44,7 @@ const EditForm = () => {
     control,
     handleSubmit,
     formState: {errors},
+    reset,
   } = useForm({
     defaultValues: {
       username: user,
@@ -52,28 +53,29 @@ const EditForm = () => {
   });
 
   const onSubmit = async (data) => {
-    setUser(data.username);
     try {
       let hashedData = '';
-      let user = {};
+      let json = {};
       if (data.password) {
         hashedData = await generateHash(data.username, data.password);
-        user = {
+        json = {
           userId: hashedData.userId,
           password: hashedData.password,
           teamId: teamValue,
         };
       } else {
         hashedData = await generateHash(data.username, '');
-        user = {
+        json = {
           userId: hashedData.userId,
           password: '',
           teamId: teamValue,
         };
       }
-      const userData = await putUser(user, token);
-      console.log('put data', userData);
+      const userData = await putUser(json, token);
+
       if (userData) {
+        setUser(data.username);
+        reset({username: data.username, password: ''});
         Alert.alert('Success', 'User modified!');
         setTeam(teamValue);
       }

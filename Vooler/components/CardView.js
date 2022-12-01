@@ -5,10 +5,10 @@ import {colorSet, useStyles} from '../utils/GlobalStyle';
 
 const CardView = ({array}) => {
   const [items, setItems] = useState(array);
-
   const onClick = (id) => {
     const newImages = [...items];
-    newImages[id].state = !newImages[id].state;
+    if (newImages[id].state == 1) newImages[id].state = 2;
+    else if (newImages[id].state == 2) newImages[id].state = 1;
     setItems(newImages);
   };
 
@@ -28,7 +28,16 @@ const CardView = ({array}) => {
               onClick(index);
             }}
           >
-            {item.state ? (
+            {item.state == 1 ? (
+              <>
+                <Text style={[fontStyle.Text, styles.itemName]}>
+                  {item.name}
+                </Text>
+                <Text style={[fontStyle.Text, styles.itemName]}>
+                  {item.unit}
+                </Text>
+              </>
+            ) : item.state == 2 ? (
               <Image
                 style={{
                   width: '100%',
@@ -39,14 +48,17 @@ const CardView = ({array}) => {
                 source={item.image}
               ></Image>
             ) : (
-              <>
-                <Text style={[fontStyle.Text, styles.itemName]}>
-                  {item.name}
-                </Text>
-                <Text style={[fontStyle.Text, styles.itemName]}>
-                  {item.unit}
-                </Text>
-              </>
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 1,
+                  borderWidth: 3,
+                  borderColor: colorSet.primary,
+                  borderRadius: 15,
+                }}
+                source={item.image}
+              ></Image>
             )}
           </TouchableOpacity>
         )}
