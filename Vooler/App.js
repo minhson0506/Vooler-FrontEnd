@@ -8,23 +8,13 @@ import BackgroundFetch from 'react-native-background-fetch';
 
 const pedometer = NativeModules.Pedometer;
 console.log(pedometer);
-// pedometer.backgroundTasks((value) => {
-//   console.log('Background task' + value);
-// });
-const stepTest = () => {
-  pedometer
-    .getSteps()
-    .then((ret) => console.log(ret))
-    .catch((e) => console.log(e.message));
-};
-stepTest();
 
 export default function App() {
   const [state, setState] = useState({events: []});
-  const taskId = 'com.vooler.ios-module.task';
   useEffect(() => {
     const initBackgroundFetch = async () => {
       const onEvent = async (taskId) => {
+        // Do background work
         console.log('[BackgroundFetch] task: ', taskId);
         pedometer.backgroundTasks((value) => {
           console.log('Background task' + value + new Date());
@@ -36,10 +26,8 @@ export default function App() {
           .getSteps()
           .then((ret) => console.log(ret))
           .catch((e) => console.log(e.message));
-
-        // Do your background work...
         await addEvent(taskId);
-        // IMPORTANT:  You must signal to the OS that your task is complete.
+        // signal to the OS that your task is complete.
         BackgroundFetch.finish(taskId);
       };
       // Timeout callback is executed when your Task has exceeded its allowed running-time.
@@ -55,10 +43,6 @@ export default function App() {
         onTimeout
       );
       console.log('[BackgroundFetch] configure status: ', status);
-      // BackgroundFetch.scheduleTask({
-      //   taskId: 'com.vooler.ios-module.task',
-      //   delay: 1 * 60 * 1000,
-      // });
     };
     initBackgroundFetch();
   }, []);

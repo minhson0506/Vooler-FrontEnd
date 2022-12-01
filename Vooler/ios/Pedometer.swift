@@ -36,7 +36,7 @@ class Pedometer: NSObject {
   
   private func initializePedometer () {
     if isPedometerAvailable {
-      guard let startDate = Calendar.current.date(byAdding: .hour, value: -1, to: Date())
+      guard let startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())
       else {return}
       pedometer.queryPedometerData(from: startDate, to: Date()){
         (data, error) in
