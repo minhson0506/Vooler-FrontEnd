@@ -14,11 +14,9 @@ const colorSet = {
 };
 
 const useStyles = () => {
-  const {setLoadFont} = useContext(MainContext);
   const [font, setFont] = useState(false);
   useEffect(() => {
     async function loadFont() {
-      console.log('start load font');
       return await Font.loadAsync({
         'Nunito-Black': require('../assets/fonts/Nunito-Black.ttf'),
         'Nunito-ExtraBold': require('../assets/fonts/Nunito-ExtraBold.ttf'),
@@ -31,10 +29,8 @@ const useStyles = () => {
     loadFont().then(() => {
       setFont(true);
     });
-    console.log('finish to load font');
   }, []);
 
-  console.log('style');
   if (!font) return undefined;
   else
     return StyleSheet.create({

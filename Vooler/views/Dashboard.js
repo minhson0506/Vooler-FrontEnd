@@ -1,42 +1,97 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   Dimensions,
+  NativeModules,
   StyleSheet,
   Text,
   TouchableOpacity,
+  ScrollView,
   View,
 } from 'react-native';
-import CardView from '../components/CardView';
-import LoginForm from '../components/LoginForm';
-import RegisterForm from '../components/RegisterForm';
-import RankTable from '../components/TableView';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
-import {AppBarBackButton, AppBarIcon} from '../components/AppBar';
+import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
-import Step from './Step';
-import Graph from './Graph';
 import {Icon} from '@rneui/base';
+import {MainContext} from '../contexts/MainContext';
+import {
+  getToday,
+  getTeamData,
+  fetchStep,
+  getBadge,
+  getTodayStep,
+  getTeamDataToday,
+} from '../utils/getData';
+import {Platform} from 'react-native';
+import {quoteArray} from '../utils/data';
 
 const Dashboard = ({navigation}) => {
+  const {TaskModule} = NativeModules;
+  const context = useContext(MainContext);
+  const {
+    loading,
+    setLoading,
+    user,
+    currentStep,
+    rank,
+    step,
+    weekStep,
+    badgeStepDay,
+    badgeStepWeek,
+    badgeRank,
+    setBadgeStepDay,
+    setBadgeStepWeek,
+    setBadgeRank,
+    token,
+  } = useContext(MainContext);
+
+  const [quote, setQuote] = useState(
+    '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
+  );
+  const [second, setSecond] = useState(0);
+
+  const randomQuote = () => {
+    const random = Math.floor(Math.random() * 18);
+    setQuote(quoteArray[random].quote);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (second === 100) {
+        setSecond(0);
+      } else setSecond(second + 1);
+      getTeamDataToday(context).then(
+        getTodayStep(context).then(getBadge(context))
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  useEffect(() => {
+    Platform.OS === 'android'
+      ? TaskModule.getToken(token)
+      : console.log('you are running ios');
+
+    randomQuote();
+  }, []);
+
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
   else
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarIcon></AppBarIcon>
+
         <View style={styles.container}>
           <View style={styles.textView}>
-            <Text style={styleFont.Title}>Good morning, Laura</Text>
-            <Text style={styles.quote}>
-              “The longer I live, the more beautiful life becomes.” - Frank
-              Lloyd Wright
-            </Text>
+            <Text style={styleFont.Title}>Good morning, {user}</Text>
+            <Text style={styles.quote}>{quote}</Text>
           </View>
           <View style={{height: '80%', justifyContent: 'space-evenly'}}>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -48,12 +103,15 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Steps</Text>
               </View>
-              <Text style={styleFont.Headline}>500</Text>
+              <Text style={styleFont.Headline}>
+                {currentStep ? currentStep : 0}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -66,14 +124,14 @@ const Dashboard = ({navigation}) => {
                 <Text style={styleFont.Title}>Rank</Text>
               </View>
               <View style={{flexDirection: 'row'}}>
-                <Text style={styleFont.Headline}>1</Text>
-                <Text style={styleFont.Text}>st</Text>
+                <Text style={styleFont.Headline}>{rank ? rank : 0}</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
+                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -85,7 +143,9 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Badges</Text>
               </View>
-              <Text style={styleFont.Headline}>0</Text>
+              <Text style={styleFont.Headline}>
+                {badgeRank + badgeStepDay + badgeStepWeek}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -95,6 +155,7 @@ const Dashboard = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'space-evenly',
   },
   textView: {

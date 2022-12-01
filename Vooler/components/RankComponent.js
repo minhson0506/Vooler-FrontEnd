@@ -15,7 +15,7 @@ import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
 
-const RankComp = ({step1, step2, step3}) => {
+const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
   const styleFont = useStyles();
   const [state, setState] = useState(100);
 
@@ -31,10 +31,14 @@ const RankComp = ({step1, step2, step3}) => {
       >
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old1.png')}
           ></Image>
-          <Text style={styles.text}>Koti 2</Text>
+          {secondTeam ? (
+            <Text style={styles.text}>{secondTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -46,15 +50,23 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>2</Text>
           </View>
-          <Text style={styleFont.Title}>{step2}</Text>
+          {secondTeam ? (
+            <Text style={styles.text}>{secondTeam[2]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old2.png')}
           ></Image>
-          <Text style={styles.text}>Koti 3</Text>
+          {firstTeam ? (
+            <Text style={styles.text}>{firstTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -63,15 +75,23 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>1</Text>
           </View>
-          <Text style={styleFont.Title}>{step1}</Text>
+          {firstTeam ? (
+            <Text style={styles.text}>{firstTeam[2]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old3.png')}
           ></Image>
-          <Text style={styles.text}>Koti 1</Text>
+          {thirdTeam ? (
+            <Text style={styles.text}>{thirdTeam[1]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <View
             style={[
               styles.rankView,
@@ -80,7 +100,11 @@ const RankComp = ({step1, step2, step3}) => {
           >
             <Text style={styles.rank}>3</Text>
           </View>
-          <Text style={styleFont.Title}>{step3}</Text>
+          {thirdTeam ? (
+            <Text style={styles.text}>{thirdTeam[2]}</Text>
+          ) : (
+            <Text style={styles.noData}>No data</Text>
+          )}
           <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
         </View>
       </View>
@@ -92,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   column: {
+    flex: 1,
     alignItems: 'center',
     alignSelf: 'flex-end',
   },
@@ -110,12 +135,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito-ExtraBold',
     fontSize: 20,
   },
+  noData: {
+    fontFamily: 'Nunito-SemiBold',
+    fontSize: 18,
+  },
   rankContainer: {
     height: Dimensions.get('window').height * 0.4,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });
 

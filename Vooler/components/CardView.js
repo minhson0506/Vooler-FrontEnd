@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 import {FlatGrid} from 'react-native-super-grid';
-import {moominArray} from '../utils/data';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 
-const CardView = () => {
-  const [items, setItems] = useState(moominArray);
-
+const CardView = ({array}) => {
+  const [items, setItems] = useState(array);
   const onClick = (id) => {
     const newImages = [...items];
-    newImages[id].state = !newImages[id].state;
+    if (newImages[id].state == 1) newImages[id].state = 2;
+    else if (newImages[id].state == 2) newImages[id].state = 1;
     setItems(newImages);
   };
 
@@ -29,12 +28,7 @@ const CardView = () => {
               onClick(index);
             }}
           >
-            {item.state ? (
-              <Image
-                style={{width: '100%', height: '100%', opacity: 0.2}}
-                source={item.image}
-              ></Image>
-            ) : (
+            {item.state == 1 ? (
               <>
                 <Text style={[fontStyle.Text, styles.itemName]}>
                   {item.name}
@@ -43,6 +37,28 @@ const CardView = () => {
                   {item.unit}
                 </Text>
               </>
+            ) : item.state == 2 ? (
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 0.2,
+                  borderRadius: 15,
+                }}
+                source={item.image}
+              ></Image>
+            ) : (
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  opacity: 1,
+                  borderWidth: 3,
+                  borderColor: colorSet.primary,
+                  borderRadius: 15,
+                }}
+                source={item.image}
+              ></Image>
             )}
           </TouchableOpacity>
         )}
