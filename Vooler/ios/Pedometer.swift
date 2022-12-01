@@ -9,7 +9,7 @@
 // - create data class of record DONE
 // - add create record method
 // - add post method with token from RN. Use event emitter when submit logins and save token to userDefaults
-// - add schedule to run task in background -> handled in RN with package react-native-background-fetch
+// - add schedule to run task in background -> handled in RN with package react-native-background-fetch Test DONE
 // - if no network save unposted data to core data
 
 
