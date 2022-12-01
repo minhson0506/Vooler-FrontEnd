@@ -67,56 +67,64 @@ const RankTable = ({state, source, sourceYesterday}) => {
           data={state == 'Team' ? header : userHeader}
           textStyle={styles.textHeader}
         />
-        {state == 'Team'
-          ? source.map((rowData) => (
-              <Row
-                key={rowData[0]}
-                data={rowData}
-                style={[
-                  styles.teamRow,
-                  rowData[1] == teamName && {backgroundColor: colorSet.primary},
-                ]}
-                textStyle={[styles.teamText, fontStyle.Text]}
-              />
-            ))
-          : source.map((rowData, index) => (
-              <View style={styles.rowWithIcon}>
+        <ScrollView
+          contentContainerStyle={{
+            height: Dimensions.get('window').height * 0.9,
+          }}
+        >
+          {state == 'Team'
+            ? source.map((rowData) => (
                 <Row
                   key={rowData[0]}
                   data={rowData}
-                  style={[styles.row]}
-                  textStyle={[
-                    styles.text,
-                    fontStyle.Text,
-                    rowData[1] == user && styles.textUser,
+                  style={[
+                    styles.teamRow,
+                    rowData[1] == teamName && {
+                      backgroundColor: colorSet.primary,
+                    },
                   ]}
+                  textStyle={[styles.teamText, fontStyle.Text]}
                 />
-                <View style={{marginTop: 10, marginLeft: 10}}>
-                  {data[index] == 'none' ? (
-                    <Icon
-                      name="equal"
-                      type="material-community"
-                      size={30}
-                      color={colorSet.black}
-                    ></Icon>
-                  ) : data[index] == 'up' ? (
-                    <Icon
-                      name="arrow-up"
-                      type="ionicon"
-                      size={30}
-                      color={colorSet.green}
-                    ></Icon>
-                  ) : (
-                    <Icon
-                      name="arrow-down"
-                      type="ionicon"
-                      size={30}
-                      color={colorSet.red}
-                    ></Icon>
-                  )}
+              ))
+            : source.map((rowData, index) => (
+                <View style={styles.rowWithIcon}>
+                  <Row
+                    key={rowData[0]}
+                    data={rowData}
+                    style={[styles.row]}
+                    textStyle={[
+                      styles.text,
+                      fontStyle.Text,
+                      rowData[1] == user && styles.textUser,
+                    ]}
+                  />
+                  <View style={{marginTop: 10, marginLeft: 10}}>
+                    {data[index] == 'none' ? (
+                      <Icon
+                        name="equal"
+                        type="material-community"
+                        size={30}
+                        color={colorSet.black}
+                      ></Icon>
+                    ) : data[index] == 'up' ? (
+                      <Icon
+                        name="arrow-up"
+                        type="ionicon"
+                        size={30}
+                        color={colorSet.green}
+                      ></Icon>
+                    ) : (
+                      <Icon
+                        name="arrow-down"
+                        type="ionicon"
+                        size={30}
+                        color={colorSet.red}
+                      ></Icon>
+                    )}
+                  </View>
                 </View>
-              </View>
-            ))}
+              ))}
+        </ScrollView>
       </Table>
     );
 };
@@ -147,7 +155,7 @@ const styles = StyleSheet.create({
   },
   row: {
     width: '80%',
-    marginTop: 15,
+    marginTop: 20,
   },
   teamRow: {
     marginTop: 20,

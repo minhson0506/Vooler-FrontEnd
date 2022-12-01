@@ -11,7 +11,6 @@ const {getTeamRecordByDate, getAllTeamRecords} = useTeam();
 const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
 
 const getTeamData = async (day, context) => {
-  console.log('start to get team data');
   const {team, token, user, uid, setRank, setTeamData} = context;
   try {
     const response = await getTeamRecordByDate(team, day, token);
@@ -54,7 +53,6 @@ const getTeamData = async (day, context) => {
 };
 
 const getTeamDataYesterday = async (day, context) => {
-  console.log('start to get team data');
   const {team, token, user, uid, setTeamDataYesterday} = context;
   try {
     const response = await getTeamRecordByDate(team, day, token);

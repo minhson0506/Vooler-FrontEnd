@@ -46,7 +46,7 @@ const Graph = ({source}) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    fontFamily: 'Nunito-SemiBold',
+    fontFamily: 'Nunito-Bold',
     alignSelf: 'center',
     marginTop: 20,
   },
