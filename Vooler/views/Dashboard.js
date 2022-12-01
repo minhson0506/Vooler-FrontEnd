@@ -40,8 +40,10 @@ const Dashboard = ({navigation}) => {
     setBadgeStepDay,
     setBadgeStepWeek,
     setBadgeRank,
+    token,
   } = useContext(MainContext);
 
+  console.log('token', token);
   console.log(
     `day badge: ${badgeStepDay}, week badge: ${badgeStepWeek}, rank: ${badgeRank}`
   );
@@ -58,23 +60,24 @@ const Dashboard = ({navigation}) => {
 
   //TODO: getBadge cannot auto reload
   useEffect(() => {
-    Platform.OS === 'android'
-      ? TaskModule.getToken(token)
-      : console.log('you are running ios');
-    randomQuote();
     const interval = setInterval(() => {
       if (second === 100) {
         setSecond(0);
       } else setSecond(second + 1);
-      getTeamDataToday(context);
-      getTodayStep(context);
-    }, 1500);
+      getTeamDataToday(context).then(
+        getTodayStep(context).then(getBadge(context))
+      );
+    }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
-    getBadge(context);
-  }, [loading]);
+    Platform.OS === 'android'
+      ? TaskModule.getToken(token)
+      : console.log('you are running ios');
+
+    randomQuote();
+  }, []);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;

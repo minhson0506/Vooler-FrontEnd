@@ -2,7 +2,6 @@ import {useTeam, useUser} from '../hooks/ApiHooks';
 import {nameArray} from '../utils/data';
 import {
   dayTarget,
-  quoteArray,
   weekFirstTarget,
   weekSecondTarget,
   weekThirdTarget,
@@ -13,7 +12,7 @@ const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
 
 const getTeamData = async (day, context) => {
   console.log('start to get team data');
-  const {team, token, user, uid, setRank, setTeamData, rank} = context;
+  const {team, token, user, uid, setRank, setTeamData} = context;
   try {
     const response = await getTeamRecordByDate(team, day, token);
 
@@ -55,17 +54,9 @@ const getTeamData = async (day, context) => {
 };
 
 const fetchStep = async (day, context) => {
-  console.log('start fetch step', day);
   const {
     token,
     setStep,
-    setWeekStep,
-    step,
-    currentWeekStep,
-    setCurrentStep,
-    setCurrentWeekStep,
-    loading,
-    setLoading,
   } = context;
   try {
     const userData = await getAllRecordsByUser(token);
@@ -85,28 +76,22 @@ const fetchStep = async (day, context) => {
 const getTodayStep = async (context) => {
   const {
     token,
-    setStep,
-    setWeekStep,
-    step,
-    currentWeekStep,
     setCurrentStep,
     setCurrentWeekStep,
     loading,
     setLoading,
   } = context;
   try {
-    const userData = await getAllRecordsByUser(token);
-    if (userData) {
-      const array = userData.records;
+    const date = getDate();
+    const response = await getUserRecordwithDate(date, token);
+    if (response) {
+      const array = response.records;
       for (const element in array) {
         if (array[element].record_date == getDate()) {
           setCurrentStep(array[element].step_count_for_date);
         }
       }
-      const response = await getUserRecordwithDate(getDate(), token);
-      if (response) {
-        setCurrentWeekStep(response.total_steps_accumulated);
-      }
+      setCurrentWeekStep(response.total_steps_accumulated);
     }
     setLoading(!loading);
   } catch (error) {
@@ -115,7 +100,7 @@ const getTodayStep = async (context) => {
 };
 
 const getTeamDataToday = async (context) => {
-  const {team, token, user, uid, setRank, setTeamData, rank} = context;
+  const {team, token, user, uid, setRank} = context;
   try {
     const response = await getTeamRecordByDate(team, getDate(), token);
 
@@ -155,14 +140,14 @@ const getTeamDataToday = async (context) => {
 };
 
 const getWeekBadge = (array, context, index) => {
-  const {currentWeekStep, badgeStepWeek, setBadgeStepWeek} = context;
+  const {currentWeekStep, setBadgeStepWeek} = context;
   if (currentWeekStep < array[0].name) setBadgeStepWeek(0 + index);
   else if (currentWeekStep < array[1].name) setBadgeStepWeek(1 + index);
   else if (currentWeekStep < array[2].name) setBadgeStepWeek(2 + index);
   else if (currentWeekStep < array[3].name) setBadgeStepWeek(3 + index);
   else if (currentWeekStep < array[4].name) setBadgeStepWeek(4 + index);
   else if (currentWeekStep < array[5].name) setBadgeStepWeek(5 + index);
-  else setBadgeStepWeek(6 + badgeStepWeek);
+  else setBadgeStepWeek(6 + index);
 };
 
 const getBadge = (context) => {
@@ -172,11 +157,7 @@ const getBadge = (context) => {
     rank,
     setBadgeRank,
     setBadgeStepDay,
-    setBadgeStepWeek,
   } = context;
-  console.log(
-    `day currentStep: ${currentStep}, currentWeekStep: ${currentWeekStep}, rank: ${rank}`
-  );
   if (currentStep < dayTarget[0].name) setBadgeStepDay(0);
   else if (currentStep < dayTarget[1].name) setBadgeStepDay(1);
   else if (currentStep < dayTarget[2].name) setBadgeStepDay(2);
@@ -247,7 +228,17 @@ const getDate = () => {
   const date = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
-  return year + '-' + month + '-' + date;
+  let today = year + '-' + month + '-' + date;
+  if (month < 10) {
+    if (date < 10) {
+      today = year + '-0' + month + '-0' + date;
+    } else today = year + '-0' + month + '-' + date;
+  } else {
+    if (date < 10) {
+      today = year + '-' + month + '-0' + date;
+    } else today = year + '-' + month + '-' + date;
+  }
+  return today;
 };
 
 export {
