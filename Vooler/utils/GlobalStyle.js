@@ -1,6 +1,5 @@
-import React, {useEffect, useContext, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {StyleSheet, Platform, StatusBar, Dimensions} from 'react-native';
-import {MainContext} from '../contexts/MainContext';
 import * as Font from 'expo-font';
 
 const colorSet = {

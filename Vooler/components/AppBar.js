@@ -1,6 +1,6 @@
 import {Icon} from '@rneui/base';
 import * as React from 'react';
-import {StyleSheet, Text, Image, View, TouchableOpacity} from 'react-native';
+import {Text, Image, View, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import {PropTypes} from 'prop-types';

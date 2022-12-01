@@ -1,22 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-
 import {
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   View,
-  ScrollView,
   Dimensions,
   FlatList,
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
-import {dayTarget, levelArray} from '../utils/data';
+import {levelArray} from '../utils/data';
 import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
-import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {fetchStep, getDate} from '../utils/getData';
 
 const Badges = ({navigation}) => {
   const {badgeStepDay, badgeStepWeek, badgeRank} = useContext(MainContext);

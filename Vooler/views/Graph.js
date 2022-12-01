@@ -1,8 +1,6 @@
-import {color} from '@rneui/base';
-import React, {Component} from 'react';
+import React from 'react';
 import {Dimensions, StyleSheet, View, Text} from 'react-native';
 import {BarChart} from 'react-native-gifted-charts';
-import {getUserWeekData} from '../utils/getData';
 import {colorSet} from '../utils/GlobalStyle';
 
 const Graph = ({source}) => {

@@ -15,7 +15,7 @@ import {useUser} from '../hooks/ApiHooks';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser, setUid, token, setTeam} =
+  const {setIsLoggedIn, setToken, setUser, setUid, setTeam} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postUser, postLogin} = useAuth();

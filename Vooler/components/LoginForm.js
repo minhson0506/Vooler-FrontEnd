@@ -18,11 +18,10 @@ import {generateHash} from '../utils/hash';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, token} =
+  const {setIsLoggedIn, setUser, setToken, setTeam, setUid} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postLogin} = useAuth();
-  const {postRecord} = useRecord();
 
   const {
     control,

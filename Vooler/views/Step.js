@@ -1,16 +1,14 @@
-import React, {useContext, useState, useEffect, Component} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
-import {ECharts} from 'react-native-echarts-wrapper';
 import Graph from './Graph';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {getToday, getUserWeekData, fetchStep} from '../utils/getData';
-import {ScrollView} from 'react-native';
+import {getToday, fetchStep} from '../utils/getData';
 
 const Step = ({navigation}) => {
   // const {TaskModule} = NativeModules;
@@ -20,7 +18,6 @@ const Step = ({navigation}) => {
   const {token, step, setStep, loading, setLoading} = useContext(MainContext);
   const context = useContext(MainContext);
   const {getUserRecordwithDate} = useUser();
-  const [date, setDate] = useState('No data');
   const [graph, setGraph] = useState([]);
 
   const onPress = () => {
@@ -31,9 +28,7 @@ const Step = ({navigation}) => {
   const getGraphData = async (day) => {
     try {
       const graphData = await getUserRecordwithDate(day, token);
-
       const startDay = graphData.start_date.split('-');
-      console.log('current data before convert', graphData);
       const current = new Date(
         parseInt(startDay[0]),
         parseInt(startDay[1]) - 1,
@@ -48,8 +43,6 @@ const Step = ({navigation}) => {
         );
       }
 
-      console.log('week', weekArray);
-
       let weekData = weekArray.map((element) => {
         for (let i = 0; i < graphData.records.length; i++) {
           if (element == graphData.records[i].record_date) {
@@ -63,20 +56,6 @@ const Step = ({navigation}) => {
       console.log('Error getting data for graph', error);
     }
   };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (second == 2000) {
-  //       setSecond(0);
-  //     } else {
-  //       setSecond(second + 1)
-  //     }
-  //     TaskModule.getStep
-  //     console.log('step in android: ', TaskModule.getStep);
-  //     console.log('step in Vs: ', steps);
-  //   }, 500);
-  //   return () => clearInterval(interval)
-  // }, []);
 
   useEffect(() => {
     fetchStep(getToday(), context);

@@ -1,5 +1,5 @@
-import {Table, Row, Rows} from 'react-native-table-component';
-import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {Table, Row} from 'react-native-table-component';
+import {StyleSheet, View, Dimensions, ScrollView} from 'react-native';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import {useContext, useState, useEffect} from 'react';
 import {MainContext} from '../contexts/MainContext';
@@ -62,12 +62,14 @@ const RankTable = ({state, source, sourceYesterday}) => {
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <Table style={styles.container}>
+      <Table key={'table'} style={styles.container}>
         <Row
+          key={'header'}
           data={state == 'Team' ? header : userHeader}
           textStyle={styles.textHeader}
         />
         <ScrollView
+          key={'scroll'}
           contentContainerStyle={{
             height: Dimensions.get('window').height * 0.9,
           }}
@@ -87,9 +89,9 @@ const RankTable = ({state, source, sourceYesterday}) => {
                 />
               ))
             : source.map((rowData, index) => (
-                <View style={styles.rowWithIcon}>
+                <View key={rowData[0]} style={styles.rowWithIcon}>
                   <Row
-                    key={rowData[0]}
+                    key={rowData[1]}
                     data={rowData}
                     style={[styles.row]}
                     textStyle={[
@@ -98,9 +100,10 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       rowData[1] == user && styles.textUser,
                     ]}
                   />
-                  <View style={{marginTop: 10, marginLeft: 10}}>
+                  <View key={rowData[2]} style={{marginTop: 10, marginLeft: 10}}>
                     {data[index] == 'none' ? (
                       <Icon
+                        key={'same'}
                         name="equal"
                         type="material-community"
                         size={30}
@@ -108,6 +111,7 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       ></Icon>
                     ) : data[index] == 'up' ? (
                       <Icon
+                        key={'up'}
                         name="arrow-up"
                         type="ionicon"
                         size={30}
@@ -115,6 +119,7 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       ></Icon>
                     ) : (
                       <Icon
+                        key={'down'}
                         name="arrow-down"
                         type="ionicon"
                         size={30}

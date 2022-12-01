@@ -14,9 +14,6 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
 import {
-  getToday,
-  getTeamData,
-  fetchStep,
   getBadge,
   getTodayStep,
   getTeamDataToday,
@@ -33,14 +30,9 @@ const Dashboard = ({navigation}) => {
     user,
     currentStep,
     rank,
-    step,
-    weekStep,
     badgeStepDay,
     badgeStepWeek,
     badgeRank,
-    setBadgeStepDay,
-    setBadgeStepWeek,
-    setBadgeRank,
     token,
   } = useContext(MainContext);
 

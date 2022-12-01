@@ -1,9 +1,8 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
@@ -15,11 +14,9 @@ import {getToday, getTeamData, getTeamDataYesterday} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const UserRank = ({navigation}) => {
-  const [date, setDate] = useState('No data');
   const {
     teamData,
     teamDataYesterday,
-    token,
     setTeamData,
     setTeamDataYesterday,
     loading,
