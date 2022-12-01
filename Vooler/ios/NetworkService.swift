@@ -14,7 +14,7 @@ class NetworkService {
   let baseUrl = "https://www.vooler.biz"
   
   // Check network availability
-  func checkNetworkConnection(){
+  func checkNetworkConnection() -> Bool{
     let reachability = try! Reachability()
 
     reachability.whenReachable = { reachability in
@@ -33,9 +33,13 @@ class NetworkService {
     } catch {
         print("Unable to start notifier")
     }
+    return reachability.connection != .unavailable;
   }
   
   
   // TODO: function to handle post record action
-  func postRecords(){}
+  func postRecords(){
+    
+    
+  }
 }

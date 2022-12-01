@@ -27,6 +27,7 @@
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.39.3",
     "react-native": "0.70.5",
+    "react-native-background-fetch": "^4.1.5",
     "react-native-dropdown-picker": "^5.4.3",
     "react-native-echarts-wrapper": "^2.0.0",
     "react-native-gesture-handler": "^2.8.0",

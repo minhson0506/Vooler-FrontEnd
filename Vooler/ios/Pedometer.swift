@@ -9,7 +9,7 @@
 // - create data class of record DONE
 // - add create record method
 // - add post method with token from RN. Use event emitter when submit logins and save token to userDefaults
-// - add schedule to run task in background
+// - add schedule to run task in background -> handled in RN with package react-native-background-fetch
 // - if no network save unposted data to core data
 
 
@@ -18,7 +18,6 @@ import CoreMotion
 
 @objc(Pedometer)
 class Pedometer: NSObject {
-  
   let networkService = NetworkService()
   override init() {
     super.init();
@@ -55,12 +54,14 @@ class Pedometer: NSObject {
     callback([count])
   }
   
+  
+  // This is example func
   @objc
   func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
     // Seem that the function is called here when the app starts on foreground, we can see the log only when calling it here
 //    networkService.checkNetworkConnection();
 //    print("network service \(networkService)");
-
+    
     if (self.steps == nil){
       let error = NSError(domain: "", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
@@ -75,6 +76,16 @@ class Pedometer: NSObject {
   func getToken(){
     
   }
+  
+  
+  // TODO: function to handle background task (get pedometer data and save to coredata if network not available)
+  //expose to ObjC
+  @objc
+  func backgroundTasks(_ callback: RCTResponseSenderBlock) {
+    callback(["hello from background task"]);
+  }
+  
+  
   
   @objc
   static func requiresMainQueueSetup() -> Bool {

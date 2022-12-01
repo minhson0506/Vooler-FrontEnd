@@ -16,6 +16,8 @@
 		185E8E9A2937330F00C4567E /* Records+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E982937330F00C4567E /* Records+CoreDataClass.swift */; };
 		185E8E9B2937330F00C4567E /* Records+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E992937330F00C4567E /* Records+CoreDataProperties.swift */; };
 		185E8E9D2937348000C4567E /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E9C2937348000C4567E /* NetworkService.swift */; };
+		185E8E9F293750F600C4567E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E9E293750F600C4567E /* AppDelegate.swift */; };
+		185E8EA32938809200C4567E /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 185E8EA22938809200C4567E /* RNBackgroundFetch+AppDelegate.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		869B86640408479CA037FF1E /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C502B3405340FB8DF2C7EB /* noop-file.swift */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
@@ -39,6 +41,8 @@
 		185E8E982937330F00C4567E /* Records+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Records+CoreDataClass.swift"; sourceTree = "<group>"; };
 		185E8E992937330F00C4567E /* Records+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Records+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		185E8E9C2937348000C4567E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		185E8E9E293750F600C4567E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		185E8EA22938809200C4567E /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		78C502B3405340FB8DF2C7EB /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Vooler/noop-file.swift"; sourceTree = "<group>"; };
 		88621C10C38BA42C622DF867 /* Pods-Vooler.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vooler.release.xcconfig"; path = "Target Support Files/Pods-Vooler/Pods-Vooler.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Vooler/SplashScreen.storyboard; sourceTree = "<group>"; };
@@ -64,6 +68,7 @@
 		13B07FAE1A68108700A75B9A /* Vooler */ = {
 			isa = PBXGroup;
 			children = (
+				185E8EA22938809200C4567E /* RNBackgroundFetch+AppDelegate.m */,
 				185E8E8F2936970900C4567E /* Data */,
 				185E8E862933635700C4567E /* VoolerDebug.entitlements */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
@@ -79,6 +84,7 @@
 				185E8E8D2933B7CF00C4567E /* Pedometer.m */,
 				185E8E8C2933B76800C4567E /* Vooler-Bridging-Header.h */,
 				185E8E9C2937348000C4567E /* NetworkService.swift */,
+				185E8E9E293750F600C4567E /* AppDelegate.swift */,
 			);
 			name = Vooler;
 			sourceTree = "<group>";
@@ -337,8 +343,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				185E8E9F293750F600C4567E /* AppDelegate.swift in Sources */,
 				185E8E9D2937348000C4567E /* NetworkService.swift in Sources */,
 				185E8E922936974A00C4567E /* RecordModel.xcdatamodeld in Sources */,
+				185E8EA32938809200C4567E /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				185E8E9B2937330F00C4567E /* Records+CoreDataProperties.swift in Sources */,
 				185E8E882933B66200C4567E /* Pedometer.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
@@ -404,7 +412,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = com.vooler.iosmodule;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vooler.ios-module";
 				PRODUCT_NAME = Vooler;
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/$(SWIFT_MODULE_NAME)-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;

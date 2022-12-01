@@ -13,6 +13,7 @@
 
 RCT_EXTERN_METHOD(test:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(getSteps:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(backgroundTasks:(RCTResponseSenderBlock)callback)
 
 @end
 
