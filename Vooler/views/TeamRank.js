@@ -59,7 +59,7 @@ const TeamRank = ({navigation}) => {
 
               {context.teamRank.length > 2 ? (
                 <>
-                  <Divider width={2}></Divider>
+                  <Divider width={1}></Divider>
                   <RankTable
                     state={'Team'}
                     source={context.teamRank.slice(3)}
@@ -81,8 +81,8 @@ const TeamRank = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '80%',
-    justifyContent: 'space-evenly',
+    flex: 1,
+    justifyContent: 'flex-start',
   },
   column: {
     alignItems: 'center',

@@ -31,7 +31,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
       >
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old1.png')}
           ></Image>
           {secondTeam ? (
@@ -59,7 +59,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old2.png')}
           ></Image>
           {firstTeam ? (
@@ -84,7 +84,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 100, height: 100}}
+            style={{width: 90, height: 90}}
             source={require('../assets/image/old3.png')}
           ></Image>
           {thirdTeam ? (
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   column: {
+    flex: 1,
     alignItems: 'center',
     alignSelf: 'flex-end',
   },
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });
 

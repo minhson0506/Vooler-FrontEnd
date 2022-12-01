@@ -10,6 +10,7 @@ import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
 import {getToday, getUserWeekData, fetchStep} from '../utils/getData';
+import {ScrollView} from 'react-native';
 
 const Step = ({navigation}) => {
   // const {TaskModule} = NativeModules;
@@ -91,7 +92,6 @@ const Step = ({navigation}) => {
         <WeeklyCalendar
           onDayPress={(day) => {
             setStep(0);
-            // setDate(day.format('YYYY-MM-DD'));
             fetchStep(day.format('YYYY-MM-DD'), context);
             getGraphData(day.format('YYYY-MM-DD'));
           }}
@@ -151,7 +151,7 @@ const Step = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '80%',
+    flex: 1,
     justifyContent: 'space-evenly',
   },
   iconText: {
@@ -159,8 +159,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     alignSelf: 'center',
-    width: 160,
-    height: 160,
+    width: 150,
+    height: 150,
     backgroundColor: colorSet.primary,
     borderRadius: 1000,
   },

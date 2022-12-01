@@ -3,8 +3,6 @@ package com.vooler.module;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextParams;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,16 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import expo.modules.ReactActivityDelegateWrapper;
 import retrofit2.Call;
@@ -40,6 +36,8 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
   private StepsDBHelper mStepsDBHelper;
   private ArrayList<DateStepsModel> mStepCountList;
   public static String token = "";
+
+  private ScheduledExecutorService scheduledExecutorService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +57,23 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
     stepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
     Log.d(TAG, "onCreate: using sensor" + stepDetector.getName());
     sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_UI);
+
+    scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
+    scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        // repeat task
+        mStepCountList = mStepsDBHelper.readStepsEntries(mStepCountList);
+        for (int i = 0; i < mStepCountList.size(); i++) {
+          // post data to db
+          if (mStepCountList.get(i).mUploaded == false) {
+            Log.d(TAG, "run: task update with day" + mStepCountList.get(i).mDate);
+            postDataStep(mStepCountList.get(i).mDate, mStepCountList.get(i).mStepCount, i);
+          }
+        }
+      }
+    }, 0, 15, TimeUnit.MINUTES);
   }
 
   public void requestPermission(Activity activity) {
@@ -66,7 +81,7 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
       if (activity.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
         String[] request = new String[]{Manifest.permission.ACTIVITY_RECOGNITION};
         activity.requestPermissions(request, 1);
-        while (activity.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED);
+        while (activity.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) ;
       }
     }
   }
@@ -79,22 +94,27 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
       Log.d(TAG, "onSensorChanged: step " + sensorEvent.values[0]);
     } else Log.d(TAG, "onSensorChanged: another sensor");
 
-    mStepCountList = mStepsDBHelper.readStepsEntries();
-    for (int i = 0; i < mStepCountList.size(); i++) {
-      Log.d(TAG, "onSensorChanged: date of data current is " + mStepCountList.get(i).mDate);
-      Log.d(TAG, "onSensorChanged: step of data current is " + mStepCountList.get(i).mStepCount);
-      // post data to db
-      postDataStep(mStepCountList.get(i).mDate, mStepCountList.get(i).mStepCount);
-    }
+    mStepCountList = mStepsDBHelper.readStepsEntries(mStepCountList);
+    if (mStepCountList != null)
+      for (int i = 0; i < mStepCountList.size(); i++) {
+        Log.d(TAG, "onSensorChanged: date of data current is " + mStepCountList.get(i).mDate);
+        Log.d(TAG, "onSensorChanged: step of data current is " + mStepCountList.get(i).mStepCount);
+        // post data to db
+        if (mStepCountList.get(i).mUploaded == false) {
+          Log.d(TAG, "onSensorChanged: post data");
+          postDataStep(mStepCountList.get(i).mDate, mStepCountList.get(i).mStepCount, i);
+        }
+      }
+    else Log.d(TAG, "onSensorChanged: mStepCounter null");
   }
 
-  public void postDataStep(String date, int step) {
+  public void postDataStep(String date, int step, int index) {
     Retrofit retrofit = new Retrofit.Builder()
       .baseUrl("https://vooler.biz/")
       .addConverterFactory(GsonConverterFactory.create())
       .build();
     RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-    DataModel model = new DataModel(step, date + " 23:59:59");
+    RequestModel model = new RequestModel(step, date + " 23:59:59");
     //String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInRlYW1faWQiOjEsImlhdCI6MTY2OTY0MDg2M30.86PfjA4qy2k9mVmPDkPDjaDe3KwaIr29bCw97i4rYXc";
     if (token != "") {
       String tokenCurrent = "Bearer " + token;
@@ -108,7 +128,7 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
             Log.d(TAG, "onResponse: post finish with date " + date);
             Log.d(TAG, "onResponse: response is " + response.body().toString());
             Log.d(TAG, "onResponse: response code is " + response.code());
-
+            mStepCountList.get(index).mUploaded = true;
           }
           Log.d(TAG, "onResponse: response " + response.isSuccessful());
         }

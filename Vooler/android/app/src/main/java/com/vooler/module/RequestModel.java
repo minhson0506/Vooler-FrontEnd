@@ -1,11 +1,11 @@
 package com.vooler.module;
 
 
-public class DataModel {
+public class RequestModel {
   private int stepCount;
   private String recordDate;
 
-  public DataModel(int stepCount, String recordDate) {
+  public RequestModel(int stepCount, String recordDate) {
     this.stepCount = stepCount;
     this.recordDate = recordDate;
   }

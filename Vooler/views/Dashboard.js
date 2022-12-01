@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  ScrollView,
   View,
 } from 'react-native';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
@@ -79,6 +80,7 @@ const Dashboard = ({navigation}) => {
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarIcon></AppBarIcon>
+
         <View style={styles.container}>
           <View style={styles.textView}>
             <Text style={styleFont.Title}>Good morning, {user}</Text>
@@ -153,6 +155,7 @@ const Dashboard = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'space-evenly',
   },
   textView: {

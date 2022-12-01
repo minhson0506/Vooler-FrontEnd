@@ -7,5 +7,5 @@ import retrofit2.http.POST;
 
 public interface RetrofitAPI {
   @POST("record")
-  Call<DataResponse> createPost(@Header("Authorization") String token, @Body DataModel dataModel);
+  Call<DataResponse> createPost(@Header("Authorization") String token, @Body RequestModel requestModel);
 }
