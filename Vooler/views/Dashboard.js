@@ -43,8 +43,6 @@ const Dashboard = ({navigation}) => {
     token,
   } = useContext(MainContext);
 
-  console.log('token', token);
-
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
   );
