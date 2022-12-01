@@ -35,7 +35,7 @@ const BadgesDetail = ({route, navigation}) => {
       const array = [...data];
       for (let i = 0; i < 6; i++) {
         if (i < badgeStepDay) array[i].state = 3;
-        else array[i].state = 1;
+        else if (array[i].state == 3) array[i].state = 1;
       }
       console.log('array to change', array);
       return array;
@@ -43,7 +43,7 @@ const BadgesDetail = ({route, navigation}) => {
       const array = [...data];
       for (let i = 0; i < 6; i++) {
         if (i < badgeRank) array[i].state = 3;
-        else array[i].state = 1;
+        else if (array[i].state == 3) array[i].state = 1;
       }
       return array;
     } else if (index == 3) {
@@ -51,7 +51,7 @@ const BadgesDetail = ({route, navigation}) => {
       if (badgeStepWeek / 6 < 1) {
         for (let i = 0; i < 6; i++) {
           if (i < badgeStepWeek) array[i].state = 3;
-          else array[i].state = 1;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {
@@ -67,7 +67,7 @@ const BadgesDetail = ({route, navigation}) => {
       } else if (badgeStepWeek / 6 < 2) {
         for (let i = 0; i < 6; i++) {
           if (i < badgeStepWeek - 6) array[i].state = 3;
-          else array[i].state = 1;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {
@@ -83,7 +83,7 @@ const BadgesDetail = ({route, navigation}) => {
       } else if (badgeStepWeek / 6 < 3) {
         for (let i = 0; i < 6; i++) {
           if (i < badgeStepWeek - 12) array[i].state = 3;
-          else array[i].state = 1;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {

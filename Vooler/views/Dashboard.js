@@ -44,9 +44,6 @@ const Dashboard = ({navigation}) => {
   } = useContext(MainContext);
 
   console.log('token', token);
-  console.log(
-    `day badge: ${badgeStepDay}, week badge: ${badgeStepWeek}, rank: ${badgeRank}`
-  );
 
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
@@ -58,7 +55,6 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
-  //TODO: getBadge cannot auto reload
   useEffect(() => {
     const interval = setInterval(() => {
       if (second === 100) {

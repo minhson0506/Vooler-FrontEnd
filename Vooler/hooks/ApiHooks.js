@@ -84,7 +84,6 @@ const useUser = () => {
   };
 
   const getUserRecordwithDate = async (endDate, token) => {
-    console.log('get data for user with date', endDate)
     const options = {
       method: 'GET',
       headers: {Authorization: `Bearer ${token}`},
