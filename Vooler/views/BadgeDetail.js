@@ -21,7 +21,8 @@ import CardView from '../components/CardView';
 import {MainContext} from '../contexts/MainContext';
 
 const BadgesDetail = ({route, navigation}) => {
-  const {badgeRank, badgeStepDay, badgeStepWeek} = useContext(MainContext);
+  const {badgeRank, badgeStepDay, badgeStepWeek, loading, setLoading} =
+    useContext(MainContext);
 
   const onPress = () => {
     navigation.goBack();
@@ -29,25 +30,28 @@ const BadgesDetail = ({route, navigation}) => {
   const {id, name} = route.params;
   const [array, setArray] = useState(dayTarget);
 
-  const changeArray = (data, id) => {
-    if (id == 1) {
+  const changeArray = (data, index) => {
+    if (index == 1) {
       const array = [...data];
-      for (let i = 0; i < badgeStepDay; i++) {
-        array[i].state = 3;
+      for (let i = 0; i < 6; i++) {
+        if (i < badgeStepDay) array[i].state = 3;
+        else if (array[i].state == 3) array[i].state = 1;
       }
       console.log('array to change', array);
       return array;
-    } else if (id == 2) {
+    } else if (index == 2) {
       const array = [...data];
-      for (let i = 0; i < badgeRank; i++) {
-        array[i].state = 3;
+      for (let i = 0; i < 6; i++) {
+        if (i < badgeRank) array[i].state = 3;
+        else if (array[i].state == 3) array[i].state = 1;
       }
       return array;
-    } else if (id == 3) {
+    } else if (index == 3) {
       const array = [...data];
       if (badgeStepWeek / 6 < 1) {
-        for (let i = 0; i < badgeStepWeek; i++) {
-          array[i].state = 3;
+        for (let i = 0; i < 6; i++) {
+          if (i < badgeStepWeek) array[i].state = 3;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {
@@ -56,13 +60,14 @@ const BadgesDetail = ({route, navigation}) => {
         }
         return array;
       }
-    } else if (id == 4) {
+    } else if (index == 4) {
       const array = [...data];
       if (badgeStepWeek / 6 < 1) {
         return array;
       } else if (badgeStepWeek / 6 < 2) {
-        for (let i = 0; i < badgeStepWeek - 6; i++) {
-          array[i].state = 3;
+        for (let i = 0; i < 6; i++) {
+          if (i < badgeStepWeek - 6) array[i].state = 3;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {
@@ -76,8 +81,9 @@ const BadgesDetail = ({route, navigation}) => {
       if (badgeStepWeek / 6 < 2) {
         return array;
       } else if (badgeStepWeek / 6 < 3) {
-        for (let i = 0; i < badgeStepWeek - 12; i++) {
-          array[i].state = 3;
+        for (let i = 0; i < 6; i++) {
+          if (i < badgeStepWeek - 12) array[i].state = 3;
+          else if (array[i].state == 3) array[i].state = 1;
         }
         return array;
       } else {
@@ -88,29 +94,30 @@ const BadgesDetail = ({route, navigation}) => {
       }
     }
   };
-  const switchId = () => {
-    switch (id) {
+  const switchId = (index) => {
+    switch (index) {
       case 2:
-        setArray(changeArray(rankTarget, id));
+        setArray(changeArray(rankTarget, index));
         break;
       case 3:
-        setArray(changeArray(weekFirstTarget, id));
+        setArray(changeArray(weekFirstTarget, index));
         break;
       case 4:
-        setArray(changeArray(weekSecondTarget, id));
+        setArray(changeArray(weekSecondTarget, index));
         break;
       case 5:
-        setArray(changeArray(weekThirdTarget, id));
+        setArray(changeArray(weekThirdTarget, index));
         break;
       default:
         setArray(changeArray(dayTarget, id));
         break;
     }
+    // setLoading(!loading);
   };
 
   useEffect(() => {
-    switchId();
-  }, []);
+    switchId(id);
+  }, [loading]);
 
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;

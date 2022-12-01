@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {getDate, getUserWeekData, fetchStep} from '../utils/getData';
+import {getToday, getUserWeekData, fetchStep} from '../utils/getData';
 
 const Step = ({navigation}) => {
   // const {TaskModule} = NativeModules;
@@ -78,8 +78,8 @@ const Step = ({navigation}) => {
   // }, []);
 
   useEffect(() => {
-    fetchStep(getDate(), context);
-    getGraphData(getDate());
+    fetchStep(getToday(), context);
+    getGraphData(getToday());
   }, []);
 
   const styleFont = useStyles();

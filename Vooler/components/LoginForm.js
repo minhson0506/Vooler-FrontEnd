@@ -55,7 +55,6 @@ const LoginForm = ({onPress}) => {
         }
         setTeam(userData.user.team_id);
         setIsLoggedIn(true);
-        console.log('token', token);
       }
     } catch (error) {
       Alert.alert('Login failed!', 'Wrong username or password!');

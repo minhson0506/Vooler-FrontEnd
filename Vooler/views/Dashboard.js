@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
 import {
-  getDate,
+  getToday,
   getTeamData,
   fetchStep,
   getBadge,
@@ -40,11 +40,8 @@ const Dashboard = ({navigation}) => {
     setBadgeStepDay,
     setBadgeStepWeek,
     setBadgeRank,
+    token,
   } = useContext(MainContext);
-
-  console.log(
-    `day badge: ${badgeStepDay}, week badge: ${badgeStepWeek}, rank: ${badgeRank}`
-  );
 
   const [quote, setQuote] = useState(
     '“The longer I live, the more beautiful life becomes.” - Frank Lloyd Wright'
@@ -56,25 +53,25 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
-  //TODO: getBadge cannot auto reload
   useEffect(() => {
-    Platform.OS === 'android'
-      ? TaskModule.getToken(token)
-      : console.log('you are running ios');
-    randomQuote();
     const interval = setInterval(() => {
       if (second === 100) {
         setSecond(0);
       } else setSecond(second + 1);
-      getTeamDataToday(context);
-      getTodayStep(context);
-    }, 1500);
+      getTeamDataToday(context).then(
+        getTodayStep(context).then(getBadge(context))
+      );
+    }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
-    getBadge(context);
-  }, [loading]);
+    Platform.OS === 'android'
+      ? TaskModule.getToken(token)
+      : console.log('you are running ios');
+
+    randomQuote();
+  }, []);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
