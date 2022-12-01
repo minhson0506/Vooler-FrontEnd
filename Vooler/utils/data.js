@@ -366,7 +366,7 @@ var nameArray = [
   'Elephant',
   'Fox',
   'Mouse',
-  'Hourse',
+  'Horse',
   'Tiger',
   'Lion',
   'Koala',

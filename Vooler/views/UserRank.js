@@ -52,11 +52,9 @@ const UserRank = ({navigation}) => {
         ></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={async (day) => {
-            //setDate(day.format('YYYY-MM-DD'));
             setTeamData([]);
             setTeamDataYesterday([]);
             getTeamData(day.format('YYYY-MM-DD'), context);
-            console.log('day', new Date(day));
             const yesterday = new Date(
               new Date(day).setDate(new Date(day).getDate() - 1)
             )
@@ -87,7 +85,7 @@ const UserRank = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: '80%',
+    flex: 1,
     marginTop: 20,
   },
   iconText: {
