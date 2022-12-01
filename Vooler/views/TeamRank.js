@@ -15,7 +15,7 @@ import {color, Divider} from '@rneui/base';
 import {Spacer} from '@react-native-material/core';
 import RankTable from '../components/TableView';
 import RankComp from '../components/RankComponent';
-import {getAllTeams, getDate} from '../utils/getData';
+import {getAllTeams, getToday} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const TeamRank = ({navigation}) => {
@@ -27,7 +27,7 @@ const TeamRank = ({navigation}) => {
   const [date, setDate] = useState('No data');
 
   useEffect(() => {
-    getAllTeams(getDate(), context);
+    getAllTeams(getToday(), context);
   }, []);
 
   const styleFont = useStyles();

@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
 import {
-  getDate,
+  getToday,
   getTeamData,
   fetchStep,
   getBadge,

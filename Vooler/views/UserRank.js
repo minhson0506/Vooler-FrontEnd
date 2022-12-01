@@ -11,13 +11,20 @@ import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import RankTable from '../components/TableView';
 import PropTypes from 'prop-types';
-import {getDate, getTeamData} from '../utils/getData';
+import {getToday, getTeamData, getTeamDataYesterday} from '../utils/getData';
 import {MainContext} from '../contexts/MainContext';
 
 const UserRank = ({navigation}) => {
   const [date, setDate] = useState('No data');
-  const {teamData, token, setTeamData, loading, setLoading} =
-    useContext(MainContext);
+  const {
+    teamData,
+    teamDataYesterday,
+    token,
+    setTeamData,
+    setTeamDataYesterday,
+    loading,
+    setLoading,
+  } = useContext(MainContext);
   const context = useContext(MainContext);
 
   const onPress = () => {
@@ -29,7 +36,7 @@ const UserRank = ({navigation}) => {
   };
 
   useEffect(() => {
-    getTeamData(getDate(), context);
+    getTeamData(getToday(), context);
   }, []);
 
   const styleFont = useStyles();
@@ -47,14 +54,27 @@ const UserRank = ({navigation}) => {
           onDayPress={async (day) => {
             //setDate(day.format('YYYY-MM-DD'));
             setTeamData([]);
+            setTeamDataYesterday([]);
             getTeamData(day.format('YYYY-MM-DD'), context);
+            console.log('day', new Date(day));
+            const yesterday = new Date(
+              new Date(day).setDate(new Date(day).getDate() - 1)
+            )
+              .toISOString()
+              .slice(0, 10);
+            getTeamDataYesterday(yesterday, context);
+            setLoading(!loading);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
         />
         <View style={styles.container}>
           {teamData.length > 0 ? (
-            <RankTable state={'User'} source={teamData}></RankTable>
+            <RankTable
+              state={'User'}
+              source={teamData}
+              sourceYesterday={teamDataYesterday}
+            ></RankTable>
           ) : (
             <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
               Oops! No data for this day!

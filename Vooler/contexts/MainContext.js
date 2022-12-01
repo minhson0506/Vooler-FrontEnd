@@ -14,6 +14,7 @@ const MainProvider = (props) => {
   const [team, setTeam] = useState(1);
   const [teamData, setTeamData] = useState([]);
   const [teamRank, setTeamRank] = useState([]);
+  const [teamDataYesterday, setTeamDataYesterday] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -67,6 +68,8 @@ const MainProvider = (props) => {
         setCurrentStep,
         currentWeekStep,
         setCurrentWeekStep,
+        teamDataYesterday,
+        setTeamDataYesterday
       }}
     >
       {props.children}

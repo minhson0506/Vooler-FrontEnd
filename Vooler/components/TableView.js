@@ -4,13 +4,50 @@ import {colorSet, useStyles} from '../utils/GlobalStyle';
 import {useContext, useState, useEffect} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {useTeam} from '../hooks/ApiHooks';
+import {Icon} from '@rneui/base';
 
-const RankTable = ({state, source}) => {
-  const {user, team} = useContext(MainContext);
+const RankTable = ({state, source, sourceYesterday}) => {
+  const {user, team, loading} = useContext(MainContext);
   const header = ['Rank', state, 'Step'];
   const fontStyle = useStyles();
   const [teamName, setTeamName] = useState('');
   const {getAllTeams} = useTeam();
+  const [data, setData] = useState([]);
+
+  const getData = () => {
+    if (state != 'Team') {
+      for (let i = 0; i < source.length; i++) {
+        for (let j = 0; j < sourceYesterday.length; j++) {
+          if (source[i][1] == sourceYesterday[j][1]) {
+            if (source[i][0] == sourceYesterday[j][0]) {
+            } else if (source[i][0] < sourceYesterday[j][0]) {
+            } else {
+            }
+          }
+        }
+      }
+      const array = source.map((element) => {
+        let string = 'none';
+        for (let j = 0; j < sourceYesterday.length; j++) {
+          if (element[1] == sourceYesterday[j][1]) {
+            if (element[0] == sourceYesterday[j][0]) {
+              string = 'none';
+            } else if (element[0] < sourceYesterday[j][0]) {
+              string = 'up';
+            } else {
+              string = 'down';
+            }
+          }
+        }
+        return string;
+      });
+      setData(array);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [loading]);
 
   const getTeamName = async () => {
     console.log('teamid', team);
@@ -36,7 +73,7 @@ const RankTable = ({state, source}) => {
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <Table borderStyle={{borderWidth: 0}} style={styles.container}>
+      <Table style={styles.container}>
         <Row data={header} textStyle={styles.textHeader} />
         {state == 'Team'
           ? source.map((rowData) => (
@@ -50,16 +87,42 @@ const RankTable = ({state, source}) => {
                 textStyle={[styles.text, fontStyle.Text]}
               />
             ))
-          : source.map((rowData) => (
-              <Row
-                key={rowData[0]}
-                data={rowData}
-                style={[
-                  styles.row,
-                  rowData[1] == user && {backgroundColor: colorSet.primary},
-                ]}
-                textStyle={[styles.text, fontStyle.Text]}
-              />
+          : source.map((rowData, index) => (
+              <View
+                style={{flexDirection: 'row', jutifyContent: 'space-evenly'}}
+              >
+                <Row
+                  key={index}
+                  data={rowData}
+                  style={[
+                    styles.row,
+                    rowData[1] == user && {backgroundColor: colorSet.primary},
+                  ]}
+                  textStyle={[styles.text, fontStyle.Text]}
+                />
+                {data[index] == 'none' ? (
+                  <Icon
+                    name="equal"
+                    type="material-community"
+                    size={30}
+                    color={colorSet.black}
+                  ></Icon>
+                ) : data[index] == 'up' ? (
+                  <Icon
+                    name="arrow-up"
+                    type="ionicon"
+                    size={30}
+                    color={colorSet.green}
+                  ></Icon>
+                ) : (
+                  <Icon
+                    name="arrow-down"
+                    type="ionicon"
+                    size={30}
+                    color={colorSet.red}
+                  ></Icon>
+                )}
+              </View>
             ))}
       </Table>
     );
@@ -83,6 +146,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito-Bold',
   },
   row: {
+    width: '80%',
     marginTop: 20,
     borderBottomWidth: 1,
     borderColor: colorSet.darkGray,

@@ -53,11 +53,45 @@ const getTeamData = async (day, context) => {
   }
 };
 
+const getTeamDataYesterday = async (day, context) => {
+  console.log('start to get team data');
+  const {team, token, user, uid, setTeamDataYesterday} = context;
+  try {
+    const response = await getTeamRecordByDate(team, day, token);
+
+    var userData = [];
+    for (const index in response.team_members) {
+      if (response.team_members[index].total_steps_accumulated != null) {
+        if (uid != response.team_members[index].uid) {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: nameArray[response.team_members[index].uid],
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        } else {
+          userData.push({
+            uid: response.team_members[index].uid,
+            name: user,
+            step: response.team_members[index].total_steps_accumulated,
+          });
+        }
+      }
+    }
+    const sortedArray = userData.sort((a, b) => b.step - a.step);
+    const newArray = sortedArray.map((element, index) => {
+      return [index + 1, element.name, element.step];
+    });
+    if (newArray) {
+      setTeamDataYesterday(newArray);
+    }
+  } catch (error) {
+    console.log('No data in this day', error);
+    setTeamDataYesterday([]);
+  }
+};
+
 const fetchStep = async (day, context) => {
-  const {
-    token,
-    setStep,
-  } = context;
+  const {token, setStep} = context;
   try {
     const userData = await getAllRecordsByUser(token);
     if (userData) {
@@ -74,20 +108,15 @@ const fetchStep = async (day, context) => {
 };
 
 const getTodayStep = async (context) => {
-  const {
-    token,
-    setCurrentStep,
-    setCurrentWeekStep,
-    loading,
-    setLoading,
-  } = context;
+  const {token, setCurrentStep, setCurrentWeekStep, loading, setLoading} =
+    context;
   try {
-    const date = getDate();
+    const date = getToday();
     const response = await getUserRecordwithDate(date, token);
     if (response) {
       const array = response.records;
       for (const element in array) {
-        if (array[element].record_date == getDate()) {
+        if (array[element].record_date == getToday()) {
           setCurrentStep(array[element].step_count_for_date);
         }
       }
@@ -102,7 +131,7 @@ const getTodayStep = async (context) => {
 const getTeamDataToday = async (context) => {
   const {team, token, user, uid, setRank} = context;
   try {
-    const response = await getTeamRecordByDate(team, getDate(), token);
+    const response = await getTeamRecordByDate(team, getToday(), token);
 
     var userData = [];
     for (const index in response.team_members) {
@@ -151,13 +180,8 @@ const getWeekBadge = (array, context, index) => {
 };
 
 const getBadge = (context) => {
-  const {
-    currentStep,
-    currentWeekStep,
-    rank,
-    setBadgeRank,
-    setBadgeStepDay,
-  } = context;
+  const {currentStep, currentWeekStep, rank, setBadgeRank, setBadgeStepDay} =
+    context;
   if (currentStep < dayTarget[0].name) setBadgeStepDay(0);
   else if (currentStep < dayTarget[1].name) setBadgeStepDay(1);
   else if (currentStep < dayTarget[2].name) setBadgeStepDay(2);
@@ -175,8 +199,6 @@ const getBadge = (context) => {
   }
 
   switch (rank) {
-    case 0:
-      setBadgeRank(0);
     case 1:
       setBadgeRank(6);
       break;
@@ -224,7 +246,7 @@ const getAllTeams = async (day, context) => {
   }
 };
 
-const getDate = () => {
+const getToday = () => {
   const date = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
@@ -243,8 +265,9 @@ const getDate = () => {
 
 export {
   getTeamData,
+  getTeamDataYesterday,
   getAllTeams,
-  getDate,
+  getToday,
   fetchStep,
   getBadge,
   getTodayStep,
