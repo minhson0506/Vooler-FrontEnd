@@ -10,11 +10,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		18294C0F2939273A00F71D36 /* RecordEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18294C0E2939273A00F71D36 /* RecordEntry.swift */; };
 		185E8E882933B66200C4567E /* Pedometer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E872933B66200C4567E /* Pedometer.swift */; };
 		185E8E8E2933B7CF00C4567E /* Pedometer.m in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E8D2933B7CF00C4567E /* Pedometer.m */; };
-		185E8E922936974A00C4567E /* RecordModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E902936974A00C4567E /* RecordModel.xcdatamodeld */; };
-		185E8E9A2937330F00C4567E /* Records+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E982937330F00C4567E /* Records+CoreDataClass.swift */; };
-		185E8E9B2937330F00C4567E /* Records+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E992937330F00C4567E /* Records+CoreDataProperties.swift */; };
 		185E8E9D2937348000C4567E /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185E8E9C2937348000C4567E /* NetworkService.swift */; };
 		185E8EA32938809200C4567E /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 185E8EA22938809200C4567E /* RNBackgroundFetch+AppDelegate.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
@@ -32,13 +30,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Vooler/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Vooler/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Vooler/main.m; sourceTree = "<group>"; };
+		18294C0E2939273A00F71D36 /* RecordEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordEntry.swift; sourceTree = "<group>"; };
 		185E8E862933635700C4567E /* VoolerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = VoolerDebug.entitlements; path = Vooler/VoolerDebug.entitlements; sourceTree = "<group>"; };
 		185E8E872933B66200C4567E /* Pedometer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pedometer.swift; sourceTree = "<group>"; };
 		185E8E8C2933B76800C4567E /* Vooler-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Vooler-Bridging-Header.h"; sourceTree = "<group>"; };
 		185E8E8D2933B7CF00C4567E /* Pedometer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Pedometer.m; sourceTree = "<group>"; };
-		185E8E912936974A00C4567E /* RecordModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RecordModel.xcdatamodel; sourceTree = "<group>"; };
-		185E8E982937330F00C4567E /* Records+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Records+CoreDataClass.swift"; sourceTree = "<group>"; };
-		185E8E992937330F00C4567E /* Records+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Records+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		185E8E9C2937348000C4567E /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		185E8EA22938809200C4567E /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		78C502B3405340FB8DF2C7EB /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Vooler/noop-file.swift"; sourceTree = "<group>"; };
@@ -89,9 +85,7 @@
 		185E8E8F2936970900C4567E /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				185E8E982937330F00C4567E /* Records+CoreDataClass.swift */,
-				185E8E992937330F00C4567E /* Records+CoreDataProperties.swift */,
-				185E8E902936974A00C4567E /* RecordModel.xcdatamodeld */,
+				18294C0E2939273A00F71D36 /* RecordEntry.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -341,13 +335,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				185E8E9D2937348000C4567E /* NetworkService.swift in Sources */,
-				185E8E922936974A00C4567E /* RecordModel.xcdatamodeld in Sources */,
 				185E8EA32938809200C4567E /* RNBackgroundFetch+AppDelegate.m in Sources */,
-				185E8E9B2937330F00C4567E /* Records+CoreDataProperties.swift in Sources */,
 				185E8E882933B66200C4567E /* Pedometer.swift in Sources */,
+				18294C0F2939273A00F71D36 /* RecordEntry.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				185E8E9A2937330F00C4567E /* Records+CoreDataClass.swift in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				869B86640408479CA037FF1E /* noop-file.swift in Sources */,
 				185E8E8E2933B7CF00C4567E /* Pedometer.m in Sources */,
@@ -549,19 +541,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		185E8E902936974A00C4567E /* RecordModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				185E8E912936974A00C4567E /* RecordModel.xcdatamodel */,
-			);
-			currentVersion = 185E8E912936974A00C4567E /* RecordModel.xcdatamodel */;
-			path = RecordModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

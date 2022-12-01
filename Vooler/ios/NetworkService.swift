@@ -39,9 +39,7 @@ class NetworkService {
   
   // TODO: function to handle post record action
   func postRecords(){
-    if (checkNetworkConnection()){
-      
-    }
+    
     
   }
 }

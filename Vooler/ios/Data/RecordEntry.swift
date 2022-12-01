@@ -1,0 +1,14 @@
+//
+//  RecordEntry.swift
+//  Vooler
+//
+//  Created by Dieu Vu on 12/1/22.
+//
+
+import Foundation
+
+struct RecordEntry: Codable {
+  var stepCount: Int
+  var recordDate: String
+}
+

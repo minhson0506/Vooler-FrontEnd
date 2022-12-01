@@ -17,7 +17,7 @@ export default function App() {
         // Do background work
         console.log('[BackgroundFetch] task: ', taskId);
         pedometer.backgroundTasks((value) => {
-          console.log('Background task' + value + new Date());
+          console.log('Background task: ' + value + new Date());
         });
         pedometer.test((value) => {
           console.log('test background, count is: ', value);
