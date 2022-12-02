@@ -1,10 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
@@ -33,7 +28,14 @@ const UserRank = ({navigation}) => {
   };
 
   useEffect(() => {
-    getTeamData(getToday(), context);
+    const today = getToday();
+    getTeamData(today, context);
+    const yesterday = new Date(
+      new Date(today).setDate(new Date(today).getDate() - 1)
+    )
+      .toISOString()
+      .slice(0, 10);
+    getTeamDataYesterday(yesterday, context);
   }, []);
 
   const styleFont = useStyles();

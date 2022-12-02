@@ -10,7 +10,7 @@ const dayTarget = [
     id: 2,
     name: 200,
     unit: 'steps/day',
-    image: require('../assets/city/järvi.jpg'),
+    image: require('../assets/city/jarvi.jpg'),
     state: 1,
   },
   {

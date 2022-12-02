@@ -13,11 +13,7 @@ import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
-import {
-  getBadge,
-  getTodayStep,
-  getTeamDataToday,
-} from '../utils/getData';
+import {getBadge, getTodayStep, getTeamDataToday} from '../utils/getData';
 import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
 
@@ -54,7 +50,7 @@ const Dashboard = ({navigation}) => {
       getTeamDataToday(context).then(
         getTodayStep(context).then(getBadge(context))
       );
-    }, 1000);
+    }, 500);
     return () => clearInterval(interval);
   }, [loading]);
 
