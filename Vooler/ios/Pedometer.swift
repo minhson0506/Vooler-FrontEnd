@@ -55,30 +55,40 @@ class Pedometer: NSObject {
     count+=1;
     callback([count])
   }
+
+ 
   
   
-  // This is example func
+  // TODO: This is example func, refine it with all function
   @objc
   func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
+    initializePedometer();
     if (self.steps == nil){
       let error = NSError(domain: "", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
     }
     else {
       let record = createRecordDataObject(stepCount: self.steps, timestamp: Date())
-      let jsonStr = convertRecordEntryToJson(records: [record])
+      var recordArrayFromFile = readLocalFile(forName: "recordData")
+      recordArrayFromFile.append(record)
+      let jsonStr = convertRecordEntryToJson(records: recordArrayFromFile)
       saveJsonDataToFile(jsonString: jsonStr)
-      let readJsonData = readLocalFile(forName: "recordData")
-      resolve("test record: \(jsonStr), savedJsonData from file: \(readJsonData)");
+      var jsonDataAfterAppending = readLocalFile(forName: "recordData")
+      resolve("test record: \(jsonStr), savedJsonData from file: \(jsonDataAfterAppending.first)");
     }
   }
   
-  // TODO: add a method to transfer token from RN and save to userDefaults
+  // Method to transfer token from RN and save to userDefaults
   @objc
-  func getToken(){
-    
+  func getToken(_ token: String) -> String{
+    print("token in native module: \(token)")
+    let defaults = UserDefaults.standard
+    defaults.set(token, forKey: "token")
+    let tokenInUD = defaults.string(forKey: "token")
+    print("token in user default: \(tokenInUD!)")
+    return token
   }
-  
+
   
   // TODO: function to handle background task (get pedometer data and save to json if network not available)
   @objc
@@ -90,7 +100,7 @@ class Pedometer: NSObject {
   private func createRecordDataObject(stepCount: Int?, timestamp: Date) -> RecordEntry {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
-    var record = RecordEntry(stepCount:0, recordDate: dateFormatter.string(from:Date()))
+    var record = RecordEntry(stepCount:0, recordDate: dateFormatter.string(from:Date()), posted: false)
     record.stepCount = (stepCount != nil) ? stepCount! : 0
     record.recordDate = dateFormatter.string(from: timestamp)
     return record
@@ -124,20 +134,22 @@ class Pedometer: NSObject {
     }
   }
   
-  private func readLocalFile(forName name: String) -> Data? {
+  private func readLocalFile(forName name: String) -> [RecordEntry] {
       do {
-       let bundlePath = FileManager.default.urls(for: .documentDirectory,
+       let fileURL = FileManager.default.urls(for: .documentDirectory,
                                                        in: .userDomainMask).first!.appendingPathComponent("recordData")
-        if let jsonData = try String(contentsOf: bundlePath).data(using: .utf8){
-            print("read path: \(bundlePath)")
+        if let jsonData = try String(contentsOf: fileURL).data(using: .utf8){
+            print("read path: \(fileURL)")
             print("json data  in file \(jsonData)")
-              return jsonData
+            let decoder = JSONDecoder()
+          let records = try decoder.decode([RecordEntry].self, from: jsonData)
+            return records
           }
       } catch {
-          print(error)
+        print(error.localizedDescription)
+        return []
       }
-      
-      return nil
+      return []
   }
   
   

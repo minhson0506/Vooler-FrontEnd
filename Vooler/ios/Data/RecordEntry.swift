@@ -10,5 +10,12 @@ import Foundation
 struct RecordEntry: Codable {
   var stepCount: Int
   var recordDate: String
+  var posted: Bool
+}
+
+
+struct RecordDataDTO: Codable {
+  var stepCount: Int
+  var recordDate: String
 }
 
