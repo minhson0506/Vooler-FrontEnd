@@ -72,7 +72,7 @@ class Pedometer: NSObject {
       var recordArrayFromFile = readLocalFile(forName: "recordData")
       recordArrayFromFile.append(record)
       let jsonStr = convertRecordEntryToJson(records: recordArrayFromFile)
-      saveJsonDataToFile(jsonString: jsonStr)
+      //saveJsonDataToFile(jsonString: jsonStr)
       var jsonDataAfterAppending = readLocalFile(forName: "recordData")
       resolve("test record: \(jsonStr), savedJsonData from file: \(jsonDataAfterAppending.first)");
     }
