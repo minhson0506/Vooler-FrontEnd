@@ -12,6 +12,7 @@ import {MainContext} from '../contexts/MainContext';
 import {useAuth, useTeam} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
 import {useUser} from '../hooks/ApiHooks';
+import Toast from 'react-native-toast-message';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -66,7 +67,7 @@ const RegisterForm = () => {
       };
       const userData = await postUser(user);
       if (userData) {
-        Alert.alert('Success', 'User created successfully!');
+        Toast.show({type: 'success', text1: 'User created successfully!'});
         //auto login for user after register
         const userLogin = {
           userId: hashedData.userId,

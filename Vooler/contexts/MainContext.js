@@ -29,6 +29,8 @@ const MainProvider = (props) => {
   const [badgeStepWeek, setBadgeStepWeek] = useState(0);
   const [badgeRank, setBadgeRank] = useState(0);
 
+  const [avgLastWeek, setAvgLastWeek] = useState(0);
+
   return (
     <MainContext.Provider
       value={{
@@ -69,7 +71,9 @@ const MainProvider = (props) => {
         currentWeekStep,
         setCurrentWeekStep,
         teamDataYesterday,
-        setTeamDataYesterday
+        setTeamDataYesterday,
+        avgLastWeek,
+        setAvgLastWeek,
       }}
     >
       {props.children}

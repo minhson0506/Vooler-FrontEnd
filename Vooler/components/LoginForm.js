@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useAuth, useRecord, useUser} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import Toast from 'react-native-toast-message';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
@@ -53,6 +54,7 @@ const LoginForm = ({onPress}) => {
           setUid(response.uid);
         }
         setTeam(userData.user.team_id);
+        Toast.show({type: 'success', text1: 'Login successfully!'});
         setIsLoggedIn(true);
       }
     } catch (error) {

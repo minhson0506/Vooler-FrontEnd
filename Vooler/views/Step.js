@@ -15,7 +15,15 @@ const Step = ({navigation}) => {
   // const [steps, setSteps] = useState("100");
   // const [second, setSecond] = useState(0);
 
-  const {token, step, setStep, loading, setLoading} = useContext(MainContext);
+  const {
+    token,
+    step,
+    setStep,
+    loading,
+    setLoading,
+    setAvgLastWeek,
+    avgLastWeek,
+  } = useContext(MainContext);
   const context = useContext(MainContext);
   const {getUserRecordwithDate} = useUser();
   const [graph, setGraph] = useState([]);
@@ -25,7 +33,7 @@ const Step = ({navigation}) => {
     navigation.goBack();
   };
 
-  const getGraphData = async (day) => {
+  const getGraphData = async (day, bool) => {
     try {
       const graphData = await getUserRecordwithDate(day, token);
       const startDay = graphData.start_date.split('-');
@@ -51,15 +59,25 @@ const Step = ({navigation}) => {
         }
         return 0;
       });
-      setGraph(weekData);
+      if (bool) {
+        setGraph(weekData);
+      } else {
+        setAvgLastWeek(graphData.total_steps_accumulated / 7);
+      }
     } catch (error) {
       console.log('Error getting data for graph', error);
     }
   };
 
   useEffect(() => {
+    const lastSaturday = new Date(
+      new Date().setDate(new Date().getDate() - 1 - new Date().getDay())
+    )
+      .toISOString()
+      .slice(0, 10);
     fetchStep(getToday(), context);
-    getGraphData(getToday());
+    getGraphData(getToday(), true);
+    getGraphData(lastSaturday, false);
   }, []);
 
   const styleFont = useStyles();
@@ -69,10 +87,21 @@ const Step = ({navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Step'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
-          onDayPress={(day) => {
+          onDayPress={(day, weekdays) => {
             setStep(0);
             fetchStep(day.format('YYYY-MM-DD'), context);
-            getGraphData(day.format('YYYY-MM-DD'));
+            const thisSaturday = new Date(
+              new Date(day).setDate(new Date(day).getDate() + 6 - weekdays)
+            )
+              .toISOString()
+              .slice(0, 10);
+            const lastSaturday = new Date(
+              new Date(day).setDate(new Date(day).getDate() - 1 - weekdays)
+            )
+              .toISOString()
+              .slice(0, 10);
+            getGraphData(thisSaturday, true);
+            getGraphData(lastSaturday, false);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
@@ -121,7 +150,7 @@ const Step = ({navigation}) => {
                 </Text>
               </View>
             </View>
-            <Graph source={graph}></Graph>
+            <Graph source={graph} avgLastWeek={avgLastWeek}></Graph>
           </View>
         </View>
       </View>

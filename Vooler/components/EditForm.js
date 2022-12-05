@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useTeam, useUser} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import Toast from 'react-native-toast-message';
 
 const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -76,7 +77,7 @@ const EditForm = () => {
       if (userData) {
         setUser(data.username);
         reset({username: data.username, password: ''});
-        Alert.alert('Success', 'User modified!');
+        Toast.show({type: 'success', text1: 'User modified!'});
         setTeam(teamValue);
       }
     } catch (error) {
