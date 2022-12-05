@@ -55,9 +55,6 @@ class Pedometer: NSObject {
     count+=1;
     callback([count])
   }
-
- 
-  
   
   // TODO: This is example func, refine it with all function
   @objc
@@ -68,13 +65,25 @@ class Pedometer: NSObject {
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
     }
     else {
-      let record = createRecordDataObject(stepCount: self.steps, timestamp: Date())
       var recordArrayFromFile = readLocalFile(forName: "recordData")
-      recordArrayFromFile.append(record)
-      let jsonStr = convertRecordEntryToJson(records: recordArrayFromFile)
-      //saveJsonDataToFile(jsonString: jsonStr)
+      var newRecord = createRecordDataObject(stepCount: self.steps, timestamp: Date())
+      // try parsing
+      networkService.postRecords(record: newRecord){ result in
+        switch result {
+        case .success:
+          print("Post succeeded")
+          newRecord.posted = true
+        case .failure(let error):
+          print("error posting \(error.localizedDescription)")
+          newRecord.posted = false
+          recordArrayFromFile.append(newRecord)
+          let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+          self.saveJsonDataToFile(jsonString: jsonStr)
+          print("test record: \(jsonStr)")
+        }
+      }
       var jsonDataAfterAppending = readLocalFile(forName: "recordData")
-      resolve("test record: \(jsonStr), savedJsonData from file: \(jsonDataAfterAppending.first)");
+      resolve("savedJsonData from file: \(jsonDataAfterAppending.last)");
     }
   }
   
