@@ -7,6 +7,8 @@
 #import <React/RCTConvert.h>
 
 #import <React/RCTAppSetupUtils.h>
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
+
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -26,6 +28,7 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   std::shared_ptr<const facebook::react::ReactNativeConfig> _reactNativeConfig;
   facebook::react::ContextContainer::Shared _contextContainer;
 }
+
 @end
 #endif
 
@@ -54,9 +57,11 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
-
+  // [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
   return YES;
 }
 
