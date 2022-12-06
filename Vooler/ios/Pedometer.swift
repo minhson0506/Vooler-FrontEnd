@@ -66,7 +66,7 @@ class Pedometer: NSObject {
       let error = NSError(domain: "authentication", code: 200, userInfo: nil);
       reject("ERROR_AUTH", "cannot get token", error);
     } else {
-      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
+//      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
       // Post records saved in JSON
       postQueuedRecords()
     }
@@ -145,10 +145,8 @@ class Pedometer: NSObject {
   // Method to transfer token from RN and save to userDefaults
   @objc
   func getToken(_ token: String) -> String{
-    print("token in native module: \(token)")
     let defaults = UserDefaults.standard
     defaults.set(token, forKey: "token")
-//    print("token in user default: \(defaults.string(forKey: "token")!)")
     return token
   }
 
