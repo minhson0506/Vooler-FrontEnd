@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RecordEntry: Codable {
+struct RecordEntry: Codable, Equatable {
   var stepCount: Int
   var recordDate: String
   var posted: Bool

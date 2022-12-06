@@ -79,7 +79,7 @@ class NetworkService {
     request.httpBody = try? JSONEncoder().encode(body)
     request.setValue( "Bearer \(token!)", forHTTPHeaderField: "Authorization")
     
-    print("req auth token: \(request.value(forHTTPHeaderField: "Authorization")!)")
+//    print("req auth token: \(request.value(forHTTPHeaderField: "Authorization")!)")
 
       URLSession.shared.dataTask(with: request) { (data, response, error) in
         guard let data = data, error == nil else {

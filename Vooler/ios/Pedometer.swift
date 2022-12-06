@@ -27,6 +27,9 @@ class Pedometer: NSObject {
     networkService.checkNetworkConnection();
   }
   
+  
+  // ======================== MAIN BACKGROUND TASKS =========================
+
   private let activityManager = CMMotionActivityManager()
   private let pedometer: CMPedometer = CMPedometer()
   
@@ -53,27 +56,27 @@ class Pedometer: NSObject {
     }
   }
   
-  private var count = 0;
+  // Function to handle background tasks of getting pedometer data and post to backend, to be triggered in background
   @objc
-  func test(_ callback: RCTResponseSenderBlock){
-    count+=1;
-    callback([count])
-  }
-  
-  // TODO: Refactor this function
-  @objc
-  func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
-    initializePedometer();
-    print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
+  func runPedometerBackgroundTasks(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
+    initializePedometer()
+
+    // make sure the user logged in and has a token
+    if (UserDefaults.standard.string(forKey: "token") == nil){
+      let error = NSError(domain: "authentication", code: 200, userInfo: nil);
+      reject("ERROR_AUTH", "cannot get token", error);
+    } else {
+      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
+      // Post records saved in JSON
+      postQueuedRecords()
+    }
+    
     if (self.steps == nil){
       let error = NSError(domain: "pedometer", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
     }
-    else if (UserDefaults.standard.string(forKey: "token") == nil){
-      let error = NSError(domain: "authentication", code: 200, userInfo: nil);
-      reject("ERROR_AUTH", "cannot get token", error);
-    }
     else {
+      // handle new record
       var recordArrayFromFile = self.readLocalFile(forName: "recordData")
       var newRecord = createRecordDataObject(stepCount: self.steps, timestamp: Date())
       networkService.postRecords(record: newRecord){ result in
@@ -114,11 +117,29 @@ class Pedometer: NSObject {
           }
         }
       }
-      let jsonDataAfterAppending = readLocalFile(forName: "recordData") //this line is for testing only
-      resolve("savedJsonData from file: \(jsonDataAfterAppending.last!.recordDate)");
+      let jsonDataAfterUpdate = readLocalFile(forName: "recordData") //this line is for testing only
+      resolve("savedJsonData from file: \((jsonDataAfterUpdate.last == nil) ? "empty" : "step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)").\n LastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)");
     }
   }
   
+  
+  // Method to check and post the old unposted records in local JSON:
+  private func postQueuedRecords(){
+    var recordArrayFromFile = readLocalFile(forName: "recordData")
+    for record in recordArrayFromFile {
+      networkService.postRecords(record: record){ result in
+        switch result {
+        case .success:
+          recordArrayFromFile = recordArrayFromFile.filter({ $0 != record})
+        case .failure (let error):
+          print("error posting record (\(record.recordDate), \(record.stepCount)) :\(error.localizedDescription)")
+        }
+      }
+    }
+    let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+    self.saveJsonDataToFile(jsonString: jsonStr)
+    print("updated record in json: \(jsonStr)")
+  }
   
   
   // Method to transfer token from RN and save to userDefaults
@@ -127,18 +148,29 @@ class Pedometer: NSObject {
     print("token in native module: \(token)")
     let defaults = UserDefaults.standard
     defaults.set(token, forKey: "token")
-//    let tokenInUD = defaults.string(forKey: "token")
-//    print("token in user default: \(tokenInUD!)")
+//    print("token in user default: \(defaults.string(forKey: "token")!)")
     return token
   }
 
   
-  // TODO: function to handle background task (get pedometer data and save to json if network not available)
+  // ======================== MISC, TO REVIEW =========================
+
+  // Test function, to remove if not use at the end
+  private var count = 0;
+  @objc
+  func test(_ callback: RCTResponseSenderBlock){
+    count+=1;
+    callback([count])
+  }
+  
+  // Test function, to remove if not use at the end
   @objc
   func backgroundTasks(_ callback: RCTResponseSenderBlock) {
     callback(["hello from background task"]);
   }
   
+  
+ // ======================== ULTILITIES =========================
   
   private func createRecordDataObject(stepCount: Int?, timestamp: Date) -> RecordEntry {
     let dateFormatter = DateFormatter()
@@ -182,7 +214,6 @@ class Pedometer: NSObject {
        let fileURL = FileManager.default.urls(for: .documentDirectory,
                                                        in: .userDomainMask).first!.appendingPathComponent("recordData")
         if let jsonData = try String(contentsOf: fileURL).data(using: .utf8){
-            print("read path: \(fileURL)")
             print("json data  in file \(jsonData)")
             let decoder = JSONDecoder()
           let records = try decoder.decode([RecordEntry].self, from: jsonData)
@@ -214,6 +245,9 @@ class Pedometer: NSObject {
     return Date()
   }
   
+  
+  // ======================== SETUP FOR OBJC =========================
+
   @objc
   static func requiresMainQueueSetup() -> Bool {
     return false;
