@@ -68,7 +68,9 @@ class NetworkService {
     print("req body \(body)")
     let encodedBody = try? JSONEncoder().encode(body)
     print("encoded body \(String(data: encodedBody!, encoding: .utf8)!)")
+    
     let token = UserDefaults.standard.string(forKey: "token")
+      
 
     var request = URLRequest(url: url)
     
@@ -79,25 +81,24 @@ class NetworkService {
     
     print("req auth token: \(request.value(forHTTPHeaderField: "Authorization")!)")
 
-    
-    URLSession.shared.dataTask(with: request) { (data, response, error) in
-      guard let data = data, error == nil else {
-        completion(.failure(.custom(errorMessage: "No data")))
-        return
+      URLSession.shared.dataTask(with: request) { (data, response, error) in
+        guard let data = data, error == nil else {
+          completion(.failure(.custom(errorMessage: "No data")))
+          return
+        }
+        
+        guard let postRecordResponse = try? JSONDecoder().decode(PostRecordResponse.self, from: data) else {
+          completion(.failure(.custom(errorMessage: "cannot parse response data")))
+          return
+        }
+        
+        print("postRecordResponse \(postRecordResponse)")
+        // save timestamp of the last successful post to userdefaults
+        UserDefaults.standard.set(postRecordResponse.record_date, forKey: "lastSuccessfulPost" )
+        
+        completion(.success(true))
       }
-      
-      guard let postRecordResponse = try? JSONDecoder().decode(PostRecordResponse.self, from: data) else {
-        completion(.failure(.custom(errorMessage: "cannot parse response data")))
-        return
-      }
-      
-     print("postRecordResponse \(postRecordResponse)")
-      // save timestamp of the last successful post to userdefaults
-      UserDefaults.standard.set(postRecordResponse.record_date, forKey: "lastSuccessfulPost" )
-      
-      completion(.success(true))
-    }
-    .resume()
+      .resume()
     
   }
 

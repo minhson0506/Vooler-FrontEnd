@@ -39,7 +39,7 @@ class Pedometer: NSObject {
   
   // Function to query the pedometer data accumulated in a day
   private func initializePedometer () {
-    var timeInterval = Int(calculatePedometerQueryTime()) * -1
+    let timeInterval = Int(calculatePedometerQueryTime()) * -1
     print("time interval \(timeInterval)")
     if isPedometerAvailable {
       guard let startDate = Calendar.current.date(byAdding: .second, value: timeInterval, to: Date())
@@ -64,16 +64,18 @@ class Pedometer: NSObject {
   @objc
   func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
     initializePedometer();
-
-    print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
+    print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
     if (self.steps == nil){
-      let error = NSError(domain: "", code: 200, userInfo: nil);
+      let error = NSError(domain: "pedometer", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
     }
+    else if (UserDefaults.standard.string(forKey: "token") == nil){
+      let error = NSError(domain: "authentication", code: 200, userInfo: nil);
+      reject("ERROR_AUTH", "cannot get token", error);
+    }
     else {
-      var recordArrayFromFile = readLocalFile(forName: "recordData")
+      var recordArrayFromFile = self.readLocalFile(forName: "recordData")
       var newRecord = createRecordDataObject(stepCount: self.steps, timestamp: Date())
-      // try parsing
       networkService.postRecords(record: newRecord){ result in
         switch result {
         case .success:
@@ -85,18 +87,39 @@ class Pedometer: NSObject {
           print("error posting \(error.localizedDescription)")
           print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
           newRecord.posted = false
-          recordArrayFromFile.append(newRecord) // uncomment this and run to clear the json file
-//        recordArrayFromFile = [] // uncomment this and run to clear the json file
-          let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
-          self.saveJsonDataToFile(jsonString: jsonStr)
-          print("test record: \(jsonStr)")
+          
+          // Check if the latest record in JSON file has the same date as the new record. If yes, overwrite the latest with the newer data of the day. Else, append the new record to json file and write to file
+          var hadSameDayRecord = false
+          if (recordArrayFromFile.count > 0){
+            let lastestRecordDate = self.convertDateStringToDate(dateString: recordArrayFromFile.last!.recordDate)
+            hadSameDayRecord = Calendar.current.isDate(lastestRecordDate, equalTo: self.convertDateStringToDate(dateString: newRecord.recordDate), toGranularity: .day)
+          } else {
+            hadSameDayRecord = false
+          }
+
+          if (hadSameDayRecord){
+            //overwrite the latest with the newer data of the day
+            recordArrayFromFile.indices.last.map {recordArrayFromFile[$0] = newRecord}
+            //            recordArrayFromFile = [] // uncomment this and run to clear the json file
+            let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+            self.saveJsonDataToFile(jsonString: jsonStr)
+            print("updated record in json: \(jsonStr)")
+          } else {
+            //append the new record to json file and write to file
+            recordArrayFromFile.append(newRecord)
+            //          recordArrayFromFile = [] // uncomment this and run to clear the json file
+            let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+            self.saveJsonDataToFile(jsonString: jsonStr)
+            print("add new day record in json: \(jsonStr)")
+          }
         }
       }
-      
-      var jsonDataAfterAppending = readLocalFile(forName: "recordData") //this line is for testing only
-      resolve("savedJsonData from file: \(jsonDataAfterAppending.last)");
+      let jsonDataAfterAppending = readLocalFile(forName: "recordData") //this line is for testing only
+      resolve("savedJsonData from file: \(jsonDataAfterAppending.last!.recordDate)");
     }
   }
+  
+  
   
   // Method to transfer token from RN and save to userDefaults
   @objc
@@ -146,7 +169,7 @@ class Pedometer: NSObject {
         let pathWithFileName = documentDirectory.appendingPathComponent("recordData")
         do {
             try jsonData.write(to: pathWithFileName)
-        print("Path: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
+//        print("Path: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
           print("saved to file")
         } catch {
             print("error saving file")
@@ -176,8 +199,19 @@ class Pedometer: NSObject {
   private func calculatePedometerQueryTime () -> TimeInterval {
     let currentTime = Date()
     let startOfDay = Calendar.current.startOfDay(for: Date())
-    var diffTimeInSeconds = currentTime.timeIntervalSinceReferenceDate - startOfDay.timeIntervalSinceReferenceDate
+    let diffTimeInSeconds = currentTime.timeIntervalSinceReferenceDate - startOfDay.timeIntervalSinceReferenceDate
     return diffTimeInSeconds
+  }
+  
+  private func convertDateStringToDate (dateString: String) -> Date {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    dateFormatter.locale = Locale(identifier: "fi_FI")
+    dateFormatter.timeZone = TimeZone(identifier: "Europe/Helsinki")
+    if let date = dateFormatter.date(from: dateString){
+      return (date)
+    }
+    return Date()
   }
   
   @objc
