@@ -18,15 +18,13 @@ enum CustomError: Error {
 
 struct PostRecordResponse: Codable {
 //  {
-//      "status": "created",
-//      "saved_timestamp": "2022-11-24T19:46:37.548Z",
-//      "record_id": 30,
-//      "uid": 1,
-//      "record_date": "2022-11-29 06:01:01"
+//      "status": "updated",
+//      "saved_timestamp": "2022-12-06T09:54:34.026Z",
+//      "uid": 28,
+//      "record_date": "2022-11-27 11:12:01"
 //  }
   let status: String
   let saved_timestamp: String
-  let record_id: Int64
   let uid: Int
   let record_date: String
 }
@@ -59,7 +57,7 @@ class NetworkService {
   }
   
   
-  // TODO: function to handle post record action
+  // Function to handle post record action
   func postRecords(record: RecordEntry, completion: @escaping (Result<Bool, CustomError>) -> Void) {
     guard let url = URL(string: "\(baseUrl)record") else {
       completion(.failure(.custom(errorMessage: "URL incorrect")))
@@ -69,7 +67,6 @@ class NetworkService {
     let body = RecordDataDTO(stepCount: record.stepCount, recordDate: record.recordDate)
     print("req body \(body)")
     let encodedBody = try? JSONEncoder().encode(body)
-//    print("encoded body \(try! JSONSerialization.jsonObject(with: encodedBody!, options: []))")
     print("encoded body \(String(data: encodedBody!, encoding: .utf8)!)")
     let token = UserDefaults.standard.string(forKey: "token")
 
@@ -90,7 +87,7 @@ class NetworkService {
       }
       
       guard let postRecordResponse = try? JSONDecoder().decode(PostRecordResponse.self, from: data) else {
-        completion(.failure(.invalidPostData))
+        completion(.failure(.custom(errorMessage: "cannot parse response data")))
         return
       }
       
@@ -98,10 +95,7 @@ class NetworkService {
       // save timestamp of the last successful post to userdefaults
       UserDefaults.standard.set(postRecordResponse.record_date, forKey: "lastSuccessfulPost" )
       
-     
       completion(.success(true))
-      
-      
     }
     .resume()
     

@@ -36,9 +36,13 @@ class Pedometer: NSObject {
              return CMPedometer.isPedometerEventTrackingAvailable() && CMPedometer.isDistanceAvailable() && CMPedometer.isStepCountingAvailable()
          }
   
+  
+  // Function to query the pedometer data accumulated in a day
   private func initializePedometer () {
+    var timeInterval = Int(calculatePedometerQueryTime()) * -1
+    print("time interval \(timeInterval)")
     if isPedometerAvailable {
-      guard let startDate = Calendar.current.date(byAdding: .hour, value: -1, to: Date())
+      guard let startDate = Calendar.current.date(byAdding: .second, value: timeInterval, to: Date())
       else {return}
       pedometer.queryPedometerData(from: startDate, to: Date()){
         (data, error) in
@@ -56,10 +60,12 @@ class Pedometer: NSObject {
     callback([count])
   }
   
-  // TODO: This is example func, refine it with all function
+  // TODO: Refactor this function
   @objc
   func getSteps(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock){
     initializePedometer();
+
+    print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
     if (self.steps == nil){
       let error = NSError(domain: "", code: 200, userInfo: nil);
       reject("ERROR_STEPCOUNT", "cannot get step count", error);
@@ -73,16 +79,21 @@ class Pedometer: NSObject {
         case .success:
           print("Post succeeded")
           newRecord.posted = true
+          UserDefaults.standard.set(newRecord.recordDate, forKey: "lastSuccessfulPost" )
+          print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
         case .failure(let error):
           print("error posting \(error.localizedDescription)")
+          print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
           newRecord.posted = false
-          recordArrayFromFile.append(newRecord)
+          recordArrayFromFile.append(newRecord) // uncomment this and run to clear the json file
+//        recordArrayFromFile = [] // uncomment this and run to clear the json file
           let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
           self.saveJsonDataToFile(jsonString: jsonStr)
           print("test record: \(jsonStr)")
         }
       }
-      var jsonDataAfterAppending = readLocalFile(forName: "recordData")
+      
+      var jsonDataAfterAppending = readLocalFile(forName: "recordData") //this line is for testing only
       resolve("savedJsonData from file: \(jsonDataAfterAppending.last)");
     }
   }
@@ -93,8 +104,8 @@ class Pedometer: NSObject {
     print("token in native module: \(token)")
     let defaults = UserDefaults.standard
     defaults.set(token, forKey: "token")
-    let tokenInUD = defaults.string(forKey: "token")
-    print("token in user default: \(tokenInUD!)")
+//    let tokenInUD = defaults.string(forKey: "token")
+//    print("token in user default: \(tokenInUD!)")
     return token
   }
 
@@ -161,6 +172,13 @@ class Pedometer: NSObject {
       return []
   }
   
+  // Function to calculate the time to query the pedometer data since the beginning of the current day to the current time
+  private func calculatePedometerQueryTime () -> TimeInterval {
+    let currentTime = Date()
+    let startOfDay = Calendar.current.startOfDay(for: Date())
+    var diffTimeInSeconds = currentTime.timeIntervalSinceReferenceDate - startOfDay.timeIntervalSinceReferenceDate
+    return diffTimeInSeconds
+  }
   
   @objc
   static func requiresMainQueueSetup() -> Bool {
