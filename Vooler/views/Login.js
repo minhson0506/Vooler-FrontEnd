@@ -15,7 +15,7 @@ import {MainContext} from '../contexts/MainContext';
 
 const Login = ({navigation}) => {
   const {getSalt} = useAuth();
-  const {setSalt} = useContext(MainContext);
+  const {setSalt, salt} = useContext(MainContext);
 
   const onPress = () => {
     navigation.navigate('Register');
@@ -23,12 +23,13 @@ const Login = ({navigation}) => {
 
   const checkSalt = async () => {
     const response = await getSalt();
-    console.log('salt', response);
-    setSalt(response);
+    if (response) {
+      setSalt(response.salt);
+    }
   };
 
   useEffect(() => {
-    if ((salt = '')) {
+    if (salt == '') {
       checkSalt();
     }
   }, []);
