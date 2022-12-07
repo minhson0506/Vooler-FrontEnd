@@ -19,7 +19,7 @@ import Toast from 'react-native-toast-message';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken, setTeam, setUid} =
+  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, setSalt, salt} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postLogin} = useAuth();
@@ -38,7 +38,7 @@ const LoginForm = ({onPress}) => {
   const onSubmit = async (data) => {
     setUser(data.username);
     console.log('data before hash', data);
-    const hashedData = await generateHash(data.username, data.password);
+    const hashedData = await generateHash(data.username, data.password, salt);
     console.log('hashedData', hashedData);
     const userLogin = {
       userId: hashedData.userId,

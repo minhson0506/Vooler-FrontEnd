@@ -16,7 +16,7 @@ import Toast from 'react-native-toast-message';
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setToken, setUser, setUid, setTeam} =
+  const {setIsLoggedIn, setToken, setUser, setUid, setTeam, salt} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postUser, postLogin} = useAuth();
@@ -58,7 +58,7 @@ const RegisterForm = () => {
 
   const onSubmit = async (data) => {
     setUser(data.username);
-    const hashedData = await generateHash(data.username, data.password);
+    const hashedData = await generateHash(data.username, data.password, salt);
     try {
       const user = {
         userId: hashedData.userId,

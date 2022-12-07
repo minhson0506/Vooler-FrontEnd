@@ -62,12 +62,14 @@ class Pedometer: NSObject {
     initializePedometer()
 
     // make sure the user logged in and has a token
+    print("token", UserDefaults.standard.string(forKey: "token"))
     if (UserDefaults.standard.string(forKey: "token") == nil){
       let error = NSError(domain: "authentication", code: 200, userInfo: nil);
       reject("ERROR_AUTH", "cannot get token", error);
     } else {
 //      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
       // Post records saved in JSON
+      print("start to post")
       postQueuedRecords()
     }
     
@@ -118,7 +120,7 @@ class Pedometer: NSObject {
         }
       }
       let jsonDataAfterUpdate = readLocalFile(forName: "recordData") //this line is for testing only
-      resolve("savedJsonData from file: \((jsonDataAfterUpdate.last == nil) ? "empty" : "step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)").\n LastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)");
+      resolve("savedJsonData from file: \((jsonDataAfterUpdate.last == nil) ? "empty" : "step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)").\n ");
     }
   }
   
@@ -147,6 +149,7 @@ class Pedometer: NSObject {
   func getToken(_ token: String) -> String{
     let defaults = UserDefaults.standard
     defaults.set(token, forKey: "token")
+    print("token input", token)
     return token
   }
 

@@ -197,7 +197,7 @@
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = Q8B28GZJN5;
+						DevelopmentTeam = 4RQUD6Q8JK;
 						LastSwiftMigration = 1250;
 					};
 				};
@@ -357,7 +357,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Vooler/VoolerDebug.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Q8B28GZJN5;
+				DEVELOPMENT_TEAM = 4RQUD6Q8JK;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -391,6 +391,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Vooler/Vooler.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4RQUD6Q8JK;
 				INFOPLIST_FILE = Vooler/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

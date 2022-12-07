@@ -20,7 +20,7 @@ import {generateHash} from '../utils/hash';
 
 const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setTeam, setUser, user, team, token} = useContext(MainContext);
+  const {setTeam, setUser, user, team, token, salt} = useContext(MainContext);
   const {putUser} = useUser();
   const {getAllTeams} = useTeam();
 
@@ -64,7 +64,7 @@ const EditForm = () => {
       let hashedData = '';
       let json = {};
       if (data.password) {
-        hashedData = await generateHash(data.username, data.password);
+        hashedData = await generateHash(data.username, data.password, salt);
         json = {
           userId: hashedData.userId,
           password: hashedData.password,
