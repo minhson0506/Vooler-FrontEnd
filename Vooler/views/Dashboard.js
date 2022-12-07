@@ -19,7 +19,7 @@ import {quoteArray} from '../utils/data';
 
 const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
-  const pedometer = NativeModules.Pedometer;
+  const iosPedometer = NativeModules.Pedometer;
   const context = useContext(MainContext);
   const {
     loading,
@@ -58,7 +58,7 @@ const Dashboard = ({navigation}) => {
   useEffect(() => {
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
-      : pedometer.getToken(token);
+      : iosPedometer.getToken(token);
 
     randomQuote();
   }, []);

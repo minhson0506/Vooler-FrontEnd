@@ -6,8 +6,8 @@ import {MainProvider} from './contexts/MainContext';
 import {NativeModules} from 'react-native';
 import BackgroundFetch from 'react-native-background-fetch';
 
-const pedometer = NativeModules.Pedometer;
-console.log(pedometer);
+const iosPedometer = NativeModules.Pedometer;
+console.log(iosPedometer);
 
 export default function App() {
   const [state, setState] = useState({events: []});
@@ -16,14 +16,8 @@ export default function App() {
       const onEvent = async (taskId) => {
         // Do background work
         console.log('[BackgroundFetch] task: ', taskId);
-        pedometer.backgroundTasks((value) => {
-          console.log('Background task: ' + value + new Date());
-        });
-        pedometer.test((value) => {
-          console.log('test background, count is: ', value);
-        });
-        pedometer
-          .getSteps()
+        iosPedometer
+          .runPedometerBackgroundTasks()
           .then((ret) => console.log(ret))
           .catch((e) => console.log(e.message));
         await addEvent(taskId);
