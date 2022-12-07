@@ -1,67 +1,117 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {StatusBar} from 'expo-status-bar';
-import Navigator from './navigators/Navigator';
-import {MainProvider} from './contexts/MainContext';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
 
-import {NativeModules} from 'react-native';
-import BackgroundFetch from 'react-native-background-fetch';
+import React from 'react';
+import type {Node} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-const iosPedometer = NativeModules.Pedometer;
-console.log(iosPedometer);
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
 
-export default function App() {
-  const [state, setState] = useState({events: []});
-  useEffect(() => {
-    const initBackgroundFetch = async () => {
-      const onEvent = async (taskId) => {
-        // Do background work
-        console.log('[BackgroundFetch] task: ', taskId);
-        iosPedometer
-          .runPedometerBackgroundTasks()
-          .then((ret) => console.log(ret))
-          .catch((e) => console.log(e.message));
-        await addEvent(taskId);
-        // signal to the OS that your task is complete.
-        BackgroundFetch.finish(taskId);
-      };
-      // Timeout callback is executed when your Task has exceeded its allowed running-time.
-      const onTimeout = async (taskId) => {
-        console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
-        BackgroundFetch.finish(taskId);
-      };
-
-      // Initialize BackgroundFetch only once when component mounts.
-      let status = await BackgroundFetch.configure(
-        {minimumFetchInterval: 15},
-        onEvent,
-        onTimeout
-      );
-      console.log('[BackgroundFetch] configure status: ', status);
-    };
-    initBackgroundFetch();
-  }, []);
-
-  const addEvent = (taskId) => {
-    return new Promise((resolve, reject) => {
-      setState((state) => ({
-        events: [
-          ...state.events,
+/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
+ * LTI update could not be added via codemod */
+const Section = ({children, title}): Node => {
+  const isDarkMode = useColorScheme() === 'dark';
+  return (
+    <View style={styles.sectionContainer}>
+      <Text
+        style={[
+          styles.sectionTitle,
           {
-            taskId: taskId,
-            timestamp: new Date().toString(),
+            color: isDarkMode ? Colors.white : Colors.black,
           },
-        ],
-      }));
-      resolve();
-    });
+        ]}>
+        {title}
+      </Text>
+      <Text
+        style={[
+          styles.sectionDescription,
+          {
+            color: isDarkMode ? Colors.light : Colors.dark,
+          },
+        ]}>
+        {children}
+      </Text>
+    </View>
+  );
+};
+
+const App: () => Node = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <>
-      <MainProvider>
-        <Navigator></Navigator>
-      </MainProvider>
-      <StatusBar style="auto" />
-    </>
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <Header />
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Section title="Step One">
+            Edit <Text style={styles.highlight}>App.js</Text> to change this
+            screen and then come back to see your edits.
+          </Section>
+          <Section title="See Your Changes">
+            <ReloadInstructions />
+          </Section>
+          <Section title="Debug">
+            <DebugInstructions />
+          </Section>
+          <Section title="Learn More">
+            Read the docs to discover what to do next:
+          </Section>
+          <LearnMoreLinks />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+});
+
+export default App;
