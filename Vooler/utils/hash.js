@@ -1,17 +1,21 @@
 import {useAuth} from '../hooks/ApiHooks';
 
-const {getSalt} = useAuth();
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 // const getHash = (userId, password, salt) => {
-//   const hashedUserId = bcrypt.hashSync(userId, salt);
-//   const hashedPassword = bcrypt.hashSync(password, salt);
+//   const hashedUserId = bcrypt.hashSync(userId, '$2a$12$3TNWLZkSAp1FgvpfGJOg9u');
+//   const hashedPassword = bcrypt.hashSync(
+//     password,
+//     '$2a$12$3TNWLZkSAp1FgvpfGJOg9u'
+//   );
 //   return {userId: hashedUserId, password: hashedPassword};
 // };
 
 const getHash = (userId, password, salt) => {
   const hashedUserId = crypt(userId, salt);
   const hashedPassword = crypt(password, salt);
+  console.log('hashed username', hashedUserId);
+  console.log('hashed password', hashedPassword);
   return {userId: hashedUserId, password: hashedPassword};
 };
 

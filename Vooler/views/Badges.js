@@ -6,6 +6,7 @@ import {
   View,
   Dimensions,
   FlatList,
+  Alert,
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {levelArray} from '../utils/data';
@@ -59,7 +60,7 @@ const Badges = ({navigation}) => {
   const checkDate = (array, date) => {
     if (array !== undefined && array.length != 0) {
       if (array[array.length - 1].record_date == date) {
-        if (array[array.length - 1].step_count_for_date >= 100) {
+        if (array[array.length - 1].step_count_for_date >= 300) {
           array.pop();
           const yesterday = new Date(
             new Date(date).setDate(new Date(date).getDate() - 1)
@@ -93,7 +94,15 @@ const Badges = ({navigation}) => {
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
-        <View style={[styles.card, {alignSelf: 'center'}]} onPress={{}}>
+        <TouchableOpacity
+          style={[styles.card, {alignSelf: 'center'}]}
+          onPress={() => {
+            Alert.alert(
+              'How to keep your streak?',
+              'Walk 300 steps/day to achieve one day streak!'
+            );
+          }}
+        >
           {streakDay > 0 ? (
             <View
               style={{
@@ -122,7 +131,7 @@ const Badges = ({navigation}) => {
               <Text style={fontStyle.Title}>Streak: {streakDay}</Text>
             </View>
           )}
-        </View>
+        </TouchableOpacity>
         <FlatList
           data={levelArray}
           style={styles.gridView}

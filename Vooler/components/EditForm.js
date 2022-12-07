@@ -83,11 +83,11 @@ const EditForm = () => {
       if (userData) {
         setUser(data.username);
         reset({username: data.username, password: ''});
-        const msg = 'User modified successfully!';
+        const msg = 'User modified!';
         if (Platform.OS === 'android') {
           ToastAndroid.show(msg, ToastAndroid.SHORT);
         } else {
-          Alert.alert(msg);
+          Alert.alert('Modified successfully!', msg);
         }
         setTeam(teamValue);
       }
@@ -96,7 +96,7 @@ const EditForm = () => {
       if (Platform.OS === 'android') {
         ToastAndroid.show(msg, ToastAndroid.SHORT);
       } else {
-        Alert.alert(msg);
+        Alert.alert('Modified failed!', msg);
       }
       console.log(error);
     }
