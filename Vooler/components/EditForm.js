@@ -1,5 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, Dimensions, View, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  ToastAndroid,
+  AlertIOS,
+} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -10,7 +17,6 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useTeam, useUser} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
-import Toast from 'react-native-toast-message';
 
 const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -77,11 +83,21 @@ const EditForm = () => {
       if (userData) {
         setUser(data.username);
         reset({username: data.username, password: ''});
-        Toast.show({type: 'success', text1: 'User modified!'});
+        const msg = 'User modified successfully!';
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else {
+          Alert.alert(msg);
+        }
         setTeam(teamValue);
       }
     } catch (error) {
-      Alert.alert('Modify failed!', 'Username is taken!');
+      const msg = 'Username already taken!';
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      } else {
+        Alert.alert(msg);
+      }
       console.log(error);
     }
   };

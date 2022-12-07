@@ -93,14 +93,17 @@ const RankTable = ({state, source, sourceYesterday}) => {
                   <Row
                     key={rowData[1]}
                     data={rowData}
-                    style={[styles.row]}
+                    style={styles.row}
                     textStyle={[
                       styles.text,
                       fontStyle.Text,
                       rowData[1] == user && styles.textUser,
                     ]}
                   />
-                  <View key={rowData[2]} style={{marginTop: 10, marginLeft: 10}}>
+                  <View
+                    key={rowData[2]}
+                    style={{marginTop: 10, marginLeft: 10}}
+                  >
                     {data[index] == 'none' ? (
                       <Icon
                         key={'same'}
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
   },
   textUser: {
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: 'Nunito-ExtraBold',
     color: colorSet.black,
   },
@@ -164,6 +167,7 @@ const styles = StyleSheet.create({
   },
   teamRow: {
     marginTop: 20,
+    justifyContent: 'space-evenly',
     borderBottomWidth: 1,
     borderColor: colorSet.darkGray,
   },
