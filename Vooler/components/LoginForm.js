@@ -38,7 +38,7 @@ const LoginForm = ({onPress}) => {
 
   const onSubmit = async (data) => {
     setUser(data.username);
-    console.log('data before hash', data);
+    // console.log('data before hash', data);
     const hashedData = await generateHash(data.username, data.password, salt);
     const userLogin = {
       userId: hashedData.userId,

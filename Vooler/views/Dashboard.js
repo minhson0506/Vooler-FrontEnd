@@ -16,7 +16,6 @@ import {MainContext} from '../contexts/MainContext';
 import {getBadge, getTodayStep, getTeamDataToday} from '../utils/getData';
 import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
-import BackgroundFetch from 'react-native-background-fetch';
 
 const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
@@ -44,50 +43,6 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
-  const [state, setState] = useState({events: []});
-
-  const addEvent = (taskId) => {
-    return new Promise((resolve, reject) => {
-      setState((state) => ({
-        events: [
-          ...state.events,
-          {
-            taskId: taskId,
-            timestamp: new Date().toString(),
-          },
-        ],
-      }));
-      resolve();
-    });
-  };
-
-  const initBackgroundFetch = async () => {
-    const onEvent = async (taskId) => {
-      // Do background work
-      console.log('[BackgroundFetch] task: ', taskId);
-      iosPedometer
-        .runPedometerBackgroundTasks()
-        .then((ret) => console.log(ret))
-        .catch((e) => console.log(e.message));
-      await addEvent(taskId);
-      // signal to the OS that your task is complete.
-      BackgroundFetch.finish(taskId);
-    };
-    // Timeout callback is executed when your Task has exceeded its allowed running-time.
-    const onTimeout = async (taskId) => {
-      console.warn('[BackgroundFetch] TIMEOUT task: ', taskId);
-      BackgroundFetch.finish(taskId);
-    };
-
-    // Initialize BackgroundFetch only once when component mounts.
-    let status = await BackgroundFetch.configure(
-      {minimumFetchInterval: 15},
-      onEvent,
-      onTimeout
-    );
-    console.log('[BackgroundFetch] configure status: ', status);
-  };
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (second === 100) {
@@ -101,14 +56,17 @@ const Dashboard = ({navigation}) => {
   }, [loading]);
 
   useEffect(() => {
+    randomQuote();
+
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
       : () => {
           iosPedometer.getToken(token);
-          initBackgroundFetch();
+          iosPedometer
+            .runPedometerBackgroundTasks()
+            .then((ret) => console.log(ret))
+            .catch((e) => console.log(e.message));
         };
-
-    randomQuote();
   }, []);
 
   const styleFont = useStyles();

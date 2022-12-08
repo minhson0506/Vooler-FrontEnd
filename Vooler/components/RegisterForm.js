@@ -1,5 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, Dimensions, View, Alert, ToastAndroid} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  ToastAndroid,
+  TouchableOpacity,
+} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -14,7 +21,7 @@ import {generateHash} from '../utils/hash';
 import {useUser} from '../hooks/ApiHooks';
 import Toast from 'react-native-toast-message';
 
-const RegisterForm = () => {
+const RegisterForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
   const {setIsLoggedIn, setToken, setUser, setUid, setTeam, salt} =
     useContext(MainContext);
@@ -101,7 +108,9 @@ const RegisterForm = () => {
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <View style={{height: '100%', justifyContent: 'space-evenly'}}>
+      <View
+        style={{height: '90%', justifyContent: 'center', alignItems: 'center'}}
+      >
         <View style={styles.card}>
           <View>
             <Text style={[fontStyle.Title, styles.text]}>Enter nickname</Text>
@@ -180,24 +189,46 @@ const RegisterForm = () => {
             {errors.password && <Text>This is required.</Text>}
           </View>
         </View>
-        <Button
-          title="SIGN UP"
-          icon={{
-            name: 'check-circle',
-            type: 'font-awesome',
-            size: 25,
-            color: 'black',
+        <View
+          style={{
+            justifyContent: 'flex-start',
+            marginTop: 15,
           }}
-          iconContainerStyle={{marginRight: 10}}
-          titleStyle={fontStyle.Button}
-          buttonStyle={styles.button}
-          containerStyle={{
-            width: 200,
-            height: 68,
-            alignSelf: 'center',
-          }}
-          onPress={handleSubmit(onSubmit)}
-        />
+        >
+          <Button
+            title="SIGN UP"
+            icon={{
+              name: 'check-circle',
+              type: 'font-awesome',
+              size: 25,
+              color: 'black',
+            }}
+            iconContainerStyle={{marginRight: 10}}
+            titleStyle={fontStyle.Button}
+            buttonStyle={styles.button}
+            containerStyle={{
+              width: 200,
+              height: 68,
+              alignSelf: 'center',
+            }}
+            onPress={handleSubmit(onSubmit)}
+          />
+          <TouchableOpacity
+            onPress={onPress}
+            style={{flexDirection: 'row', justifyContent: 'center'}}
+          >
+            <Text
+              style={{
+                fontFamily: 'Nunito-Medium',
+                fontSize: 20,
+                marginEnd: 10,
+              }}
+            >
+              Already had account?
+            </Text>
+            <Text style={[fontStyle.Text]}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
 };

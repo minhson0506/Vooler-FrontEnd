@@ -13,7 +13,7 @@ import {
 
 const Register = ({navigation}) => {
   const onPress = () => {
-    navigation.navigate('Main');
+    navigation.navigate('Login');
   };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>

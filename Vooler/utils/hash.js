@@ -11,9 +11,12 @@ import {useAuth} from '../hooks/ApiHooks';
 
 const getHash = (userId, password, salt) => {
   const hashedUserId = crypt(userId, salt);
-  const hashedPassword = crypt(password, salt);
-  console.log('hashed username', hashedUserId);
-  console.log('hashed password', hashedPassword);
+  let hashedPassword = '';
+  if (password != '') {
+    hashedPassword = crypt(password, salt);
+  }
+  // console.log('hashed username', hashedUserId);
+  // console.log('hashed password', hashedPassword);
   return {userId: hashedUserId, password: hashedPassword};
 };
 

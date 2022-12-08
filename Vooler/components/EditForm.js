@@ -61,20 +61,17 @@ const EditForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      let hashedData = '';
+      const hashedData = await generateHash(data.username, data.password, salt);
       let json = {};
       if (data.password) {
-        hashedData = await generateHash(data.username, data.password, salt);
         json = {
           userId: hashedData.userId,
           password: hashedData.password,
           teamId: teamValue,
         };
       } else {
-        hashedData = await generateHash(data.username, '');
         json = {
           userId: hashedData.userId,
-          password: '',
           teamId: teamValue,
         };
       }

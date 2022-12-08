@@ -91,20 +91,21 @@ const RankTable = ({state, source, sourceYesterday}) => {
               key={item[0]}
               style={[
                 styles.rowWithIcon,
-                item[1] == user && {backgroundColor: '#fff2cc'},
+                (item[1] == user || item[1] == teamName) && {
+                  backgroundColor: '#fff2cc',
+                },
               ]}
             >
               {state == 'Team' ? (
                 <Row
                   key={item[0]}
                   data={item}
-                  style={[
-                    styles.teamRow,
-                    item[1] == teamName && {
-                      backgroundColor: '#fff2cc',
-                    },
+                  style={[styles.teamRow]}
+                  textStyle={[
+                    styles.teamText,
+                    fontStyle.Text,
+                    item[1] == teamName && styles.textUser,
                   ]}
-                  textStyle={[styles.teamText, fontStyle.Text]}
                 />
               ) : (
                 <>
