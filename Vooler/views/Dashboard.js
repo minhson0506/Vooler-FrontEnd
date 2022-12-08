@@ -59,10 +59,7 @@ const Dashboard = ({navigation}) => {
 
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
-      : () => {
-          const iosPedometer = NativeModules.Pedometer;
-          iosPedometer.getToken(token);
-        };
+      : NativeModules.Pedometer.getToken(token);
   }, []);
 
   useEffect(() => {
