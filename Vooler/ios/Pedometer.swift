@@ -67,82 +67,96 @@ class Pedometer: NSObject {
       let error = NSError(domain: "authentication", code: 200, userInfo: nil);
       reject("ERROR_AUTH", "cannot get token", error);
     } else {
-//      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
-      // Post records saved in JSON
-      print("start to post")
-      postQueuedRecords()
-    }
-    
-    if (self.steps == nil){
-      let error = NSError(domain: "pedometer", code: 200, userInfo: nil);
-      reject("ERROR_STEPCOUNT", "cannot get step count", error);
-    }
-    else {
-      // handle new record
-      var recordArrayFromFile = self.readLocalFile(forName: "recordData")
-      var newRecord = createRecordDataObject(stepCount: self.steps, timestamp: Date())
-      networkService.postRecords(record: newRecord){ result in
-        switch result {
-        case .success:
-          print("Post succeeded")
-          newRecord.posted = true
-          UserDefaults.standard.set(newRecord.recordDate, forKey: "lastSuccessfulPost" )
-          print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
-        case .failure(let error):
-          print("error posting \(error.localizedDescription)")
-          print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
-          newRecord.posted = false
-          
-          // Check if the latest record in JSON file has the same date as the new record. If yes, overwrite the latest with the newer data of the day. Else, append the new record to json file and write to file
-          var hadSameDayRecord = false
-          if (recordArrayFromFile.count > 0){
-            let lastestRecordDate = self.convertDateStringToDate(dateString: recordArrayFromFile.last!.recordDate)
-            hadSameDayRecord = Calendar.current.isDate(lastestRecordDate, equalTo: self.convertDateStringToDate(dateString: newRecord.recordDate), toGranularity: .day)
-          } else {
-            hadSameDayRecord = false
-          }
-
-          if (hadSameDayRecord){
-            //overwrite the latest with the newer data of the day
-            recordArrayFromFile.indices.last.map {recordArrayFromFile[$0] = newRecord}
-            //            recordArrayFromFile = [] // uncomment this and run to clear the json file
-            let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
-            self.saveJsonDataToFile(jsonString: jsonStr)
-            print("updated record in json: \(jsonStr)")
-          } else {
-            //append the new record to json file and write to file
-            recordArrayFromFile.append(newRecord)
-            //          recordArrayFromFile = [] // uncomment this and run to clear the json file
-            let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
-            self.saveJsonDataToFile(jsonString: jsonStr)
-            print("add new day record in json: \(jsonStr)")
+      //      print("TOKEN: \(UserDefaults.standard.string(forKey: "token")!)")
+      if (self.steps == nil){
+        let error = NSError(domain: "pedometer", code: 200, userInfo: nil);
+        reject("ERROR_STEPCOUNT", "cannot get step count", error);
+      }
+      else {
+        // Post records saved in JSON, must be completed before the new record posting
+        print("start to post")
+        var postOldRecordCompletion = false
+        postQueuedRecords{result in
+          switch result {
+          case .success:
+            print("posted all queued record")
+            postOldRecordCompletion = true
+          case .failure(let failure):
+            print("failed to post queue record \(failure.localizedDescription)")
+            postOldRecordCompletion = true
           }
         }
+        if (postOldRecordCompletion){
+          // handle new record
+          var recordArrayFromFile = self.readLocalFile(forName: "recordData")
+          var newRecord = createRecordDataObject(stepCount: self.steps, timestamp: Date())
+          networkService.postRecords(record: newRecord){ result in
+            switch result {
+            case .success:
+              print("Post succeeded")
+              newRecord.posted = true
+              UserDefaults.standard.set(newRecord.recordDate, forKey: "lastSuccessfulPost" )
+              print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
+            case .failure(let error):
+              print("error posting \(error.localizedDescription)")
+              print("lastSuccessfulPost timestamp \(UserDefaults.standard.string(forKey: "lastSuccessfulPost")!)")
+              newRecord.posted = false
+              
+              // Check if the latest record in JSON file has the same date as the new record. If yes, overwrite the latest with the newer data of the day. Else, append the new record to json file and write to file
+              var hadSameDayRecord = false
+              if (recordArrayFromFile.count > 0){
+                let lastestRecordDate = self.convertDateStringToDate(dateString: recordArrayFromFile.last!.recordDate)
+                hadSameDayRecord = Calendar.current.isDate(lastestRecordDate, equalTo: self.convertDateStringToDate(dateString: newRecord.recordDate), toGranularity: .day)
+              } else {
+                hadSameDayRecord = false
+              }
+              
+              if (hadSameDayRecord){
+                //overwrite the latest with the newer data of the day
+                recordArrayFromFile.indices.last.map {recordArrayFromFile[$0] = newRecord}
+                //            recordArrayFromFile = [] // uncomment this and run to clear the json file
+                let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+                self.saveJsonDataToFile(jsonString: jsonStr)
+                print("updated record in json: \(jsonStr)")
+              } else {
+                //append the new record to json file and write to file
+                recordArrayFromFile.append(newRecord)
+                //          recordArrayFromFile = [] // uncomment this and run to clear the json file
+                let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+                self.saveJsonDataToFile(jsonString: jsonStr)
+                print("add new day record in json: \(jsonStr)")
+              }
+            }
+          }
+        }
+        let jsonDataAfterUpdate = readLocalFile(forName: "recordData") //this line is for testing only
+        let lastSuccessfulPostRecord = (UserDefaults.standard.string(forKey: "lastSuccessfulPost") == nil) ? "" : UserDefaults.standard.string(forKey: "lastSuccessfulPost")
+        let resolveMessage = (jsonDataAfterUpdate.last != nil) ? "saved to json: step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)" : "lastSuccessfulPost: \(String(describing: lastSuccessfulPostRecord))"
+        resolve(resolveMessage);
       }
-      let jsonDataAfterUpdate = readLocalFile(forName: "recordData") //this line is for testing only
-      let lastSuccessfulPostRecord = (UserDefaults.standard.string(forKey: "lastSuccessfulPost") == nil) ? "" : UserDefaults.standard.string(forKey: "lastSuccessfulPost")
-      let resolveMessage = (jsonDataAfterUpdate.last != nil) ? "saved to json: step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)" : "lastSuccessfulPost: \(String(describing: lastSuccessfulPostRecord))"
-      resolve(resolveMessage);
     }
   } 
   
   
   // Method to check and post the old unposted records in local JSON:
-  private func postQueuedRecords(){
+  private func postQueuedRecords(completion: @escaping (Result<Bool, CustomError>) -> Void){
     var recordArrayFromFile = readLocalFile(forName: "recordData")
     for record in recordArrayFromFile {
       networkService.postRecords(record: record){ result in
         switch result {
         case .success:
           recordArrayFromFile = recordArrayFromFile.filter({ $0 != record})
+          print("recordArrayFromFile after post queued record \(recordArrayFromFile)")
+          let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
+          self.saveJsonDataToFile(jsonString: jsonStr)
+          print("updated record in json: \(jsonStr)")
         case .failure (let error):
           print("error posting record (\(record.recordDate), \(record.stepCount)) :\(error.localizedDescription)")
+          completion(.failure(.custom(errorMessage: "cannot post queued data")))
         }
       }
     }
-    let jsonStr = self.convertRecordEntryToJson(records: recordArrayFromFile)
-    self.saveJsonDataToFile(jsonString: jsonStr)
-    print("updated record in json: \(jsonStr)")
+    completion(.success(true))
   }
   
   
