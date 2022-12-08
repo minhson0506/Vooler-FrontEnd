@@ -62,7 +62,7 @@ class Pedometer: NSObject {
     initializePedometer()
 
     // make sure the user logged in and has a token
-    print("token", UserDefaults.standard.string(forKey: "token"))
+    print("token", UserDefaults.standard.string(forKey: "token") ?? "")
     if (UserDefaults.standard.string(forKey: "token") == nil){
       let error = NSError(domain: "authentication", code: 200, userInfo: nil);
       reject("ERROR_AUTH", "cannot get token", error);
@@ -120,9 +120,11 @@ class Pedometer: NSObject {
         }
       }
       let jsonDataAfterUpdate = readLocalFile(forName: "recordData") //this line is for testing only
-      resolve("savedJsonData from file: \((jsonDataAfterUpdate.last == nil) ? "empty" : "step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)").\n ");
+      let lastSuccessfulPostRecord = (UserDefaults.standard.string(forKey: "lastSuccessfulPost") == nil) ? "" : UserDefaults.standard.string(forKey: "lastSuccessfulPost")
+      let resolveMessage = (jsonDataAfterUpdate.last != nil) ? "saved to json: step: \(jsonDataAfterUpdate.last!.stepCount), date: \(jsonDataAfterUpdate.last!.recordDate)" : "lastSuccessfulPost: \(String(describing: lastSuccessfulPostRecord))"
+      resolve(resolveMessage);
     }
-  }
+  } 
   
   
   // Method to check and post the old unposted records in local JSON:
@@ -149,27 +151,9 @@ class Pedometer: NSObject {
   func getToken(_ token: String) -> String{
     let defaults = UserDefaults.standard
     defaults.set(token, forKey: "token")
-    print("token input", token)
     return token
   }
 
-  
-  // ======================== MISC, TO REVIEW =========================
-
-  // Test function, to remove if not use at the end
-  private var count = 0;
-  @objc
-  func test(_ callback: RCTResponseSenderBlock){
-    count+=1;
-    callback([count])
-  }
-  
-  // Test function, to remove if not use at the end
-  @objc
-  func backgroundTasks(_ callback: RCTResponseSenderBlock) {
-    callback(["hello from background task"]);
-  }
-  
   
  // ======================== ULTILITIES =========================
   

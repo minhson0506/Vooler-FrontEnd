@@ -19,7 +19,6 @@ import {quoteArray} from '../utils/data';
 
 const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
-  const iosPedometer = NativeModules.Pedometer;
   const context = useContext(MainContext);
   const {
     loading,
@@ -61,12 +60,29 @@ const Dashboard = ({navigation}) => {
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
       : () => {
+          const iosPedometer = NativeModules.Pedometer;
           iosPedometer.getToken(token);
-          iosPedometer
-            .runPedometerBackgroundTasks()
-            .then((ret) => console.log(ret))
-            .catch((e) => console.log(e.message));
         };
+  }, []);
+
+  useEffect(() => {
+    const tryFetch = () => {
+      if (Platform.OS === 'ios') {
+        const iosPedometer = NativeModules.Pedometer;
+        iosPedometer
+          .runPedometerBackgroundTasks()
+          .then((ret) => {
+            return ret;
+          })
+          .catch((e) => {
+            console.log(e.message);
+            setTimeout(() => {
+              return tryFetch();
+            }, 1000);
+          });
+      }
+    };
+    tryFetch();
   }, []);
 
   const styleFont = useStyles();
