@@ -11,10 +11,8 @@
 
 @interface RCT_EXTERN_MODULE(Pedometer, RCTEventEmitter);
 
-RCT_EXTERN_METHOD(test:(RCTResponseSenderBlock)callback)
 RCT_EXTERN_METHOD(getToken:(NSString *)token)
 RCT_EXTERN_METHOD(runPedometerBackgroundTasks:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
-RCT_EXTERN_METHOD(backgroundTasks:(RCTResponseSenderBlock)callback)
 
 @end
 

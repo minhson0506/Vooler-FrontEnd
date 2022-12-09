@@ -19,7 +19,6 @@ import {quoteArray} from '../utils/data';
 
 const Dashboard = ({navigation}) => {
   const {TaskModule} = NativeModules;
-  const iosPedometer = NativeModules.Pedometer;
   const context = useContext(MainContext);
   const {
     loading,
@@ -60,14 +59,28 @@ const Dashboard = ({navigation}) => {
 
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
-      : () => {
-          iosPedometer.getToken(token);
-          iosPedometer
-            .runPedometerBackgroundTasks()
-            .then((ret) => console.log(ret))
-            .catch((e) => console.log(e.message));
-        };
+      : NativeModules.Pedometer.getToken(token);
   }, []);
+
+  useEffect(() => {
+    const tryFetch = () => {
+      if (Platform.OS === 'ios') {
+        const iosPedometer = NativeModules.Pedometer;
+        iosPedometer
+          .runPedometerBackgroundTasks()
+          .then((ret) => {
+            return ret;
+          })
+          .catch((e) => {
+            console.log(e.message);
+            setTimeout(() => {
+              return tryFetch();
+            }, 1000);
+          });
+      }
+    };
+    tryFetch();
+  }, [loading]);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -86,7 +99,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -106,7 +118,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -126,7 +137,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
