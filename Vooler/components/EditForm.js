@@ -1,5 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {StyleSheet, Dimensions, View, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  ToastAndroid,
+  AlertIOS,
+} from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
 import {useForm, Controller} from 'react-hook-form';
@@ -13,7 +20,7 @@ import {generateHash} from '../utils/hash';
 
 const EditForm = () => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setTeam, setUser, user, team, token} = useContext(MainContext);
+  const {setTeam, setUser, user, team, token, salt} = useContext(MainContext);
   const {putUser} = useUser();
   const {getAllTeams} = useTeam();
 
@@ -54,20 +61,17 @@ const EditForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      let hashedData = '';
+      const hashedData = await generateHash(data.username, data.password, salt);
       let json = {};
       if (data.password) {
-        hashedData = await generateHash(data.username, data.password);
         json = {
           userId: hashedData.userId,
           password: hashedData.password,
           teamId: teamValue,
         };
       } else {
-        hashedData = await generateHash(data.username, '');
         json = {
           userId: hashedData.userId,
-          password: '',
           teamId: teamValue,
         };
       }
@@ -76,11 +80,21 @@ const EditForm = () => {
       if (userData) {
         setUser(data.username);
         reset({username: data.username, password: ''});
-        Alert.alert('Success', 'User modified!');
+        const msg = 'User modified!';
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else {
+          Alert.alert('Modified successfully!', msg);
+        }
         setTeam(teamValue);
       }
     } catch (error) {
-      Alert.alert('Modify failed!', 'Username is taken!');
+      const msg = 'Username already taken!';
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      } else {
+        Alert.alert('Modified failed!', msg);
+      }
       console.log(error);
     }
   };

@@ -13,14 +13,7 @@ import {AppBarIcon} from '../components/AppBar';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {MainContext} from '../contexts/MainContext';
-import {
-  getToday,
-  getTeamData,
-  fetchStep,
-  getBadge,
-  getTodayStep,
-  getTeamDataToday,
-} from '../utils/getData';
+import {getBadge, getTodayStep, getTeamDataToday} from '../utils/getData';
 import {Platform} from 'react-native';
 import {quoteArray} from '../utils/data';
 
@@ -33,14 +26,9 @@ const Dashboard = ({navigation}) => {
     user,
     currentStep,
     rank,
-    step,
-    weekStep,
     badgeStepDay,
     badgeStepWeek,
     badgeRank,
-    setBadgeStepDay,
-    setBadgeStepWeek,
-    setBadgeRank,
     token,
   } = useContext(MainContext);
 
@@ -62,17 +50,37 @@ const Dashboard = ({navigation}) => {
       getTeamDataToday(context).then(
         getTodayStep(context).then(getBadge(context))
       );
-    }, 1000);
+    }, 500);
     return () => clearInterval(interval);
   }, [loading]);
 
   useEffect(() => {
+    randomQuote();
+
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
-      : console.log('you are running ios');
-
-    randomQuote();
+      : NativeModules.Pedometer.getToken(token);
   }, []);
+
+  useEffect(() => {
+    const tryFetch = () => {
+      if (Platform.OS === 'ios') {
+        const iosPedometer = NativeModules.Pedometer;
+        iosPedometer
+          .runPedometerBackgroundTasks()
+          .then((ret) => {
+            return ret;
+          })
+          .catch((e) => {
+            console.log(e.message);
+            setTimeout(() => {
+              return tryFetch();
+            }, 1000);
+          });
+      }
+    };
+    tryFetch();
+  }, [loading]);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -91,7 +99,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -111,7 +118,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -131,7 +137,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>

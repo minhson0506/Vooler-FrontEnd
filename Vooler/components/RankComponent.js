@@ -6,14 +6,9 @@ import {
   View,
   Dimensions,
   Image,
-  ScrollView,
 } from 'react-native';
-import {safeAreaStyle, useStyles, colorSet} from '../utils/GlobalStyle';
-import WeeklyCalendar from 'react-native-weekly-calendar';
+import {useStyles, colorSet} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
-import {color, Divider} from '@rneui/base';
-import {Spacer} from '@react-native-material/core';
-import RankTable from '../components/TableView';
 
 const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
   const styleFont = useStyles();

@@ -1,7 +1,6 @@
 import React from 'react';
-import {colorSet, safeAreaStyle} from '../utils/GlobalStyle';
+import {safeAreaStyle} from '../utils/GlobalStyle';
 import {AppBarIcon} from '../components/AppBar';
-import RegisterForm from '../components/RegisterForm';
 import PropTypes from 'prop-types';
 import {
   View,

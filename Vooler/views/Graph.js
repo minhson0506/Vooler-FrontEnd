@@ -1,19 +1,16 @@
-import {color} from '@rneui/base';
-import React, {Component} from 'react';
+import React from 'react';
 import {Dimensions, StyleSheet, View, Text} from 'react-native';
 import {BarChart} from 'react-native-gifted-charts';
-import {getUserWeekData} from '../utils/getData';
 import {colorSet} from '../utils/GlobalStyle';
 
-const Graph = ({source}) => {
-  const avg = source.reduce((a, b) => a + b, 0) / source.length;
+const Graph = ({source, avgLastWeek}) => {
   const dateArray = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const barData = source.map((element, index) => {
     return {
       value: element,
       label: dateArray[index],
-      frontColor: element > avg ? colorSet.primary : '#BFBFBF',
+      frontColor: element > avgLastWeek ? colorSet.primary : '#BFBFBF',
     };
   });
 
@@ -30,7 +27,7 @@ const Graph = ({source}) => {
         hideRules
         initialSpacing={10}
         showReferenceLine1
-        referenceLine1Position={avg}
+        referenceLine1Position={avgLastWeek}
         referenceLine1Config={{
           color: 'gray',
           dashWidth: 2,
@@ -38,7 +35,9 @@ const Graph = ({source}) => {
           width: Dimensions.get('window').width * 0.75,
         }}
       />
-      <Text style={styles.text}>Average: {Math.round(avg)} steps/day</Text>
+      <Text style={styles.text}>
+        Last week avg. {Math.round(avgLastWeek)} steps/day
+      </Text>
     </>
   );
 };

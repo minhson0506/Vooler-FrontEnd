@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {safeAreaStyle} from '../utils/GlobalStyle';
 import {AppBarIcon} from '../components/AppBar';
 import LoginForm from '../components/LoginForm';
@@ -10,11 +10,30 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {useAuth} from '../hooks/ApiHooks';
+import {MainContext} from '../contexts/MainContext';
 
 const Login = ({navigation}) => {
+  const {getSalt} = useAuth();
+  const {setSalt, salt} = useContext(MainContext);
+
   const onPress = () => {
     navigation.navigate('Register');
   };
+
+  const checkSalt = async () => {
+    const response = await getSalt();
+    if (response) {
+      setSalt(response.salt);
+    }
+  };
+
+  useEffect(() => {
+    if (salt == '') {
+      checkSalt();
+    }
+  }, []);
+
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity

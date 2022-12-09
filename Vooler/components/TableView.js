@@ -1,10 +1,12 @@
-import {Table, Row, Rows} from 'react-native-table-component';
-import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {Table, Row} from 'react-native-table-component';
+import {StyleSheet, View, Dimensions, ScrollView, Text} from 'react-native';
 import {colorSet, useStyles} from '../utils/GlobalStyle';
 import {useContext, useState, useEffect} from 'react';
 import {MainContext} from '../contexts/MainContext';
 import {useTeam} from '../hooks/ApiHooks';
 import {Icon} from '@rneui/base';
+import {FlatList} from 'react-native';
+import {nameArray} from '../utils/data';
 
 const RankTable = ({state, source, sourceYesterday}) => {
   const {user, team, loading} = useContext(MainContext);
@@ -14,6 +16,8 @@ const RankTable = ({state, source, sourceYesterday}) => {
   const [teamName, setTeamName] = useState('');
   const {getAllTeams} = useTeam();
   const [data, setData] = useState([]);
+
+  const dimension = Dimensions.get('window').width;
 
   const getData = () => {
     if (state != 'Team') {
@@ -62,45 +66,68 @@ const RankTable = ({state, source, sourceYesterday}) => {
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <Table style={styles.container}>
+      <>
         <Row
+          key={'header'}
           data={state == 'Team' ? header : userHeader}
           textStyle={styles.textHeader}
+          style={{width: '100%'}}
+          widthArr={
+            state != 'Team'
+              ? [
+                  dimension * 0.2,
+                  dimension * 0.3,
+                  dimension * 0.25,
+                  dimension * 0.25,
+                ]
+              : [dimension * 0.3, dimension * 0.4, dimension * 0.3]
+          }
         />
-        <ScrollView
-          contentContainerStyle={{
-            height: Dimensions.get('window').height * 0.9,
-          }}
-        >
-          {state == 'Team'
-            ? source.map((rowData) => (
+        <FlatList
+          data={source}
+          textStyle={[styles.text, fontStyle.Text]}
+          renderItem={({item, index}) => (
+            <View
+              key={item[0]}
+              style={[
+                styles.rowWithIcon,
+                (item[1] == user || item[1] == teamName) && {
+                  backgroundColor: '#fff2cc',
+                },
+              ]}
+            >
+              {state == 'Team' ? (
                 <Row
-                  key={rowData[0]}
-                  data={rowData}
-                  style={[
-                    styles.teamRow,
-                    rowData[1] == teamName && {
-                      backgroundColor: colorSet.primary,
-                    },
+                  key={item[0]}
+                  data={item}
+                  style={[styles.teamRow]}
+                  textStyle={[
+                    styles.teamText,
+                    fontStyle.Text,
+                    item[1] == teamName && styles.textUser,
                   ]}
-                  textStyle={[styles.teamText, fontStyle.Text]}
                 />
-              ))
-            : source.map((rowData, index) => (
-                <View style={styles.rowWithIcon}>
+              ) : (
+                <>
                   <Row
-                    key={rowData[0]}
-                    data={rowData}
-                    style={[styles.row]}
+                    key={item[1]}
+                    data={item}
+                    style={styles.row}
                     textStyle={[
                       styles.text,
                       fontStyle.Text,
-                      rowData[1] == user && styles.textUser,
+                      item[1] == user && styles.textUser,
+                    ]}
+                    widthArr={[
+                      dimension * 0.8 * 0.25,
+                      dimension * 0.8 * 0.4,
+                      dimension * 0.8 * 0.3,
                     ]}
                   />
-                  <View style={{marginTop: 10, marginLeft: 10}}>
+                  <View key={item[2]} style={{marginTop: 10, marginLeft: 10}}>
                     {data[index] == 'none' ? (
                       <Icon
+                        key={'same'}
                         name="equal"
                         type="material-community"
                         size={30}
@@ -108,6 +135,7 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       ></Icon>
                     ) : data[index] == 'up' ? (
                       <Icon
+                        key={'up'}
                         name="arrow-up"
                         type="ionicon"
                         size={30}
@@ -115,6 +143,7 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       ></Icon>
                     ) : (
                       <Icon
+                        key={'down'}
                         name="arrow-down"
                         type="ionicon"
                         size={30}
@@ -122,10 +151,12 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       ></Icon>
                     )}
                   </View>
-                </View>
-              ))}
-        </ScrollView>
-      </Table>
+                </>
+              )}
+            </View>
+          )}
+        />
+      </>
     );
 };
 
@@ -149,7 +180,7 @@ const styles = StyleSheet.create({
   },
   textUser: {
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: 'Nunito-ExtraBold',
     color: colorSet.black,
   },
@@ -159,6 +190,7 @@ const styles = StyleSheet.create({
   },
   teamRow: {
     marginTop: 20,
+    justifyContent: 'space-evenly',
     borderBottomWidth: 1,
     borderColor: colorSet.darkGray,
   },

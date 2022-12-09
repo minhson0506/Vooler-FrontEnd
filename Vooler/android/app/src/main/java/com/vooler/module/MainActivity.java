@@ -73,7 +73,7 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
           }
         }
       }
-    }, 0, 15, TimeUnit.MINUTES);
+    }, 0, 2, TimeUnit.MINUTES);
   }
 
   public void requestPermission(Activity activity) {

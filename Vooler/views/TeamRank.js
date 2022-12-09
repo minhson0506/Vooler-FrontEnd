@@ -5,14 +5,11 @@ import {
   Text,
   View,
   Dimensions,
-  Image,
-  ScrollView,
 } from 'react-native';
 import {safeAreaStyle, useStyles, colorSet} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import PropTypes from 'prop-types';
-import {color, Divider} from '@rneui/base';
-import {Spacer} from '@react-native-material/core';
+import {Divider} from '@rneui/base';
 import RankTable from '../components/TableView';
 import RankComp from '../components/RankComponent';
 import {getAllTeams, getToday} from '../utils/getData';
@@ -22,9 +19,7 @@ const TeamRank = ({navigation}) => {
   const onPress = () => {
     navigation.goBack();
   };
-
   const context = useContext(MainContext);
-  const [date, setDate] = useState('No data');
 
   useEffect(() => {
     getAllTeams(getToday(), context);
@@ -41,7 +36,6 @@ const TeamRank = ({navigation}) => {
         ></AppBarBackButton>
         <WeeklyCalendar
           onDayPress={(day) => {
-            //setDate(day.format('DD-MM-YYYY'));
             context.setTeamRank([]);
             getAllTeams(day.format('YYYY-MM-DD'), context);
           }}
@@ -56,7 +50,6 @@ const TeamRank = ({navigation}) => {
                 secondTeam={context.teamRank[1]}
                 thirdTeam={context.teamRank[2]}
               ></RankComp>
-
               {context.teamRank.length > 2 ? (
                 <>
                   <Divider width={1}></Divider>

@@ -21,7 +21,7 @@ import CardView from '../components/CardView';
 import {MainContext} from '../contexts/MainContext';
 
 const BadgesDetail = ({route, navigation}) => {
-  const {badgeRank, badgeStepDay, badgeStepWeek, loading, setLoading} =
+  const {badgeRank, badgeStepDay, badgeStepWeek, loading} =
     useContext(MainContext);
 
   const onPress = () => {

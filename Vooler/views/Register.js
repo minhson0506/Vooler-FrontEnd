@@ -1,5 +1,5 @@
 import React from 'react';
-import {colorSet, safeAreaStyle} from '../utils/GlobalStyle';
+import {safeAreaStyle} from '../utils/GlobalStyle';
 import {AppBarIcon} from '../components/AppBar';
 import RegisterForm from '../components/RegisterForm';
 import PropTypes from 'prop-types';
@@ -9,12 +9,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
-  Text,
 } from 'react-native';
 
 const Register = ({navigation}) => {
   const onPress = () => {
-    navigation.navigate('Main');
+    navigation.navigate('Login');
   };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>

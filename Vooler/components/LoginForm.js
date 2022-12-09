@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import {Input, Text, Button} from '@rneui/base';
 import {IconButton} from '@react-native-material/core';
@@ -15,14 +16,14 @@ import PropTypes from 'prop-types';
 import {MainContext} from '../contexts/MainContext';
 import {useAuth, useRecord, useUser} from '../hooks/ApiHooks';
 import {generateHash} from '../utils/hash';
+import Toast from 'react-native-toast-message';
 
 const LoginForm = ({onPress}) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, token} =
+  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, setSalt, salt} =
     useContext(MainContext);
   const {getUserByToken} = useUser();
   const {postLogin} = useAuth();
-  const {postRecord} = useRecord();
 
   const {
     control,
@@ -37,9 +38,8 @@ const LoginForm = ({onPress}) => {
 
   const onSubmit = async (data) => {
     setUser(data.username);
-    console.log('data before hash', data);
-    const hashedData = await generateHash(data.username, data.password);
-    console.log('hashedData', hashedData);
+    // console.log('data before hash', data);
+    const hashedData = await generateHash(data.username, data.password, salt);
     const userLogin = {
       userId: hashedData.userId,
       password: hashedData.password,
@@ -54,10 +54,19 @@ const LoginForm = ({onPress}) => {
           setUid(response.uid);
         }
         setTeam(userData.user.team_id);
+        const msg = 'Login successfully!';
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(msg, ToastAndroid.SHORT);
+        }
         setIsLoggedIn(true);
       }
     } catch (error) {
-      Alert.alert('Login failed!', 'Wrong username or password!');
+      const msg = 'Wrong username or password!';
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(msg, ToastAndroid.SHORT);
+      } else {
+        Alert.alert('Login failed!', msg);
+      }
       console.log(error);
     }
   };

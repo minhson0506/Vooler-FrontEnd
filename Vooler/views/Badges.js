@@ -1,26 +1,28 @@
 import React, {useContext, useEffect, useState} from 'react';
-
 import {
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   View,
-  ScrollView,
   Dimensions,
   FlatList,
+  Alert,
 } from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
-import {dayTarget, levelArray} from '../utils/data';
+import {levelArray} from '../utils/data';
 import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
-import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {fetchStep, getDate} from '../utils/getData';
+import {useUser} from '../hooks/ApiHooks';
+import {getToday} from '../utils/getData';
+import {Icon} from '@rneui/base';
 
 const Badges = ({navigation}) => {
-  const {badgeStepDay, badgeStepWeek, badgeRank} = useContext(MainContext);
+  const {badgeStepDay, badgeStepWeek, badgeRank, token, loading} =
+    useContext(MainContext);
   const [array, setArray] = useState(levelArray);
+  const [streakDay, setStreakDay] = useState(0);
+  const {getAllRecordsByUser} = useUser();
 
   const changeArray = () => {
     const newArray = [...array];
@@ -39,9 +41,48 @@ const Badges = ({navigation}) => {
     setArray(newArray);
   };
 
+  const checkStreak = async () => {
+    const response = await getAllRecordsByUser(token);
+    const today = getToday();
+    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1))
+      .toISOString()
+      .slice(0, 10);
+
+    if (response) {
+      const array = response.records;
+      if (array) {
+        if (array[array.length - 1].record_date == today) array.pop();
+        setStreakDay(checkDate(array, yesterday));
+      }
+    }
+  };
+
+  const checkDate = (array, date) => {
+    if (array !== undefined && array.length != 0) {
+      if (array[array.length - 1].record_date == date) {
+        if (array[array.length - 1].step_count_for_date >= 300) {
+          array.pop();
+          const yesterday = new Date(
+            new Date(date).setDate(new Date(date).getDate() - 1)
+          )
+            .toISOString()
+            .slice(0, 10);
+          return 1 + checkDate(array, yesterday);
+        } else {
+          return 0;
+        }
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  };
+
   useEffect(() => {
     changeArray();
-  }, []);
+    checkStreak();
+  }, [loading]);
 
   const onPress = () => {
     navigation.goBack();
@@ -53,6 +94,44 @@ const Badges = ({navigation}) => {
     return (
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
+        <TouchableOpacity
+          style={[styles.card, {alignSelf: 'center'}]}
+          onPress={() => {
+            Alert.alert(
+              'How to keep your streak?',
+              'Walk 300 steps/day to achieve one day streak!'
+            );
+          }}
+        >
+          {streakDay > 0 ? (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Icon
+                name="fire"
+                type="material-community"
+                size={35}
+                color={colorSet.primary}
+              ></Icon>
+              <Text style={fontStyle.Title}>Streak: {streakDay} days</Text>
+            </View>
+          ) : (
+            <View
+              style={{alignItems: 'center', justifyContent: 'space-between'}}
+            >
+              <Icon
+                name="fire"
+                type="material-community"
+                size={35}
+                color={colorSet.black}
+              ></Icon>
+              <Text style={fontStyle.Title}>Streak: {streakDay}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
         <FlatList
           data={levelArray}
           style={styles.gridView}
@@ -79,7 +158,7 @@ const Badges = ({navigation}) => {
 
 const styles = StyleSheet.create({
   gridView: {
-    padding: 20,
+    paddingStart: 20,
   },
   itemContainer: {
     backgroundColor: colorSet.lightGray,

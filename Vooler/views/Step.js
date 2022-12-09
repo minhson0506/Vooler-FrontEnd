@@ -1,26 +1,31 @@
-import React, {useContext, useState, useEffect, Component} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {AppBarBackButton} from '../components/AppBar';
 import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
-import {ECharts} from 'react-native-echarts-wrapper';
 import Graph from './Graph';
 import PropTypes from 'prop-types';
 import {Icon} from '@rneui/base';
 import {useUser} from '../hooks/ApiHooks';
 import {MainContext} from '../contexts/MainContext';
-import {getToday, getUserWeekData, fetchStep} from '../utils/getData';
-import {ScrollView} from 'react-native';
+import {getToday, fetchStep} from '../utils/getData';
 
 const Step = ({navigation}) => {
   // const {TaskModule} = NativeModules;
   // const [steps, setSteps] = useState("100");
   // const [second, setSecond] = useState(0);
 
-  const {token, step, setStep, loading, setLoading} = useContext(MainContext);
+  const {
+    token,
+    step,
+    setStep,
+    loading,
+    setLoading,
+    setAvgLastWeek,
+    avgLastWeek,
+  } = useContext(MainContext);
   const context = useContext(MainContext);
   const {getUserRecordwithDate} = useUser();
-  const [date, setDate] = useState('No data');
   const [graph, setGraph] = useState([]);
 
   const onPress = () => {
@@ -28,12 +33,10 @@ const Step = ({navigation}) => {
     navigation.goBack();
   };
 
-  const getGraphData = async (day) => {
+  const getGraphData = async (day, bool) => {
     try {
       const graphData = await getUserRecordwithDate(day, token);
-
       const startDay = graphData.start_date.split('-');
-      console.log('current data before convert', graphData);
       const current = new Date(
         parseInt(startDay[0]),
         parseInt(startDay[1]) - 1,
@@ -48,8 +51,6 @@ const Step = ({navigation}) => {
         );
       }
 
-      console.log('week', weekArray);
-
       let weekData = weekArray.map((element) => {
         for (let i = 0; i < graphData.records.length; i++) {
           if (element == graphData.records[i].record_date) {
@@ -58,29 +59,25 @@ const Step = ({navigation}) => {
         }
         return 0;
       });
-      setGraph(weekData);
+      if (bool) {
+        setGraph(weekData);
+      } else {
+        setAvgLastWeek(graphData.total_steps_accumulated / 7);
+      }
     } catch (error) {
       console.log('Error getting data for graph', error);
     }
   };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (second == 2000) {
-  //       setSecond(0);
-  //     } else {
-  //       setSecond(second + 1)
-  //     }
-  //     TaskModule.getStep
-  //     console.log('step in android: ', TaskModule.getStep);
-  //     console.log('step in Vs: ', steps);
-  //   }, 500);
-  //   return () => clearInterval(interval)
-  // }, []);
-
   useEffect(() => {
+    const lastSaturday = new Date(
+      new Date().setDate(new Date().getDate() - 1 - new Date().getDay())
+    )
+      .toISOString()
+      .slice(0, 10);
     fetchStep(getToday(), context);
-    getGraphData(getToday());
+    getGraphData(getToday(), true);
+    getGraphData(lastSaturday, false);
   }, []);
 
   const styleFont = useStyles();
@@ -90,10 +87,21 @@ const Step = ({navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Step'} onPress={onPress}></AppBarBackButton>
         <WeeklyCalendar
-          onDayPress={(day) => {
+          onDayPress={(day, weekdays) => {
             setStep(0);
             fetchStep(day.format('YYYY-MM-DD'), context);
-            getGraphData(day.format('YYYY-MM-DD'));
+            const thisSaturday = new Date(
+              new Date(day).setDate(new Date(day).getDate() + 6 - weekdays)
+            )
+              .toISOString()
+              .slice(0, 10);
+            const lastSaturday = new Date(
+              new Date(day).setDate(new Date(day).getDate() - 1 - weekdays)
+            )
+              .toISOString()
+              .slice(0, 10);
+            getGraphData(thisSaturday, true);
+            getGraphData(lastSaturday, false);
           }}
           themeColor={colorSet.primary}
           style={{height: 100}}
@@ -142,7 +150,7 @@ const Step = ({navigation}) => {
                 </Text>
               </View>
             </View>
-            <Graph source={graph}></Graph>
+            <Graph source={graph} avgLastWeek={avgLastWeek}></Graph>
           </View>
         </View>
       </View>

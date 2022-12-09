@@ -9,7 +9,7 @@ const MainProvider = (props) => {
   const [user, setUser] = useState();
   const [uid, setUid] = useState();
   const [token, setToken] = useState('fetching...');
-  const [salt, setSalt] = useState();
+  const [salt, setSalt] = useState('');
 
   const [team, setTeam] = useState(1);
   const [teamData, setTeamData] = useState([]);
@@ -28,6 +28,8 @@ const MainProvider = (props) => {
   const [badgeStepDay, setBadgeStepDay] = useState(0);
   const [badgeStepWeek, setBadgeStepWeek] = useState(0);
   const [badgeRank, setBadgeRank] = useState(0);
+
+  const [avgLastWeek, setAvgLastWeek] = useState(0);
 
   return (
     <MainContext.Provider
@@ -69,7 +71,9 @@ const MainProvider = (props) => {
         currentWeekStep,
         setCurrentWeekStep,
         teamDataYesterday,
-        setTeamDataYesterday
+        setTeamDataYesterday,
+        avgLastWeek,
+        setAvgLastWeek,
       }}
     >
       {props.children}
