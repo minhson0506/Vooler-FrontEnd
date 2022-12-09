@@ -52,7 +52,7 @@ const Dashboard = ({navigation}) => {
       );
     }, 500);
     return () => clearInterval(interval);
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     randomQuote();
