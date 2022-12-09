@@ -52,7 +52,7 @@ const Dashboard = ({navigation}) => {
       );
     }, 500);
     return () => clearInterval(interval);
-  }, [loading]);
+  }, []);
 
   useEffect(() => {
     randomQuote();
@@ -80,7 +80,7 @@ const Dashboard = ({navigation}) => {
       }
     };
     tryFetch();
-  }, []);
+  }, [loading]);
 
   const styleFont = useStyles();
   if (styleFont == undefined) return undefined;
@@ -99,7 +99,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Step');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -119,7 +118,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('UserRank');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
@@ -139,7 +137,6 @@ const Dashboard = ({navigation}) => {
               style={styles.card}
               onPress={() => {
                 navigation.navigate('Badges');
-                setLoading(!loading);
               }}
             >
               <View style={styles.iconText}>
