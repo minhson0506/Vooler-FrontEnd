@@ -47,12 +47,12 @@ video conference platform. More than that, Vooler also motivates the seniors to 
    <li>"react-native-weekly-calendar": 0.2.0
 </ul>
 
-[![My Skills](https://skills.thijs.gg/icons?i=javascript,java,swift,nodejs,figma&theme=light)](https://skills.thijs.gg)
+[![My Skills](https://skills.thijs.gg/icons?i=javascript,java,swift,figma&theme=light)](https://skills.thijs.gg)
 
 ## Installation
 1. Clone Vooler FrontEnd repo to local:
 ```
-$ git clone [https://github.com/minhson0506/DatingApp-Hook.git](https://github.com/minhson0506/Vooler-FrontEnd.git)
+$ git clone "https://github.com/minhson0506/Vooler-FrontEnd.git"
 ```
 2. Install dependencies in `Vooler` folder:
 ```
