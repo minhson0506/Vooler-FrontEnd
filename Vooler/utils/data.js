@@ -271,7 +271,7 @@ const quoteArray = [
     quote:
       '"Age is something that does not matter unless you are a cheese!" - Billie Burke',
   },
-  {id: 4, Quote: '"Ageing is just another word for living." - Cindy Joseph'},
+  { id: 4, Quote: '"Ageing is just another word for living." - Cindy Joseph' },
   {
     id: 5,
     quote: '"It is not how old you are. It is how you are old." - Jules Renard',

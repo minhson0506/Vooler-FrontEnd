@@ -1,11 +1,11 @@
-import {Icon} from '@rneui/base';
+import { Icon } from '@rneui/base';
 import * as React from 'react';
-import {Text, Image, View, TouchableOpacity} from 'react-native';
+import { Text, Image, View, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {colorSet, useStyles} from '../utils/GlobalStyle';
-import {PropTypes} from 'prop-types';
+import { colorSet, useStyles } from '../utils/GlobalStyle';
+import { PropTypes } from 'prop-types';
 
-const AppBarBackButton = ({onPress, title, icon, team}) => {
+const AppBarBackButton = ({ onPress, title, icon, team }) => {
   const fontStyle = useStyles();
   if (fontStyle == undefined) return undefined;
   else
@@ -16,21 +16,21 @@ const AppBarBackButton = ({onPress, title, icon, team}) => {
           justifyContent: 'space-between',
         }}
       >
-        <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
           <Ionicons
             name="arrow-back"
             size={30}
-            style={{marginStart: 20}}
+            style={{ marginStart: 20 }}
             onPress={onPress}
           />
         </View>
-        <Text style={[fontStyle.Headline, {color: colorSet.primary}]}>
+        <Text style={[fontStyle.Headline, { color: colorSet.primary }]}>
           {title}
         </Text>
         {icon == true ? (
           <TouchableOpacity
             onPress={team}
-            style={{width: 50, justifyContent: 'center', paddingEnd: 20}}
+            style={{ width: 50, justifyContent: 'center', paddingEnd: 20 }}
           >
             <Icon
               name="people"
@@ -40,14 +40,14 @@ const AppBarBackButton = ({onPress, title, icon, team}) => {
             ></Icon>
           </TouchableOpacity>
         ) : (
-          <View style={{width: 50}}></View>
+          <View style={{ width: 50 }}></View>
         )}
       </View>
     );
 };
 
 const AppBarIcon = () => (
-  <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+  <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
     <Image
       source={require('../assets/app_icon.png')}
       style={{
@@ -63,4 +63,4 @@ AppBarBackButton.propTypes = {
   onPress: PropTypes.func,
 };
 
-export {AppBarIcon, AppBarBackButton};
+export { AppBarIcon, AppBarBackButton };

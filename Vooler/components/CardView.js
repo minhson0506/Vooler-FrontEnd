@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
-import {FlatGrid} from 'react-native-super-grid';
-import {colorSet, useStyles} from '../utils/GlobalStyle';
+import React, { useState } from 'react';
+import { StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { FlatGrid } from 'react-native-super-grid';
+import { colorSet, useStyles } from '../utils/GlobalStyle';
 
-const CardView = ({array}) => {
+const CardView = ({ array }) => {
   const [items, setItems] = useState(array);
+
   const onClick = (id) => {
     const newImages = [...items];
     if (newImages[id].state == 1) newImages[id].state = 2;
@@ -21,7 +22,7 @@ const CardView = ({array}) => {
         data={items}
         style={styles.gridView}
         spacing={10}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <TouchableOpacity
             style={styles.itemContainer}
             onPress={() => {

@@ -1,3 +1,3 @@
 const baseUrl = 'https://vooler.biz/';
 
-export {baseUrl};
+export { baseUrl };

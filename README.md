@@ -52,7 +52,7 @@ video conference platform. More than that, Vooler also motivates the seniors to 
 ## Installation
 1. Clone Vooler FrontEnd repo to local:
 ```
-$ git clone "https://github.com/minhson0506/Vooler-FrontEnd.git"
+$ git clone https://github.com/minhson0506/Vooler-FrontEnd.git
 ```
 2. Install dependencies in `Vooler` folder:
 ```
@@ -69,3 +69,5 @@ or
 $ npx expo run:ios
 ```
 
+## Link to BackEnd
+https://github.com/minhson0506/Vooler-BackEnd

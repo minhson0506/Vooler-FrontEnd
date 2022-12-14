@@ -1,11 +1,12 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View, Text} from 'react-native';
-import {BarChart} from 'react-native-gifted-charts';
-import {colorSet} from '../utils/GlobalStyle';
+import { Dimensions, StyleSheet, Text } from 'react-native';
+import { BarChart } from 'react-native-gifted-charts';
+import { colorSet } from '../utils/GlobalStyle';
 
-const Graph = ({source, avgLastWeek}) => {
+const Graph = ({ source, avgLastWeek }) => {
   const dateArray = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
+  // map data for display
   const barData = source.map((element, index) => {
     return {
       value: element,

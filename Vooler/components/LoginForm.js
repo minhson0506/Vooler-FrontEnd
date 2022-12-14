@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -7,28 +7,27 @@ import {
   Alert,
   ToastAndroid,
 } from 'react-native';
-import {Input, Text, Button} from '@rneui/base';
-import {IconButton} from '@react-native-material/core';
-import {useForm, Controller} from 'react-hook-form';
+import { Input, Text, Button } from '@rneui/base';
+import { IconButton } from '@react-native-material/core';
+import { useForm, Controller } from 'react-hook-form';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import {colorSet, useStyles} from '../utils/GlobalStyle';
+import { colorSet, useStyles } from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
-import {MainContext} from '../contexts/MainContext';
-import {useAuth, useRecord, useUser} from '../hooks/ApiHooks';
-import {generateHash} from '../utils/hash';
-import Toast from 'react-native-toast-message';
+import { MainContext } from '../contexts/MainContext';
+import { useAuth, useUser } from '../hooks/ApiHooks';
+import { generateHash } from '../utils/hash';
 
-const LoginForm = ({onPress}) => {
+const LoginForm = ({ onPress }) => {
   const [showPassword, setShowPassword] = useState(true);
-  const {setIsLoggedIn, setUser, setToken, setTeam, setUid, setSalt, salt} =
+  const { setIsLoggedIn, setUser, setToken, setTeam, setUid, setSalt, salt } =
     useContext(MainContext);
-  const {getUserByToken} = useUser();
-  const {postLogin} = useAuth();
+  const { getUserByToken } = useUser();
+  const { postLogin } = useAuth();
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       username: '',
@@ -38,7 +37,6 @@ const LoginForm = ({onPress}) => {
 
   const onSubmit = async (data) => {
     setUser(data.username);
-    // console.log('data before hash', data);
     const hashedData = await generateHash(data.username, data.password, salt);
     const userLogin = {
       userId: hashedData.userId,
@@ -74,7 +72,7 @@ const LoginForm = ({onPress}) => {
   if (fontStyle == undefined) return undefined;
   else
     return (
-      <View style={{height: '100%', justifyContent: 'center'}}>
+      <View style={{ height: '100%', justifyContent: 'center' }}>
         <View style={styles.card}>
           <View>
             <Text style={[fontStyle.Title, styles.text]}>Enter nickname</Text>
@@ -83,7 +81,7 @@ const LoginForm = ({onPress}) => {
               rules={{
                 required: true,
               }}
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -91,7 +89,7 @@ const LoginForm = ({onPress}) => {
                   placeholder="Nickname"
                   style={styles.inputBox}
                   inputContainerStyle={styles.inputContainer}
-                  inputStyle={{fontFamily: 'Nunito-Bold'}}
+                  inputStyle={{ fontFamily: 'Nunito-Bold' }}
                 />
               )}
               name="username"
@@ -106,7 +104,7 @@ const LoginForm = ({onPress}) => {
               rules={{
                 required: true,
               }}
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -115,7 +113,7 @@ const LoginForm = ({onPress}) => {
                   secureTextEntry={showPassword}
                   style={styles.inputBox}
                   autoCapitalize="none"
-                  inputStyle={{fontFamily: 'Nunito-Bold'}}
+                  inputStyle={{ fontFamily: 'Nunito-Bold' }}
                   inputContainerStyle={styles.inputContainer}
                   rightIcon={(props) => (
                     <IconButton
@@ -147,7 +145,7 @@ const LoginForm = ({onPress}) => {
               size: 25,
               color: 'black',
             }}
-            iconContainerStyle={{marginRight: 10}}
+            iconContainerStyle={{ marginRight: 10 }}
             titleStyle={fontStyle.Button}
             buttonStyle={styles.button}
             containerStyle={{
@@ -159,7 +157,7 @@ const LoginForm = ({onPress}) => {
           />
           <TouchableOpacity
             onPress={onPress}
-            style={{flexDirection: 'row', justifyContent: 'center'}}
+            style={{ flexDirection: 'row', justifyContent: 'center' }}
           >
             <Text
               style={{
@@ -186,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colorSet.lightGray,
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
@@ -218,6 +216,6 @@ const styles = StyleSheet.create({
   },
 });
 
-LoginForm.propTypes = {onPress: PropTypes.func};
+LoginForm.propTypes = { onPress: PropTypes.func };
 
 export default LoginForm;

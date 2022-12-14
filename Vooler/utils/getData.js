@@ -1,5 +1,5 @@
-import {useTeam, useUser} from '../hooks/ApiHooks';
-import {nameArray} from '../utils/data';
+import { useTeam, useUser } from '../hooks/ApiHooks';
+import { nameArray } from '../utils/data';
 import {
   dayTarget,
   weekFirstTarget,
@@ -7,11 +7,11 @@ import {
   weekThirdTarget,
 } from '../utils/data';
 
-const {getTeamRecordByDate, getAllTeamRecords} = useTeam();
-const {getAllRecordsByUser, getUserRecordwithDate} = useUser();
+const { getTeamRecordByDate, getAllTeamRecords } = useTeam();
+const { getAllRecordsByUser, getUserRecordwithDate } = useUser();
 
 const getTeamData = async (day, context) => {
-  const {team, token, user, uid, setRank, setTeamData} = context;
+  const { team, token, user, uid, setRank, setTeamData } = context;
   try {
     const response = await getTeamRecordByDate(team, day, token);
 
@@ -53,7 +53,7 @@ const getTeamData = async (day, context) => {
 };
 
 const getTeamDataYesterday = async (day, context) => {
-  const {team, token, user, uid, setTeamDataYesterday} = context;
+  const { team, token, user, uid, setTeamDataYesterday } = context;
   try {
     const response = await getTeamRecordByDate(team, day, token);
 
@@ -89,7 +89,7 @@ const getTeamDataYesterday = async (day, context) => {
 };
 
 const fetchStep = async (day, context) => {
-  const {token, setStep} = context;
+  const { token, setStep } = context;
   try {
     const userData = await getAllRecordsByUser(token);
     if (userData) {
@@ -106,7 +106,7 @@ const fetchStep = async (day, context) => {
 };
 
 const getTodayStep = async (context) => {
-  const {token, setCurrentStep, setCurrentWeekStep, loading, setLoading} =
+  const { token, setCurrentStep, setCurrentWeekStep, loading, setLoading } =
     context;
   try {
     const date = getToday();
@@ -127,7 +127,7 @@ const getTodayStep = async (context) => {
 };
 
 const getTeamDataToday = async (context) => {
-  const {team, token, user, uid, setRank} = context;
+  const { team, token, user, uid, setRank } = context;
   try {
     const response = await getTeamRecordByDate(team, getToday(), token);
 
@@ -167,7 +167,7 @@ const getTeamDataToday = async (context) => {
 };
 
 const getWeekBadge = (array, context, index) => {
-  const {currentWeekStep, setBadgeStepWeek} = context;
+  const { currentWeekStep, setBadgeStepWeek } = context;
   if (currentWeekStep < array[0].name) setBadgeStepWeek(0 + index);
   else if (currentWeekStep < array[1].name) setBadgeStepWeek(1 + index);
   else if (currentWeekStep < array[2].name) setBadgeStepWeek(2 + index);
@@ -178,7 +178,7 @@ const getWeekBadge = (array, context, index) => {
 };
 
 const getBadge = (context) => {
-  const {currentStep, currentWeekStep, rank, setBadgeRank, setBadgeStepDay} =
+  const { currentStep, currentWeekStep, rank, setBadgeRank, setBadgeStepDay } =
     context;
   if (currentStep < dayTarget[0].name) setBadgeStepDay(0);
   else if (currentStep < dayTarget[1].name) setBadgeStepDay(1);
@@ -221,7 +221,7 @@ const getBadge = (context) => {
 };
 
 const getAllTeams = async (day, context) => {
-  const {token, setTeamRank} = context;
+  const { token, setTeamRank } = context;
   try {
     const response = await getAllTeamRecords(day, token);
     const teamData = response.teams.filter((element) => {
@@ -261,6 +261,71 @@ const getToday = () => {
   return today;
 };
 
+// change array bagde for displaying
+const changeArrayBagde = (data, index, badgeRank, badgeStepDay, badgeStepWeek) => {
+  if (index == 1) {
+    const array = [...data];
+    for (let i = 0; i < 6; i++) {
+      if (i < badgeStepDay) array[i].state = 3;
+      else if (array[i].state == 3) array[i].state = 1;
+    }
+    return array;
+  } else if (index == 2) {
+    const array = [...data];
+    for (let i = 0; i < 6; i++) {
+      if (i < badgeRank) array[i].state = 3;
+      else if (array[i].state == 3) array[i].state = 1;
+    }
+    return array;
+  } else if (index == 3) {
+    const array = [...data];
+    if (badgeStepWeek / 6 < 1) {
+      for (let i = 0; i < 6; i++) {
+        if (i < badgeStepWeek) array[i].state = 3;
+        else if (array[i].state == 3) array[i].state = 1;
+      }
+      return array;
+    } else {
+      for (let i = 0; i < 6; i++) {
+        array[i].state = 3;
+      }
+      return array;
+    }
+  } else if (index == 4) {
+    const array = [...data];
+    if (badgeStepWeek / 6 < 1) {
+      return array;
+    } else if (badgeStepWeek / 6 < 2) {
+      for (let i = 0; i < 6; i++) {
+        if (i < badgeStepWeek - 6) array[i].state = 3;
+        else if (array[i].state == 3) array[i].state = 1;
+      }
+      return array;
+    } else {
+      for (let i = 0; i < 6; i++) {
+        array[i].state = 3;
+      }
+      return array;
+    }
+  } else {
+    const array = [...data];
+    if (badgeStepWeek / 6 < 2) {
+      return array;
+    } else if (badgeStepWeek / 6 < 3) {
+      for (let i = 0; i < 6; i++) {
+        if (i < badgeStepWeek - 12) array[i].state = 3;
+        else if (array[i].state == 3) array[i].state = 1;
+      }
+      return array;
+    } else {
+      for (let i = 0; i < 6; i++) {
+        array[i].state = 3;
+      }
+      return array;
+    }
+  }
+};
+
 export {
   getTeamData,
   getTeamDataYesterday,
@@ -270,4 +335,5 @@ export {
   getBadge,
   getTodayStep,
   getTeamDataToday,
+  changeArrayBagde,
 };

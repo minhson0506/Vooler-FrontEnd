@@ -1,21 +1,21 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {AppBarBackButton} from '../components/AppBar';
+import React, { useContext, useEffect } from 'react';
+import { AppBarBackButton } from '../components/AppBar';
 import {
   StyleSheet,
   Text,
   View,
   Dimensions,
 } from 'react-native';
-import {safeAreaStyle, useStyles, colorSet} from '../utils/GlobalStyle';
+import { safeAreaStyle, useStyles, colorSet } from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import PropTypes from 'prop-types';
-import {Divider} from '@rneui/base';
+import { Divider } from '@rneui/base';
 import RankTable from '../components/TableView';
 import RankComp from '../components/RankComponent';
-import {getAllTeams, getToday} from '../utils/getData';
-import {MainContext} from '../contexts/MainContext';
+import { getAllTeams, getToday } from '../utils/getData';
+import { MainContext } from '../contexts/MainContext';
 
-const TeamRank = ({navigation}) => {
+const TeamRank = ({ navigation }) => {
   const onPress = () => {
     navigation.goBack();
   };
@@ -40,7 +40,7 @@ const TeamRank = ({navigation}) => {
             getAllTeams(day.format('YYYY-MM-DD'), context);
           }}
           themeColor={colorSet.primary}
-          style={{height: 100, marginBottom: 10}}
+          style={{ height: 100, marginBottom: 10 }}
         />
         <View style={styles.container}>
           {context.teamRank.length > 0 ? (
@@ -63,7 +63,7 @@ const TeamRank = ({navigation}) => {
               )}
             </>
           ) : (
-            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+            <Text style={[{ alignSelf: 'center' }, styleFont.Text]}>
               Oops! No data for this day!
             </Text>
           )}
@@ -104,6 +104,6 @@ const styles = StyleSheet.create({
   },
 });
 
-TeamRank.propTypes = {navigation: PropTypes.object};
+TeamRank.propTypes = { navigation: PropTypes.object };
 
 export default TeamRank;

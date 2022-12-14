@@ -1,4 +1,4 @@
-import {baseUrl} from '../utils/variables';
+import { baseUrl } from '../utils/variables';
 
 const doFetch = async (url, options = {}) => {
   try {
@@ -10,7 +10,6 @@ const doFetch = async (url, options = {}) => {
       const message = json.error
         ? `${json.message}: ${json.error}`
         : json.message;
-
       throw new Error(message || response.statusText);
     }
   } catch (err) {
@@ -22,7 +21,7 @@ const useAuth = () => {
   const postLogin = async (userCredentials) => {
     const options = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userCredentials),
     };
     return await doFetch(baseUrl + 'auth/login', options);
@@ -31,7 +30,7 @@ const useAuth = () => {
   const postUser = async (data) => {
     const options = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     };
     return await doFetch(baseUrl + 'auth/register', options);
@@ -41,14 +40,14 @@ const useAuth = () => {
     return await doFetch(baseUrl + 'auth/salt');
   };
 
-  return {postLogin, postUser, getSalt};
+  return { postLogin, postUser, getSalt };
 };
 
 const useUser = () => {
   const getAllUsers = async (token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'user/all', options);
   };
@@ -56,7 +55,7 @@ const useUser = () => {
   const getUserByToken = async (token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'user/info', options);
   };
@@ -76,7 +75,7 @@ const useUser = () => {
   const getAllRecordsByUser = async (token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'user/records', options);
   };
@@ -84,7 +83,7 @@ const useUser = () => {
   const getUserRecordwithDate = async (endDate, token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'user/records?endDate=' + endDate, options);
   };
@@ -105,7 +104,7 @@ const useTeam = () => {
   const getTeamInfoByTeamId = async (teamId, token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'team' + teamId, options);
   };
@@ -113,7 +112,7 @@ const useTeam = () => {
   const getTeamRecordByDate = async (teamId, endDate, token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(
       baseUrl + 'team?endDate=' + endDate + '&teamId=' + teamId,
@@ -124,7 +123,7 @@ const useTeam = () => {
   const getAllTeamRecords = async (endDate, token) => {
     const options = {
       method: 'GET',
-      headers: {Authorization: `Bearer ${token}`},
+      headers: { Authorization: `Bearer ${token}` },
     };
     return await doFetch(baseUrl + 'team?endDate=' + endDate, options);
   };
@@ -150,7 +149,7 @@ const useRecord = () => {
     return await doFetch(baseUrl + 'record', options);
   };
 
-  return {postRecord};
+  return { postRecord };
 };
 
-export {useAuth, useUser, useTeam, useRecord};
+export { useAuth, useUser, useTeam, useRecord };

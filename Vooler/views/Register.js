@@ -1,6 +1,6 @@
 import React from 'react';
-import {safeAreaStyle} from '../utils/GlobalStyle';
-import {AppBarIcon} from '../components/AppBar';
+import { safeAreaStyle } from '../utils/GlobalStyle';
+import { AppBarIcon } from '../components/AppBar';
 import RegisterForm from '../components/RegisterForm';
 import PropTypes from 'prop-types';
 import {
@@ -11,14 +11,14 @@ import {
   Keyboard,
 } from 'react-native';
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
   const onPress = () => {
     navigation.navigate('Login');
   };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         activeOpacity={1}
         onPress={() => Keyboard.dismiss()}
       >
@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Register.propTypes = {navigation: PropTypes.object};
+Register.propTypes = { navigation: PropTypes.object };
 
 export default Register;

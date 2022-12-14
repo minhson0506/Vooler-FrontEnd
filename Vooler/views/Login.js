@@ -1,6 +1,6 @@
-import React, {useContext, useEffect} from 'react';
-import {safeAreaStyle} from '../utils/GlobalStyle';
-import {AppBarIcon} from '../components/AppBar';
+import React, { useContext, useEffect } from 'react';
+import { safeAreaStyle } from '../utils/GlobalStyle';
+import { AppBarIcon } from '../components/AppBar';
 import LoginForm from '../components/LoginForm';
 import PropTypes from 'prop-types';
 import {
@@ -10,12 +10,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {useAuth} from '../hooks/ApiHooks';
-import {MainContext} from '../contexts/MainContext';
+import { useAuth } from '../hooks/ApiHooks';
+import { MainContext } from '../contexts/MainContext';
 
-const Login = ({navigation}) => {
-  const {getSalt} = useAuth();
-  const {setSalt, salt} = useContext(MainContext);
+const Login = ({ navigation }) => {
+  const { getSalt } = useAuth();
+  const { setSalt, salt } = useContext(MainContext);
 
   const onPress = () => {
     navigation.navigate('Register');
@@ -28,6 +28,7 @@ const Login = ({navigation}) => {
     }
   };
 
+  // load salt for encoding if salt is null
   useEffect(() => {
     if (salt == '') {
       checkSalt();
@@ -37,7 +38,7 @@ const Login = ({navigation}) => {
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         activeOpacity={1}
         onPress={() => Keyboard.dismiss()}
       >
@@ -60,6 +61,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Login.propTypes = {navigation: PropTypes.object};
+Login.propTypes = { navigation: PropTypes.object };
 
 export default Login;

@@ -10,22 +10,6 @@ public class RequestModel {
     this.recordDate = recordDate;
   }
 
-  public int getStepCount() {
-    return stepCount;
-  }
-
-  public String getRecordDate() {
-    return recordDate;
-  }
-
-  public void setStepCount(int stepCount) {
-    this.stepCount = stepCount;
-  }
-
-  public void setRecordDate(String recordDate) {
-    this.recordDate = recordDate;
-  }
-
   @Override
   public String toString() {
     return "DataModel{" +

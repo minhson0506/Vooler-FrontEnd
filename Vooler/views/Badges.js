@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,22 +8,23 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
-import {AppBarBackButton} from '../components/AppBar';
-import {levelArray} from '../utils/data';
-import {colorSet, useStyles, safeAreaStyle} from '../utils/GlobalStyle';
+import { AppBarBackButton } from '../components/AppBar';
+import { levelArray } from '../utils/data';
+import { colorSet, useStyles, safeAreaStyle } from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
-import {MainContext} from '../contexts/MainContext';
-import {useUser} from '../hooks/ApiHooks';
-import {getToday} from '../utils/getData';
-import {Icon} from '@rneui/base';
+import { MainContext } from '../contexts/MainContext';
+import { useUser } from '../hooks/ApiHooks';
+import { getToday } from '../utils/getData';
+import { Icon } from '@rneui/base';
 
-const Badges = ({navigation}) => {
-  const {badgeStepDay, badgeStepWeek, badgeRank, token, loading} =
+const Badges = ({ navigation }) => {
+  const { badgeStepDay, badgeStepWeek, badgeRank, token, loading } =
     useContext(MainContext);
   const [array, setArray] = useState(levelArray);
   const [streakDay, setStreakDay] = useState(0);
-  const {getAllRecordsByUser} = useUser();
+  const { getAllRecordsByUser } = useUser();
 
+  // get array of badge for displaying
   const changeArray = () => {
     const newArray = [...array];
     newArray[0].completed = badgeStepDay;
@@ -41,6 +42,7 @@ const Badges = ({navigation}) => {
     setArray(newArray);
   };
 
+  // get streak data for displaying
   const checkStreak = async () => {
     const response = await getAllRecordsByUser(token);
     const today = getToday();
@@ -57,6 +59,7 @@ const Badges = ({navigation}) => {
     }
   };
 
+  // function for calculating streak
   const checkDate = (array, date) => {
     if (array !== undefined && array.length != 0) {
       if (array[array.length - 1].record_date == date) {
@@ -95,7 +98,7 @@ const Badges = ({navigation}) => {
       <View style={safeAreaStyle.AndroidSafeArea}>
         <AppBarBackButton title={'Badge'} onPress={onPress}></AppBarBackButton>
         <TouchableOpacity
-          style={[styles.card, {alignSelf: 'center'}]}
+          style={[styles.card, { alignSelf: 'center' }]}
           onPress={() => {
             Alert.alert(
               'How to keep your streak?',
@@ -107,7 +110,7 @@ const Badges = ({navigation}) => {
             <View
               style={{
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'space-between'
               }}
             >
               <Icon
@@ -120,7 +123,10 @@ const Badges = ({navigation}) => {
             </View>
           ) : (
             <View
-              style={{alignItems: 'center', justifyContent: 'space-between'}}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
             >
               <Icon
                 name="fire"
@@ -135,7 +141,7 @@ const Badges = ({navigation}) => {
         <FlatList
           data={levelArray}
           style={styles.gridView}
-          renderItem={({item, index}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
@@ -177,7 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colorSet.lightGray,
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     padding: 20,
@@ -185,6 +191,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Badges.propTypes = {navigation: PropTypes.object};
+Badges.propTypes = { navigation: PropTypes.object };
 
 export default Badges;
