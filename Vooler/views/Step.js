@@ -1,20 +1,16 @@
-import React, {useContext, useState, useEffect} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {AppBarBackButton} from '../components/AppBar';
-import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
+import React, { useContext, useState, useEffect } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { AppBarBackButton } from '../components/AppBar';
+import { colorSet, safeAreaStyle, useStyles } from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import Graph from './Graph';
 import PropTypes from 'prop-types';
-import {Icon} from '@rneui/base';
-import {useUser} from '../hooks/ApiHooks';
-import {MainContext} from '../contexts/MainContext';
-import {getToday, fetchStep} from '../utils/getData';
+import { Icon } from '@rneui/base';
+import { useUser } from '../hooks/ApiHooks';
+import { MainContext } from '../contexts/MainContext';
+import { getToday, fetchStep } from '../utils/getData';
 
-const Step = ({navigation}) => {
-  // const {TaskModule} = NativeModules;
-  // const [steps, setSteps] = useState("100");
-  // const [second, setSecond] = useState(0);
-
+const Step = ({ navigation }) => {
   const {
     token,
     step,
@@ -25,7 +21,8 @@ const Step = ({navigation}) => {
     avgLastWeek,
   } = useContext(MainContext);
   const context = useContext(MainContext);
-  const {getUserRecordwithDate} = useUser();
+
+  const { getUserRecordwithDate } = useUser();
   const [graph, setGraph] = useState([]);
 
   const onPress = () => {
@@ -33,6 +30,7 @@ const Step = ({navigation}) => {
     navigation.goBack();
   };
 
+  // get data for displaying
   const getGraphData = async (day, bool) => {
     try {
       const graphData = await getUserRecordwithDate(day, token);
@@ -104,7 +102,7 @@ const Step = ({navigation}) => {
             getGraphData(lastSaturday, false);
           }}
           themeColor={colorSet.primary}
-          style={{height: 100}}
+          style={{ height: 100 }}
         />
         <View style={styles.container}>
           <View style={styles.iconText}>
@@ -115,13 +113,13 @@ const Step = ({navigation}) => {
               color={colorSet.black}
             ></Icon>
             <Text style={styleFont.Headline}>{step ? step : 0}</Text>
-            <Text style={{fontFamily: 'Nunito-SemiBold', fontSize: 18}}>
+            <Text style={{ fontFamily: 'Nunito-SemiBold', fontSize: 18 }}>
               STEPS
             </Text>
           </View>
           <View style={styles.card}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
             >
               <Text style={[styles.text, styleFont.Text]}>Week summary</Text>
               <View
@@ -179,7 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colorSet.lightGray,
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     justifyContent: 'space-evenly',
@@ -190,6 +188,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Step.propTypes = {navigation: PropTypes.object};
+Step.propTypes = { navigation: PropTypes.object };
 
 export default Step;

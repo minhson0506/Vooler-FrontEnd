@@ -49,6 +49,7 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
     super.onCreate(null);
     Log.d(TAG, "onCreate: start app in android module");
 
+    // init step service
     mStepsDBHelper = new StepsDBHelper(this);
     sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
     for (Sensor sensor : sensorManager.getSensorList(Sensor.TYPE_ALL)) {
@@ -58,15 +59,15 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
     Log.d(TAG, "onCreate: using sensor" + stepDetector.getName());
     sensorManager.registerListener(this, stepDetector, SensorManager.SENSOR_DELAY_UI);
 
+    // create schedule task
     scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
     scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
         // repeat task
         mStepCountList = mStepsDBHelper.readStepsEntries(mStepCountList);
         for (int i = 0; i < mStepCountList.size(); i++) {
-          // post data to db
+          // post data to db if the data was not post
           if (mStepCountList.get(i).mUploaded == false) {
             Log.d(TAG, "run: task update with day" + mStepCountList.get(i).mDate);
             postDataStep(mStepCountList.get(i).mDate, mStepCountList.get(i).mStepCount, i);
@@ -76,16 +77,19 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
     }, 0, 2, TimeUnit.MINUTES);
   }
 
+  // request permission for step counter
   public void requestPermission(Activity activity) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       if (activity.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
         String[] request = new String[]{Manifest.permission.ACTIVITY_RECOGNITION};
         activity.requestPermissions(request, 1);
+        // wait for accepting permission
         while (activity.checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) ;
       }
     }
   }
 
+  // push data when detect step
   @Override
   public void onSensorChanged(SensorEvent sensorEvent) {
     if (sensorEvent.sensor == stepDetector) {
@@ -108,6 +112,7 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
     else Log.d(TAG, "onSensorChanged: mStepCounter null");
   }
 
+  // post data only when token is not null
   public void postDataStep(String date, int step, int index) {
     Retrofit retrofit = new Retrofit.Builder()
       .baseUrl("https://vooler.biz/")
@@ -115,7 +120,6 @@ public class MainActivity extends ReactActivity implements SensorEventListener {
       .build();
     RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
     RequestModel model = new RequestModel(step, date + " 23:59:59");
-    //String token = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInRlYW1faWQiOjEsImlhdCI6MTY2OTY0MDg2M30.86PfjA4qy2k9mVmPDkPDjaDe3KwaIr29bCw97i4rYXc";
     if (token != "") {
       String tokenCurrent = "Bearer " + token;
       Call<DataResponse> call = retrofitAPI.createPost(tokenCurrent, model);

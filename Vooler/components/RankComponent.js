@@ -1,5 +1,4 @@
-import React, {useContext, useState} from 'react';
-import {AppBarBackButton} from '../components/AppBar';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,10 +6,10 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import {useStyles, colorSet} from '../utils/GlobalStyle';
+import { useStyles, colorSet } from '../utils/GlobalStyle';
 import PropTypes from 'prop-types';
 
-const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
+const RankComp = ({ firstTeam, secondTeam, thirdTeam }) => {
   const styleFont = useStyles();
   const [state, setState] = useState(100);
 
@@ -20,13 +19,13 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
       <View
         style={styles.rankContainer}
         onLayout={(event) => {
-          var {x, y, width, height} = event.nativeEvent.layout;
+          var { height } = event.nativeEvent.layout;
           setState(height);
         }}
       >
         <View style={styles.column}>
           <Image
-            style={{width: 90, height: 90}}
+            style={{ width: 90, height: 90 }}
             source={require('../assets/image/old1.png')}
           ></Image>
           {secondTeam ? (
@@ -50,11 +49,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           ) : (
             <Text style={styles.noData}>No data</Text>
           )}
-          <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
+          <Text style={{ fontFamily: 'Nunito-Bold', fontSize: 15 }}>STEPS</Text>
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 90, height: 90}}
+            style={{ width: 90, height: 90 }}
             source={require('../assets/image/old2.png')}
           ></Image>
           {firstTeam ? (
@@ -65,7 +64,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           <View
             style={[
               styles.rankView,
-              {backgroundColor: colorSet.green, height: state / 2.5},
+              { backgroundColor: colorSet.green, height: state / 2.5 },
             ]}
           >
             <Text style={styles.rank}>1</Text>
@@ -75,11 +74,11 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           ) : (
             <Text style={styles.noData}>No data</Text>
           )}
-          <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
+          <Text style={{ fontFamily: 'Nunito-Bold', fontSize: 15 }}>STEPS</Text>
         </View>
         <View style={styles.column}>
           <Image
-            style={{width: 90, height: 90}}
+            style={{ width: 90, height: 90 }}
             source={require('../assets/image/old3.png')}
           ></Image>
           {thirdTeam ? (
@@ -90,7 +89,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           <View
             style={[
               styles.rankView,
-              {backgroundColor: colorSet.red, height: ((state / 2.5) * 8) / 10},
+              { backgroundColor: colorSet.red, height: ((state / 2.5) * 8) / 10 },
             ]}
           >
             <Text style={styles.rank}>3</Text>
@@ -100,7 +99,7 @@ const RankComp = ({firstTeam, secondTeam, thirdTeam}) => {
           ) : (
             <Text style={styles.noData}>No data</Text>
           )}
-          <Text style={{fontFamily: 'Nunito-Bold', fontSize: 15}}>STEPS</Text>
+          <Text style={{ fontFamily: 'Nunito-Bold', fontSize: 15 }}>STEPS</Text>
         </View>
       </View>
     );

@@ -1,24 +1,24 @@
-import {Table, Row} from 'react-native-table-component';
-import {StyleSheet, View, Dimensions, ScrollView, Text} from 'react-native';
-import {colorSet, useStyles} from '../utils/GlobalStyle';
-import {useContext, useState, useEffect} from 'react';
-import {MainContext} from '../contexts/MainContext';
-import {useTeam} from '../hooks/ApiHooks';
-import {Icon} from '@rneui/base';
-import {FlatList} from 'react-native';
-import {nameArray} from '../utils/data';
+import { Row } from 'react-native-table-component';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { colorSet, useStyles } from '../utils/GlobalStyle';
+import { useContext, useState, useEffect } from 'react';
+import { MainContext } from '../contexts/MainContext';
+import { useTeam } from '../hooks/ApiHooks';
+import { Icon } from '@rneui/base';
+import { FlatList } from 'react-native';
 
-const RankTable = ({state, source, sourceYesterday}) => {
-  const {user, team, loading} = useContext(MainContext);
+const RankTable = ({ state, source, sourceYesterday }) => {
+  const { user, team, loading } = useContext(MainContext);
   const header = ['Rank', 'Team', 'Step'];
   const userHeader = ['Rank', 'User', 'Step', 'Status'];
   const fontStyle = useStyles();
   const [teamName, setTeamName] = useState('');
-  const {getAllTeams} = useTeam();
+  const { getAllTeams } = useTeam();
   const [data, setData] = useState([]);
 
   const dimension = Dimensions.get('window').width;
 
+  // get array of data for display
   const getData = () => {
     if (state != 'Team') {
       const array = source.map((element) => {
@@ -71,22 +71,22 @@ const RankTable = ({state, source, sourceYesterday}) => {
           key={'header'}
           data={state == 'Team' ? header : userHeader}
           textStyle={styles.textHeader}
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           widthArr={
             state != 'Team'
               ? [
-                  dimension * 0.2,
-                  dimension * 0.3,
-                  dimension * 0.25,
-                  dimension * 0.25,
-                ]
+                dimension * 0.2,
+                dimension * 0.3,
+                dimension * 0.25,
+                dimension * 0.25,
+              ]
               : [dimension * 0.3, dimension * 0.4, dimension * 0.3]
           }
         />
         <FlatList
           data={source}
           textStyle={[styles.text, fontStyle.Text]}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <View
               key={item[0]}
               style={[
@@ -124,7 +124,7 @@ const RankTable = ({state, source, sourceYesterday}) => {
                       dimension * 0.8 * 0.3,
                     ]}
                   />
-                  <View key={item[2]} style={{marginTop: 10, marginLeft: 10}}>
+                  <View key={item[2]} style={{ marginTop: 10, marginLeft: 10 }}>
                     {data[index] == 'none' ? (
                       <Icon
                         key={'same'}

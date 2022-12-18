@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {StyleSheet, Platform, StatusBar, Dimensions} from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Platform, StatusBar, Dimensions } from 'react-native';
 import * as Font from 'expo-font';
 
 const colorSet = {
@@ -67,4 +67,4 @@ const safeAreaStyle = StyleSheet.create({
   },
 });
 
-export {colorSet, useStyles, safeAreaStyle};
+export { colorSet, useStyles, safeAreaStyle };

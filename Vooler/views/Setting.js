@@ -1,6 +1,6 @@
 import React from 'react';
-import {safeAreaStyle} from '../utils/GlobalStyle';
-import {AppBarIcon} from '../components/AppBar';
+import { safeAreaStyle } from '../utils/GlobalStyle';
+import { AppBarIcon } from '../components/AppBar';
 import PropTypes from 'prop-types';
 import {
   View,
@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import EditForm from '../components/EditForm';
 
-const Settings = ({navigation}) => {
-  const onPress = () => {};
+const Settings = ({ navigation }) => {
+  const onPress = () => { };
   return (
     <View style={safeAreaStyle.AndroidSafeArea}>
       <TouchableOpacity
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         activeOpacity={1}
         onPress={() => Keyboard.dismiss()}
       >
@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Settings.propTypes = {navigation: PropTypes.object};
+Settings.propTypes = { navigation: PropTypes.object };
 
 export default Settings;

@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {StatusBar} from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import Navigator from './navigators/Navigator';
-import {MainProvider} from './contexts/MainContext';
-import {Platform, NativeModules} from 'react-native';
+import { MainProvider } from './contexts/MainContext';
+import { Platform, NativeModules } from 'react-native';
 import BackgroundFetch from 'react-native-background-fetch';
 
 const iosPedometer = NativeModules.Pedometer;
-console.log(iosPedometer);
 
 export default function App() {
-  const [state, setState] = useState({events: []});
+  const [state, setState] = useState({ events: [] });
   useEffect(() => {
     if (Platform.OS === 'ios') {
       const initBackgroundFetch = async () => {
@@ -32,7 +31,7 @@ export default function App() {
 
         // Initialize BackgroundFetch only once when component mounts.
         let status = await BackgroundFetch.configure(
-          {minimumFetchInterval: 15},
+          { minimumFetchInterval: 15 },
           onEvent,
           onTimeout
         );

@@ -1,28 +1,26 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   Dimensions,
   NativeModules,
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
   View,
 } from 'react-native';
-import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
-import {AppBarIcon} from '../components/AppBar';
+import { colorSet, safeAreaStyle, useStyles } from '../utils/GlobalStyle';
+import { AppBarIcon } from '../components/AppBar';
 import PropTypes from 'prop-types';
-import {Icon} from '@rneui/base';
-import {MainContext} from '../contexts/MainContext';
-import {getBadge, getTodayStep, getTeamDataToday} from '../utils/getData';
-import {Platform} from 'react-native';
-import {quoteArray} from '../utils/data';
+import { Icon } from '@rneui/base';
+import { MainContext } from '../contexts/MainContext';
+import { getBadge, getTodayStep, getTeamDataToday } from '../utils/getData';
+import { Platform } from 'react-native';
+import { quoteArray } from '../utils/data';
 
-const Dashboard = ({navigation}) => {
-  const {TaskModule} = NativeModules;
+const Dashboard = ({ navigation }) => {
+  const { TaskModule } = NativeModules;
   const context = useContext(MainContext);
   const {
     loading,
-    setLoading,
     user,
     currentStep,
     rank,
@@ -42,6 +40,7 @@ const Dashboard = ({navigation}) => {
     setQuote(quoteArray[random].quote);
   };
 
+  // auto reload app
   useEffect(() => {
     const interval = setInterval(() => {
       if (second === 100) {
@@ -56,12 +55,13 @@ const Dashboard = ({navigation}) => {
 
   useEffect(() => {
     randomQuote();
-
+    // transfer token to native module
     Platform.OS === 'android'
       ? TaskModule.getToken(token)
       : NativeModules.Pedometer.getToken(token);
   }, []);
 
+  // init background task in ios
   useEffect(() => {
     const tryFetch = () => {
       if (Platform.OS === 'ios') {
@@ -94,7 +94,7 @@ const Dashboard = ({navigation}) => {
             <Text style={styleFont.Title}>Good morning, {user}</Text>
             <Text style={styles.quote}>{quote}</Text>
           </View>
-          <View style={{height: '80%', justifyContent: 'space-evenly'}}>
+          <View style={{ height: '80%', justifyContent: 'space-evenly' }}>
             <TouchableOpacity
               style={styles.card}
               onPress={() => {
@@ -129,7 +129,7 @@ const Dashboard = ({navigation}) => {
                 ></Icon>
                 <Text style={styleFont.Title}>Rank</Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Text style={styleFont.Headline}>{rank ? rank : 0}</Text>
               </View>
             </TouchableOpacity>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colorSet.lightGray,
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     paddingStart: 20,
@@ -195,6 +195,6 @@ const styles = StyleSheet.create({
   },
 });
 
-Dashboard.propTypes = {navigation: PropTypes.object};
+Dashboard.propTypes = { navigation: PropTypes.object };
 
 export default Dashboard;

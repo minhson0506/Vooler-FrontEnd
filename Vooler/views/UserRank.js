@@ -1,14 +1,14 @@
-import React, {useContext, useEffect} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {AppBarBackButton} from '../components/AppBar';
-import {colorSet, safeAreaStyle, useStyles} from '../utils/GlobalStyle';
+import React, { useContext, useEffect } from 'react';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { AppBarBackButton } from '../components/AppBar';
+import { colorSet, safeAreaStyle, useStyles } from '../utils/GlobalStyle';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import RankTable from '../components/TableView';
 import PropTypes from 'prop-types';
-import {getToday, getTeamData, getTeamDataYesterday} from '../utils/getData';
-import {MainContext} from '../contexts/MainContext';
+import { getToday, getTeamData, getTeamDataYesterday } from '../utils/getData';
+import { MainContext } from '../contexts/MainContext';
 
-const UserRank = ({navigation}) => {
+const UserRank = ({ navigation }) => {
   const {
     teamData,
     teamDataYesterday,
@@ -63,7 +63,7 @@ const UserRank = ({navigation}) => {
             setLoading(!loading);
           }}
           themeColor={colorSet.primary}
-          style={{height: 100}}
+          style={{ height: 100 }}
         />
         <View style={styles.container}>
           {teamData.length > 0 ? (
@@ -73,7 +73,7 @@ const UserRank = ({navigation}) => {
               sourceYesterday={teamDataYesterday}
             ></RankTable>
           ) : (
-            <Text style={[{alignSelf: 'center'}, styleFont.Text]}>
+            <Text style={[{ alignSelf: 'center' }, styleFont.Text]}>
               Oops! No data for this day!
             </Text>
           )}
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colorSet.lightGray,
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     justifyContent: 'space-evenly',
@@ -115,6 +115,6 @@ const styles = StyleSheet.create({
   },
 });
 
-UserRank.propTypes = {navigation: PropTypes.object};
+UserRank.propTypes = { navigation: PropTypes.object };
 
 export default UserRank;
